@@ -73,19 +73,24 @@ def callback():
 
 @handler.add(JoinEvent)
 def handle_join(event):
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(
-            text="Terima Kasih telah memasukkan "+namaBot.capitalize()+" dalam chat ini ;D\nJika kalian membutuhkan bantuanku, panggil saja :)",
-            quick_reply=QuickReply(
-                items=[
-                    QuickReplyButton(
-                        action=MessageAction(
-                            label=namaBot.capitalize(),
-                            text=namaBot.capitalize()
+    line_bot_api.reply_message(event.reply_token, [
+            TextSendMessage(
+                text="Terima Kasih telah memasukkan "+namaBot.capitalize()+" dalam chat ini ;D\nJika kalian membutuhkan bantuanku, panggil saja :)"
+            ),
+            TextSendMessage(
+                text='Agar dapat menggunakan fitur-fitur yang ada, harus add '+namaBot.capitalize()+' sebagai teman dulu yak ;D',
+                quick_reply=QuickReply(
+                    items=[
+                        QuickReplyButton(
+                            action=MessageAction(
+                                label=namaBot.capitalize(),
+                                text=namaBot.capitalize()
+                            )
                         )
-                    )
-                ]
+                    ]
+                )  
             )
-        )
+        ]
     )
 
 @handler.add(FollowEvent)
