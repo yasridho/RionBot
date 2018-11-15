@@ -118,7 +118,12 @@ def handle_follow(event):
         ]
     )
     #data = db.reference('/')
-    firebase.post('/pengguna', event.source.user_id)
+    data = {'user_id':event.source.user_id,
+            'nama':line_bot_api.get_profile(event.source.user_id).display_name,
+            'foto':line_bot_api.get_profile(event.source.user_id).picture_url,
+            'status':line_bot_api.get_profile(event.source.user_id).status_message,
+            'waktu_add':time.time()}
+    firebase.post('/pengguna', data)
     #new_user = data.child('pengguna').set(
     #    {
     #        'user_id':event.source.user_id,
