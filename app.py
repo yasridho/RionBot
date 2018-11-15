@@ -48,7 +48,7 @@ app = Flask(__name__)
 
 sleep = False
 
-cred = credentials.Certificate('/Key/serviceAccountKey.json')
+cred = credentials.Certificate('Key/serviceAccountKey.json')
 firebase_admin.initialize_app(cred, os.environ.get('DATABASE_URL'))
 
 #===========[ NOTE SAVER ]=======================
