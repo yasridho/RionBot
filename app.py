@@ -23,8 +23,8 @@ import imp
 #import firebase_admin
 
 #from google.auth import app_engine
-#from firebase_admin import db
-#from firebase_admin import credentials
+from firebase_admin import db
+from firebase_admin import credentials
 from acc import (namaBot, google_key, line_bot_api, handler)
 from sesuatu import mau_nonton
 from bs4 import BeautifulSoup
