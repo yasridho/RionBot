@@ -20,7 +20,7 @@ import cinemaxxi
 import yify_torrent
 import acc
 import imp
-#import firebase_admin
+import firebase_admin
 
 #from google.auth import app_engine
 from firebase_admin import db
