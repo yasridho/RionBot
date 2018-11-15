@@ -20,11 +20,12 @@ import cinemaxxi
 import yify_torrent
 import acc
 import imp
-import firebase_admin
+#import firebase_admin
 
 #from google.auth import app_engine
-from firebase_admin import db
-from firebase_admin import credentials
+#from firebase_admin import db
+#from firebase_admin import credentials
+from firebase import firebase
 from acc import (namaBot, google_key, line_bot_api, handler)
 from sesuatu import mau_nonton
 from bs4 import BeautifulSoup
@@ -48,8 +49,9 @@ app = Flask(__name__)
 
 sleep = False
 
-cred = credentials.Certificate('Key/serviceAccountKey.json')
-firebase_admin.initialize_app(cred, os.environ.get('DATABASE_URL'))
+#cred = credentials.Certificate('Key/serviceAccountKey.json')
+#firebase_admin.initialize_app(cred, os.environ.get('DATABASE_URL'))
+firebase = firebase.FirebaseApplication(os.environ.get('FIREBASE_LINK_DATABASE'), None)
 
 #===========[ NOTE SAVER ]=======================
 notes = {}
@@ -115,16 +117,17 @@ def handle_follow(event):
             )
         ]
     )
-    data = db.reference('/')
-    new_user = data.child('pengguna').set(
-        {
-            'user_id':event.source.user_id,
-            'nama':line_bot_api.get_profile(event.source.user_id).display_name,
-            'foto':line_bot_api.get_profile(event.source.user_id).picture_url,
-            'status':line_bot_api.get_profile(event.source.user_id).status_message,
-            'waktu_add':time.time()
-        }
-    )
+    #data = db.reference('/')
+    firebase.post('/pengguna', event.source.user_id)
+    #new_user = data.child('pengguna').set(
+    #    {
+    #        'user_id':event.source.user_id,
+    #        'nama':line_bot_api.get_profile(event.source.user_id).display_name,
+    #        'foto':line_bot_api.get_profile(event.source.user_id).picture_url,
+    #        'status':line_bot_api.get_profile(event.source.user_id).status_message,
+    #        'waktu_add':time.time()
+    #    }
+    #)
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
