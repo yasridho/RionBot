@@ -1,0 +1,1335 @@
+import requests, json
+import sys
+import os
+import random
+import re
+import urllib
+import pafy
+import time
+from linebot.models import *
+from acc import google_key
+
+def ukuran_file(args):
+	minimal = 2**10
+	n = 0
+	ukuran = {0:'', 1:'Kilo', 2:'Mega', 3:'Giga', 4:'Tera'}
+	while args > minimal:
+		args = args/minimal
+		n = n + 1
+	if args == 1:
+		return args, ukuran[n]+'byte'
+	else:
+		return args, ukuran[n]+'bytes'
+
+def info_film(args):
+	try:
+		url = urllib.request.urlopen('https://mtix.21cineplex.com/gui.movie_details.php?sid=&movie_id='+args)
+		udict = url.read().decode('utf-8').replace('\r','').replace('\n','')
+		data = re.findall('<div class="main-content">(.*?)<div class="col-xs-8 col-sm-11 col-md-11" style="font-weight: bold">',udict, re.S)[0]
+		gambar = re.findall('<img src="(.*?)" width="50" height="50"/>', data, re.S)
+		return gambar
+	except Exception as e:
+		try:
+			et, ev, tb = sys.exc_info()
+			lineno = tb.tb_lineno
+			fn = tb.tb_frame.f_code.co_filename
+			return "[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))
+		except:
+			return "Undescribeable error detected!!"
+
+def download_film(args):
+	result = list()
+	try:
+		url = urllib.request.urlopen(urllib.request.Request('https://yts.am/api/v2/list_movies.json?query_term='+urllib.parse.quote(args), headers={'User-Agent': "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)"}))
+		udict = url.read().decode('utf-8')
+		data = json.loads(udict)["data"]["movies"]
+		for film in data:
+			judul = film["title_long"]
+			rating = film["rating"]
+			durasi = film["runtime"]
+			genres = ", ".join(film["genres"])
+			bahasa = film["language"]
+			trailer = "https://youtube.com/watch?v="+film["yt_trailer_code"]
+			download = film["torrents"]
+			gambar = urllib.parse.quote(film["medium_cover_image"]).replace('%5C','').replace("%3A",":")
+			gambar = "https://ytss.unblocked.lol"+gambar[14:]
+			tombol = list()
+			for s in download:
+				tombol.append(
+					ButtonComponent(
+						action=URIAction(
+							label=s["quality"],
+							uri=s["url"]
+						),
+						color='#cf4d6a',
+						style='primary'
+					)
+				)
+			bintang = list()
+			n = 2
+			while n <= rating:
+				bintang.append(
+					IconComponent(
+						url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png'
+						)
+					)
+				n = n + 2
+			if len(bintang) < 5:
+				sisa_bintang = 5 - len(bintang)
+				n = 0
+				while n < sisa_bintang:
+					bintang.append(
+						IconComponent(
+							url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png'
+						)
+					)
+					n = n + 1
+			bintang.append(
+				TextComponent(
+					text=str(rating),
+					flex=0,
+					margin='md',
+					size='sm',
+					color='#999999'
+				)
+			)
+			result.append(
+				BubbleContainer(
+					hero=ImageComponent(
+						url=gambar,
+						size='full',
+						aspect_mode='cover',
+						aspect_ratio='3:4'
+					),
+					body=BoxComponent(
+						layout='vertical',
+						contents=[
+							TextComponent(
+								text=judul,
+								size='xl',
+								align='center',
+								weight='bold',
+								wrap=True
+							),
+							BoxComponent(
+								layout='baseline',
+								margin='md',
+							contents=bintang
+							),
+							BoxComponent(
+								layout='vertical',
+								margin='lg',
+								contents=[
+									BoxComponent(
+										layout='baseline',
+										contents=[
+											TextComponent(
+												text='Durasi',
+												flex=1,
+												size='sm',
+												color='#aaaaaa'
+											),
+											TextComponent(
+												text=str(durasi),
+												flex=3,
+												size='sm',
+												color='#666666',
+												wrap=True
+											)
+										]
+									),
+									BoxComponent(
+										layout='baseline',
+										contents=[
+											TextComponent(
+												text='Genres',
+												flex=1,
+												size='sm',
+												color='#aaaaaa'
+											),
+											TextComponent(
+												text=genres,
+												flex=3,
+												size='sm',
+												color='#666666',
+												wrap=True
+											)
+										]
+									),
+									BoxComponent(
+										layout='baseline',
+										contents=[
+											TextComponent(
+												text='Bahasa',
+												flex=1,
+												size='sm',
+												color='#aaaaaa'
+											),
+											TextComponent(
+												text=bahasa,
+												flex=3,
+												size='sm',
+												color='#666666',
+												wrap=True
+											)
+										]
+									)
+								]
+							),
+							ButtonComponent(
+								action=URIAction(
+									label='Lihat Trailer',
+									uri=trailer
+								),
+								color='#ae3737',
+								margin='lg',
+								style='primary'
+							)
+						]
+					),
+					footer=BoxComponent(
+						layout='horizontal',
+						spacing='sm',
+						contents=tombol[:3]
+					)
+				)
+			)
+	except Exception as e:
+		try:
+			et, ev, tb = sys.exc_info()
+			lineno = tb.tb_lineno
+			fn = tb.tb_frame.f_code.co_filename
+			result.append("[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
+		except:
+			result.append("Undescribeable error detected!!")
+
+	return result
+
+def gis(args):
+	search = args.split()
+	url = urllib.request.urlopen('https://www.googleapis.com/customsearch/v1?q='+'+'.join(search)+'&cx=012011408610071646553%3A9m9ecisn3oe&imgColorType=color&num=10&safe=off&searchType=image&key='+google_key)
+	udict = url.read().decode('utf-8')
+	data = json.loads(udict)
+	result = list()
+	for d in data["items"]:
+		gambar = d["link"]
+		if "http://" in gambar:
+			imgur = os.popen("curl --request POST \
+						--url https://api.imgur.com/3/image \
+						--header 'Authorization: Client-ID 802f673008792da' \
+						--form 'image="+gambar+"'").read()
+			ganti = json.loads(imgur)
+			gambar = ganti["data"]["link"]
+		jenis = d["mime"].replace("image/","")
+		tinggi = d["image"]["height"]
+		lebar = d["image"]["width"]
+		judul = d["title"]
+		link = d["image"]["contextLink"]
+		#balas("Here's your result for: "+args)
+		#img(gambar)
+		result.append(
+			CarouselColumn(
+				thumbnail_image_url=gambar,
+				title=judul[:39],
+				text='Size: '+str(lebar)+'x'+str(tinggi)+'\nType: '+jenis,
+				actions=[
+					URIAction(
+						label='Sumber Gambar',
+						uri=link
+					)
+				]
+			)
+		)
+	hasil = TemplateSendMessage(
+		alt_text="Hasil pencarian: "+args,
+		template=CarouselTemplate(
+			columns=result
+		)
+	)
+	return hasil
+
+def download(gambar, args):
+	try:
+		video = pafy.new(args)
+		judul = video.title
+		result = list()
+		for s in video.streams:
+			resolusi = s.resolution
+			ekstensi = s.extension
+			link = s.url
+			ukuran = ukuran_file(int(s.get_filesize()))
+			ukuran = str(ukuran[0])[:4]+" "+ukuran[1]
+			result.append(
+				BubbleContainer(
+					hero=ImageComponent(
+						url=gambar,
+						size='full',
+						aspect_ratio='1.51:1',
+						aspect_mode='cover'
+					),
+					body=BoxComponent(
+						layout='vertical',
+						contents=[
+							TextComponent(
+								text=judul,
+								size='md',
+								align='start',
+								weight='bold',
+								wrap=True
+							),
+							BoxComponent(
+								layout='baseline',
+								margin='md',
+								contents=[
+									TextComponent(
+										text='Resolusi',
+										flex=2,
+										size='sm',
+										weight='bold'
+									),
+									TextComponent(
+										text=resolusi,
+										flex=2,
+										size='sm'
+									)
+								]
+							),
+							BoxComponent(
+								layout='baseline',
+								contents=[
+									TextComponent(
+										text='Ukuran',
+										flex=2,
+										size='sm',
+										weight='bold'
+									),
+									TextComponent(
+										text=ukuran,
+										flex=2,
+										size='sm'
+									)
+								]
+							)
+						]
+					),
+					footer=BoxComponent(
+						layout='horizontal',
+						contents=[
+							ButtonComponent(
+								action=URIAction(
+									label=ekstensi,
+									uri=link
+								),
+								color='#008d86',
+								style='primary'
+							)
+						]
+					)
+				)
+			)
+		pesan = FlexSendMessage(
+			alt_text="Download "+judul,
+			contents=CarouselContainer(
+				contents=result
+			)	
+		)
+		return pesan
+	except Exception as e:
+		try:
+			et, ev, tb = sys.exc_info()
+			lineno = tb.tb_lineno
+			fn = tb.tb_frame.f_code.co_filename
+			return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
+		except:
+			return TextSendMessage(text="Undescribeable error detected!!")
+
+def mau_nonton():
+    pesan = FlexSendMessage(
+                alt_text='MENU FILM',
+                contents=
+                        CarouselContainer(
+                            contents=[
+                                BubbleContainer(
+                                    hero=ImageComponent(
+                                        url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_3_movie.png',
+                                        size='full',
+                                        aspect_ratio='20:13',
+                                        aspect_mode='cover'
+                                    ),
+                                    body=BoxComponent(
+                                        layout='vertical',
+                                        spacing='md',
+                                        contents=[
+                                            TextComponent(
+                                                text='Now Playing',
+                                                size='xl',
+                                                align='center',
+                                                gravity='center',
+                                                weight='bold',
+                                                color='#000000',
+                                                wrap=True
+                                            ),
+                                            TextComponent(
+                                                text='Cek Film di XXI',
+                                                align='center'
+                                            ),
+                                            BoxComponent(
+                                                layout='baseline',
+                                                spacing='sm',
+                                                margin='xl',
+                                                contents=[
+                                                    TextComponent(
+                                                        text='Fungsi',
+                                                        flex=1,
+                                                        size='xs',
+                                                        align='start',
+                                                        weight='bold'
+                                                    ),
+                                                    TextComponent(
+                                                        text='Cek film di bioskop kesayangan kamu',
+                                                        flex=4,
+                                                        size='xs',
+                                                        align='start',
+                                                        wrap=True
+                                                    )
+                                                ]
+                                            )
+                                        ]
+                                    ), 
+                                    footer=BoxComponent(
+                                        layout='horizontal',
+                                        margin='md',
+                                        contents=[
+                                            ButtonComponent(
+                                                style='primary',
+                                                color='#840000',
+                                                action=MessageAction(
+                                                    label='Pilih',
+                                                    text='Cek film bioskop'
+                                                )
+                                            )
+                                        ]
+                                    )
+                                ),
+                                BubbleContainer(
+                                    hero=ImageComponent(
+                                        url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_3_movie.png',
+                                        size='full',
+                                        aspect_ratio='20:13',
+                                        aspect_mode='cover'
+                                    ),
+                                    body=BoxComponent(
+                                        layout='vertical',
+                                        spacing='md',
+                                        contents=[
+                                            TextComponent(
+                                                text='IMDB',
+                                                size='xl',
+                                                align='center',
+                                                gravity='center',
+                                                weight='bold',
+                                                color='#000000',
+                                                wrap=True
+                                            ),
+                                            TextComponent(
+                                                text='Cari info film menarik?',
+                                                align='center'
+                                            ),
+                                            BoxComponent(
+                                                layout='baseline',
+                                                spacing='sm',
+                                                margin='xl',
+                                                contents=[
+                                                    TextComponent(
+                                                        text='Fungsi',
+                                                        flex=1,
+                                                        size='xs',
+                                                        align='start',
+                                                        weight='bold'
+                                                    ),
+                                                    TextComponent(
+                                                        text='Mencari dan menampilkan info film',
+                                                        flex=4,
+                                                        size='xs',
+                                                        align='start',
+                                                        wrap=True
+                                                    )
+                                                ]
+                                            )
+                                        ]
+                                    ), 
+                                    footer=BoxComponent(
+                                        layout='horizontal',
+                                        margin='md',
+                                        contents=[
+                                            ButtonComponent(
+                                                style='primary',
+                                                color='#840000',
+                                                action=MessageAction(
+                                                    label='Pilih',
+                                                    text='Cek film dong'
+                                                )
+                                            )
+                                        ]
+                                    )
+                                ),
+                                BubbleContainer(
+                                    hero=ImageComponent(
+                                        url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_3_movie.png',
+                                        size='full',
+                                        aspect_ratio='20:13',
+                                        aspect_mode='cover'
+                                    ),
+                                    body=BoxComponent(
+                                        layout='vertical',
+                                        spacing='md',
+                                        contents=[
+                                            TextComponent(
+                                                text='Download Film',
+                                                size='xl',
+                                                align='center',
+                                                gravity='center',
+                                                weight='bold',
+                                                color='#000000',
+                                                wrap=True
+                                            ),
+                                            TextComponent(
+                                                text='Gamau ke bioskop?\nDownload aja',
+                                                wrap=True,
+                                                align='center'
+                                            ),
+                                            BoxComponent(
+                                                layout='baseline',
+                                                spacing='sm',
+                                                margin='xl',
+                                                contents=[
+                                                    TextComponent(
+                                                        text='Fungsi',
+                                                        flex=1,
+                                                        size='xs',
+                                                        align='start',
+                                                        weight='bold'
+                                                    ),
+                                                    TextComponent(
+                                                        text='Download film',
+                                                        flex=4,
+                                                        size='xs',
+                                                        align='start',
+                                                        wrap=True
+                                                    )
+                                                ]
+                                            ),
+                                            BoxComponent(
+                                                layout='baseline',
+                                                spacing='sm',
+                                                margin='xl',
+                                                contents=[
+                                                    TextComponent(
+                                                        text='Note',
+                                                        flex=1,
+                                                        size='xs',
+                                                        align='start',
+                                                        weight='bold',
+                                                    ),
+                                                    TextComponent(
+                                                        text='Harus punya torrent downloader untuk mendownload film',
+                                                        flex=4,
+                                                        size='xs',
+                                                        align='start',
+                                                        wrap=True
+                                                    )
+                                                ]
+                                            )
+                                        ]
+                                    ), 
+                                    footer=BoxComponent(
+                                        layout='horizontal',
+                                        margin='md',
+                                        contents=[
+                                            ButtonComponent(
+                                                style='primary',
+                                                color='#840000',
+                                                action=MessageAction(
+                                                    label='Pilih',
+                                                    text='Mau download film'
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+    return pesan
+
+def youtube(args):
+	try:
+		if "<" in args or ">" in args:
+			args = args.replace("<","").replace(">","")
+		search = args.split()
+		url = urllib.request.urlopen('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&order=relevance&q='+'+'.join(search)+'&type=video&key='+google_key)
+		udict = url.read().decode('utf-8')
+		data = json.loads(udict)
+		result = list()
+		num = 1
+		for d in data["items"]:
+			link 		= 'https://youtube.com/watch?v='+d["id"]["videoId"]
+			judul 		= d["snippet"]["title"]
+			channel 	= d["snippet"]["channelTitle"]
+			thumbnails 	= d["snippet"]["thumbnails"]["high"]["url"]
+			data 		= json.loads(urllib.request.urlopen('https://www.googleapis.com/youtube/v3/videos?id='+d["id"]["videoId"]+'&key=AIzaSyAsn3d5sxrVwgYzIPgLS4mrFoqepJR5RzE&part=snippet,contentDetails,statistics,status').read().decode('utf-8'))["items"][0]
+			durasi 		= data["contentDetails"]["duration"]
+			durasi 		= durasi.replace("PT","").replace("M"," menit, dan ").replace("S"," detik.")
+			statistik 	= data["statistics"]
+			
+			try:
+				penonton = statistik["viewCount"]
+				if int(penonton) > 1000000000:
+					akhiran = penonton[-9:]
+					penonton = penonton.replace(akhiran," miliar")
+				elif int(penonton) > 1000000:
+					akhiran = penonton[-6:]
+					penonton = penonton.replace(akhiran," juta")
+				elif int(penonton) > 1000:
+					akhiran = penonton[-3:]
+					penonton = penonton.replace(akhiran," ribu")
+			except:
+				penonton = "Tidak ditampilkan"
+
+			try:
+				disukai = statistik["likeCount"]
+				if int(disukai) > 1000000000:
+					akhiran = disukai[-9:]
+					disukai = disukai.replace(akhiran," miliar")
+				elif int(disukai) > 1000000:
+					akhiran = disukai[-6:]
+					disukai = disukai.replace(akhiran," juta")
+				elif int(disukai) > 1000:
+					akhiran = disukai[-3:]
+					disukai = disukai.replace(akhiran," ribu")
+			except:
+				disukai = "Tidak ditampilkan"
+
+			try:
+				tidak_disukai = statistik["dislikeCount"]
+				if int(tidak_disukai) > 1000000000:
+					akhiran = tidak_disukai[-9:]
+					tidak_disukai = tidak_disukai.replace(akhiran," miliar")
+				elif int(tidak_disukai) > 1000000:
+					akhiran = tidak_disukai[-6:]
+					tidak_disukai = tidak_disukai.replace(akhiran," juta")
+				elif int(tidak_disukai) > 1000:
+					akhiran = tidak_disukai[-3:]
+					tidak_disukai = tidak_disukai.replace(akhiran," ribu")
+			except:
+				tidak_disukai = "Tidak ditampilkan"
+			
+			try:
+				komentar = statistik["commentCount"]
+				if int(komentar) > 1000000000:
+					akhiran = komentar[-9:]
+					komentar = komentar.replace(akhiran," miliar")
+				elif int(komentar) > 1000000:
+					akhiran = komentar[-6:]
+					komentar = komentar.replace(akhiran," juta")
+				elif int(komentar) > 1000:
+					akhiran = komentar[-3:]
+					komentar = komentar.replace(akhiran," ribu")
+			except:
+				komentar = "Tidak ditampilkan"
+			
+			result.append(
+				BubbleContainer(
+					styles=BubbleStyle(
+						header=BlockStyle(
+							background_color='#730000'
+						)
+					),
+					header=BoxComponent(
+						layout='vertical',
+						contents=[
+							TextComponent(
+								text=args.capitalize(),
+								size='md',
+								align='center',
+								color='#ffffff',
+								wrap=True
+							)
+						]
+					),
+					hero=ImageComponent(
+						url=thumbnails,
+						size='full',
+						aspect_ratio='20:13',
+						aspect_mode='cover'
+					),
+					body=BoxComponent(
+						layout='vertical',
+						contents=[
+							TextComponent(
+								text=judul,
+								align='start',
+								weight='bold',
+								wrap=True
+							),	
+							BoxComponent(
+								layout='baseline',
+								margin='md',
+								contents=[
+									TextComponent(
+										text='Channel',
+										flex=1,
+										size='xs',
+										weight='bold',
+									),
+									TextComponent(
+										text=channel,
+										flex=3,
+										size='xs',
+										align='start',
+										wrap=True
+									)
+								]
+							),
+							BoxComponent(
+								layout='baseline',
+								margin='md',
+								contents=[
+									TextComponent(
+										text='Durasi',
+										flex=1,
+										size='xs',
+										weight='bold',
+									),
+									TextComponent(
+										text=durasi,
+										flex=3,
+										size='xs',
+										align='start',
+										wrap=True
+									)
+								]
+							),
+							BoxComponent(
+								layout='vertical',
+								spacing='none',
+								margin='md',
+								contents=[
+									BoxComponent(
+										layout='baseline',
+										spacing='xs',
+										contents=[
+											IconComponent(
+												url='https://freeiconshop.com/wp-content/uploads/edd/like-flat.png',
+												margin='md'
+											),
+											TextComponent(
+												text=disukai,
+												wrap=True,
+												margin='md'
+											),
+											IconComponent(
+												url='https://freeiconshop.com/wp-content/uploads/edd/eye-flat.png',
+												margin='md'
+											),
+											TextComponent(
+												text=penonton,
+												wrap=True,
+												margin='md'
+											)
+										]
+									),
+									BoxComponent(
+										layout='baseline',
+										spacing='xs',
+										contents=[
+											IconComponent(
+												url='https://image.flaticon.com/icons/png/512/433/433374.png',
+												margin='md'
+											),
+											TextComponent(
+												text=tidak_disukai,
+												wrap=True,
+												margin='md'
+											),
+											IconComponent(
+												url='https://freeiconshop.com/wp-content/uploads/edd/chat-flat.png',
+												margin='md'
+											),
+											TextComponent(
+												text=komentar,
+												wrap=True,
+												margin='md'
+											)
+										]
+									)
+								]
+							)
+						]	
+					),
+					footer=BoxComponent(
+						layout='horizontal',
+						spacing='md',
+						contents=[
+							ButtonComponent(
+								action=URIAction(
+									label='Nonton',
+									uri=link
+								),
+								color='#0062a3',
+								style='primary'
+							),
+							ButtonComponent(
+								action=PostbackAction(
+									label='Download',
+									text='Download video yang ke-'+str(num)+' dong',
+									data='/ytdownload '+thumbnails+' '+link
+								),
+								style='secondary'
+							)
+						]
+					)
+				)
+			)
+			num = num + 1
+			#balas("I've found this for you:")
+			#img(thumbnails)
+			#message(judul+"\nLink: "+link+"\nCreated by: "+channel+"\nDeskripsi: "+deskripsi)
+		return result
+	except Exception as e:
+		try:
+			et, ev, tb = sys.exc_info()
+			lineno = tb.tb_lineno
+			fn = tb.tb_frame.f_code.co_filename
+			return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
+		except:
+			return TextSendMessage(text="Undescribeable error detected!!")
+
+def stimey(total_seconds):
+	MINUTE  = 60
+	HOUR	= MINUTE * 60
+	DAY	 = HOUR * 24
+
+	days	= int( total_seconds / DAY )
+	hours	= int( ( total_seconds % DAY ) / HOUR )
+	minutes	= int( ( total_seconds % HOUR ) / MINUTE )
+	seconds	= int( total_seconds % MINUTE )
+
+	string = list()
+	if days > 0:
+		string.append(str(days) + " hari")
+	if hours > 0:
+		string.append(str(hours) + " jam")
+	if minutes > 0:
+		string.append(str(minutes) + " menit")
+	if seconds > 0:
+		string.append(str(seconds) + " detik")
+	else:
+		if len(string) == 0:string.append("0 detik")
+	if len(string) > 1:
+		return ", ".join(string[:-1])+", dan "+string[-1]
+	else:
+		return ", ".join(string)
+
+def info_film(args):
+	try:
+		url = urllib.request.urlopen('https://mtix.21cineplex.com/gui.movie_details.php?sid=&movie_id='+args)
+		udict = url.read().decode('utf-8').replace('\r','').replace('\n','')
+		data = re.findall('<div class="main-content">(.*?)<div class="col-xs-8 col-sm-11 col-md-11" style="font-weight: bold">',udict, re.S)[0]
+		rating = re.findall('<img src="(.*?)" width="50" height="50"/>', data, re.S)[0]
+		rating = 'https://mtix.21cineplex.com/'+rating
+		data = re.findall('<div class="col-xs-8 col-sm-11 col-md-11" style="font-weight: bold">(.*?)<hr class="hr_separator" /><div class="footer" style="background-color: #ffffff">',udict, re.S)[0]
+		gambar = re.findall('<img src="(.*?)" class="img-responsive pull-left gap-left" style="width:99%; margin-right:10px; margin-bottom: 10px;"/>',data, re.S)[0]
+		judul = re.findall('<div>(.*?)</div>',data, re.S)[0]
+		genre = re.findall('<div>(.*?)</div>',data, re.S)[1]
+		sinopsis = re.findall('<div>(.*?)</div>',data, re.S)[2]
+		sinopsis = sinopsis.replace('<p id="description">','').replace('</p><span id="readMore" style="text-decoration: underline"></span>','').replace('<br />','\n')
+		trailer = re.findall(' BUY TICKET </button></p>                                        <p><button onclick="location.href = (.*?);" class="btn icon-btn btn-success" style="margin-top: 10px; width:90%;" > TRAILER </button></p>',data, re.S)[0]
+		trailer = trailer.replace("'","")
+		writer = re.findall('<strong>Writer</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
+		producer = re.findall('<br /><p style="margin-bottom: 5px"><strong>Producer</strong>:</p>                            <p> (.*?)</p>',data, re.S)[0]
+		director = re.findall('<p style="margin-bottom: 5px"><strong>Director</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
+		cast = re.findall('<p style="margin-bottom: 5px"><strong>Cast</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
+		distributor = re.findall('<p style="margin-bottom: 5px"><strong>Distributor</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
+		durasi = re.findall('<p><span class="glyphicon glyphicon-time" style="margin-bottom: 10px"></span> (.*?)</p>',data, re.S)[0]
+		tipe = re.findall('<p><a class="btn btn-default btn-outline disabled" style="color: #005350; font-weight: bold;"> (.*?)</a></p>',data, re.S)[0]
+
+		hasil = FlexSendMessage(
+			alt_text="Info "+judul,
+			contents=CarouselContainer(
+				contents=[
+					BubbleContainer(
+						hero=ImageComponent(
+							url=gambar,
+							size='full',
+							aspect_ratio='9:16',
+							aspect_mode='cover'
+						)
+					),
+					BubbleContainer(
+						header=BoxComponent(
+							layout='vertical',
+							contents=[
+								BoxComponent(
+									layout='baseline',
+									margin='none',
+									contents=[
+										TextComponent(
+											text=judul,
+											size='md',
+											align='start',
+											weight='bold',
+											color='#ffffff',
+											wrap=True
+										),
+										IconComponent(
+											url=rating,
+											size='xxl'
+										)
+									]
+								)
+							]
+						),
+						body=BoxComponent(
+							layout='vertical',
+							contents=[
+								BoxComponent(
+									layout='horizontal',
+									spacing='md',
+									contents=[
+										BoxComponent(
+											layout='vertical',
+											margin='sm',
+											contents=[
+												SeparatorComponent(
+													color='#61ad57'
+												),
+												BoxComponent(
+													layout='horizontal',
+													contents=[
+														SeparatorComponent(
+															color='#61ad57'
+														),
+														TextComponent(
+															text=tipe,
+															align='center',
+															weight='bold',
+															color='#61ad57'
+														),
+														SeparatorComponent(
+															color='#61ad57'
+														)
+													]
+												),
+												SeparatorComponent(
+													color='#61ad57'
+												)
+											]
+										),
+										BoxComponent(
+											layout='vertical',
+											contents=[
+												SeparatorComponent(
+													color='#61ad57'
+												),
+												BoxComponent(
+													layout='horizontal',
+													contents=[
+														SeparatorComponent(
+															color='#61ad57'
+														),
+														TextComponent(
+															text=durasi,
+															align='center',
+															weight='bold',
+															color='#61ad57'
+														),
+														SeparatorComponent(
+															color='#61ad57'
+														)
+													]
+												),
+												SeparatorComponent(
+													color='#61ad57'
+												)
+											]
+										)
+									]
+								),
+								BoxComponent(
+									layout='vertical',
+									spacing='none',
+									margin='lg',
+									contents=[
+										BoxComponent(
+											layout='baseline',
+											contents=[
+												TextComponent(
+													text='Genre',
+													flex=1,
+													size='sm'
+												),
+												TextComponent(
+													text=genre,
+													flex=2,
+													size='sm',
+													wrap=True
+												)
+											]
+										),
+										BoxComponent(
+											layout='baseline',
+											contents=[
+												TextComponent(
+													text='Writer',
+													flex=1,
+													size='sm'
+												),
+												TextComponent(
+													text=writer,
+													flex=2,
+													size='sm',
+													wrap=True
+												)
+											]
+										),
+										BoxComponent(
+											layout='baseline',
+											contents=[
+												TextComponent(
+													text='Director',
+													flex=1,
+													size='sm'
+												),
+												TextComponent(
+													text=director,
+													flex=2,
+													size='sm',
+													wrap=True
+												)
+											]
+										),
+										BoxComponent(
+											layout='baseline',
+											contents=[
+												TextComponent(
+													text='Distributor',
+													flex=1,
+													size='sm'
+												),
+												TextComponent(
+													text=distributor,
+													flex=2,
+													size='sm',
+													wrap=True
+												)
+											]
+										),
+										BoxComponent(
+											layout='baseline',
+											contents=[
+												TextComponent(
+													text='Producer',
+													flex=1,
+													size='sm'
+												),
+												TextComponent(
+													text=producer,
+													flex=2,
+													size='sm',
+													wrap=True
+												)
+											]
+										),
+										BoxComponent(
+											layout='baseline',
+											contents=[
+												TextComponent(
+													text='Cast',
+													flex=1,
+													size='sm'
+												),
+												TextComponent(
+													text=cast,
+													flex=2,
+													size='sm',
+													wrap=True
+												)
+											]
+										)
+									]
+								)
+							]
+						),
+						styles=BubbleStyle(
+							header=BlockStyle(
+								background_color='#61ad57'
+							)
+						)
+					),
+					BubbleContainer(
+						header=BoxComponent(
+							layout='vertical',
+							contents=[
+								TextComponent(
+									text='Sinopsis',
+									size='lg',
+									align='start',
+									weight='bold',
+									color='#ffffff'
+								)
+							]
+						),
+						body=BoxComponent(
+							layout='vertical',
+							contents=[
+								TextComponent(
+									text=sinopsis,
+									align='start',
+									size='xs',
+									wrap=True
+								)
+							]
+						),
+						footer=BoxComponent(
+							layout='horizontal',
+							contents=[
+								ButtonComponent(
+									action=URIAction(
+										label='Lihat Trailer',
+										uri=trailer
+									),
+									color='#61ad57',
+									style='primary'
+								)
+							]
+						),
+						styles=BubbleStyle(
+							header=BlockStyle(
+								background_color='#61ad57'
+							),
+							footer=BlockStyle(
+								background_color='#61ad57'
+							)
+						)
+					)
+				]
+			)
+		)
+		return hasil
+	except Exception as e:
+		try:
+			et, ev, tb = sys.exc_info()
+			lineno = tb.tb_lineno
+			fn = tb.tb_frame.f_code.co_filename
+			return "[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))
+		except:
+			return "Undescribeable error detected!!"
+
+def tayang(kode_bioskop):
+	try:
+		url = urllib.request.urlopen('https://mtix.21cineplex.com/gui.schedule.php?sid=&find_by=1&cinema_id='+kode_bioskop+'&movie_id=')
+		udict = url.read().decode('utf-8').replace('\r','').replace('\n','')
+		#data = re.findall('<li class="list-group-item" style="border-color: #FFFFFF; padding:0px">(.*?)</p>', udict, re.S)
+		
+		gambar = re.findall('<img src="(.*?)" border="0" width="125" class="img-responsive pull-left gap-left" style="margin-right:10px;"/>',udict, re.S)
+		gambar = gambar[1:]
+		
+		judul = re.findall('<a >(.*?)</a>',udict, re.S)
+		judul = judul[1:]
+
+		tipe = re.findall('<br>                     <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
+		tipe = tipe[1:]
+
+		rating = re.findall('</span>                     <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
+		rating = rating[1:]
+
+		durasi = re.findall('<span class="glyphicon glyphicon-time"></span> (.*?)</div>',udict, re.S)
+		durasi = durasi[2:]
+
+		tanggal = re.findall('<div class="row">                            <div class="col-xs-7" style="text-align:left"><p class="p_date"><p class="p_date">(.*?)</p></div>',udict, re.S)
+		bioskop = re.findall('<h4><span><strong>(.*?)</strong></span></h4>',udict, re.S)[0]
+
+		harga = re.findall('</p></div><div class="col-xs-5" style="text-align:right"><span class="p_price">(.*?)</span></div><br><p class="p_time pull-left" style="margin: 10px">',udict, re.S)
+
+		jamku = {}
+		main = list()
+		waktu = re.findall('<p class="p_time pull-left" style="margin: 10px">(.*?) </p><div class="clearfix"></div>',udict, re.S)
+		num = 1
+		for i in waktu:
+			data = re.findall('<a class="btn btn-outline-primary div_schedule" style="border-color: #337ab7;font-size:14px; margin-left:3px; margin-top:15px" href="#" onClick="(.*?)">(.*?)</a>',i, re.S)
+			data1 = re.findall('<a class="btn btn-default btn-outline disabled div_schedule" style="color: #FFFFFF; background-color: #737373;font-size:14px; margin-left:3px; margin-top:15px" >(.*?)</a>',i, re.S)
+			jamku.update({num:[]})
+			for jam in data1:
+				if len(jamku[num]) > 0:
+					jamku[num].append(SeparatorComponent())
+				jamku[num].append(
+					TextComponent(
+						text=jam,
+						align='center',
+						color='#A5A5A5'
+					)
+				)
+			for klik, jam in data:
+				if len(jamku[num]) > 0:
+					jamku[num].append(SeparatorComponent())
+				jamku[num].append(
+					TextComponent(
+						text=jam,
+						align='center'
+					)
+				)
+			num = num + 1
+		num = 1
+		gabungin = zip(gambar, judul, tipe, rating, durasi, tanggal, harga)
+		if gabungin:
+			res = list()
+			for y in gabungin:
+				img, title, tpe, rate, lama, tgl, rupiah = y
+				res.append(
+					BubbleContainer(
+						header=BoxComponent(
+							layout='vertical',
+							contents=[
+								TextComponent(
+									text=bioskop,
+									align='center',
+									weight='bold',
+									color='#ffffff',
+									wrap=True
+								)
+							]
+						),
+						hero=ImageComponent(
+							url=img,
+							size='full',
+							aspect_ratio='3:4',
+							aspect_mode='cover'
+						),
+						body=BoxComponent(
+							layout='vertical',
+							contents=[
+								TextComponent(
+									text=title,
+									size='xl',
+									align='center',
+									weight='bold',
+									wrap=True
+								),
+								SeparatorComponent(margin='md'),
+								BoxComponent(
+									layout='horizontal',
+									margin='md',
+									contents=[
+										TextComponent(
+											text=tpe,
+											flex=1,
+											align='center',
+											gravity='center',
+											weight='bold'
+										),
+										SeparatorComponent(margin='md'),
+										TextComponent(
+											text=rate,
+											flex=1,
+											align='center',
+											gravity='center',
+											weight='bold'
+										)
+									]
+								),
+								SeparatorComponent(margin='md'),
+								BoxComponent(
+									layout='horizontal',
+									margin='lg',
+									contents=[
+										BoxComponent(
+											layout='baseline',
+											spacing='md',
+											margin='xl',
+											contents=[
+												IconComponent(
+													url='https://www.freeiconspng.com/uploads/clock-png-5.png',
+													margin='sm',
+													aspect_ratio='1:1'
+												),
+												TextComponent(
+													text=lama,
+													flex=2,
+													margin='lg',
+													align='start'
+												)
+											]
+										),
+										BoxComponent(
+											layout='baseline',
+											spacing='md',
+											margin='md',
+											contents=[
+												IconComponent(
+													url='https://cdn4.iconfinder.com/data/icons/small-n-flat/24/calendar-512.png',
+													margin='sm',
+													aspect_ratio='1:1'
+												),
+												TextComponent(
+													text=tgl
+												)
+											]
+										)
+									]
+								),
+								SeparatorComponent(margin='md'),
+								TextComponent(
+									text=rupiah,
+									margin='md',
+									size='lg',
+									align='center'
+								),
+								SeparatorComponent(margin='md'),
+								BoxComponent(
+									layout='horizontal',
+									margin='md',
+									contents=jamku[num]
+								)
+							]
+						),
+						footer=BoxComponent(
+							layout='horizontal',
+							contents=[
+								ButtonComponent(
+									PostbackAction(
+										label='Lihat Selengkapnya',
+										data='/cek_film_bioskop '+img.replace('https://web3.21cineplex.com/movie-images/','').replace('.jpg',''),
+										text='Detail film '+title+'?'
+									),
+									color='#6d0000',
+									style='primary'
+								)
+							]
+						),
+						styles=BubbleStyle(
+							header=BlockStyle(
+								background_color='#000000'
+							),
+							footer=BlockStyle(
+								background_color='#000000'
+							)
+						)
+					)
+				)
+				num = num + 1
+			hasil = FlexSendMessage(
+				alt_text="Sekarang main di "+bioskop,
+				contents=CarouselContainer(
+					contents=res
+				)	
+			)
+			return hasil
+	except Exception as e:
+		try:
+			et, ev, tb = sys.exc_info()
+			lineno = tb.tb_lineno
+			fn = tb.tb_frame.f_code.co_filename
+			return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
+		except:
+			return TextSendMessage(text="Undescribeable error detected!!")

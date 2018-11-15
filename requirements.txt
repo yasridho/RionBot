@@ -1,0 +1,10 @@
+line-bot-sdk
+flask
+requests
+beautifulsoup4
+language_check
+pafy
+youtube-dl
+cinema21
+firebase_admin
+google
