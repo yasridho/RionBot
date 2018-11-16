@@ -198,9 +198,7 @@ def pengaturan(args):
 		)
 		kirim = FlexSendMessage(
 			alt_text='Pengaturan',
-			contents=CarouselContainer(
-				contents=pesan
-			)
+			contents=pesan
 		)
 		return kirim
 	except Exception as e:
