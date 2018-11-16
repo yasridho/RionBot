@@ -20,6 +20,7 @@ import cinemaxxi
 import yify_torrent
 import acc
 import imp
+import pyrebase
 #import firebase_admin
 
 #from google.auth import app_engine
@@ -51,7 +52,16 @@ sleep = False
 
 #cred = credentials.Certificate('Key/serviceAccountKey.json')
 #firebase_admin.initialize_app(cred, os.environ.get('DATABASE_URL'))
-firebase = firebase.FirebaseApplication(os.environ.get('FIREBASE_LINK_DATABASE'), None)
+#firebase = firebase.FirebaseApplication(os.environ.get('FIREBASE_LINK_DATABASE'), None)
+config = {
+    "apiKey": os.environ.get('FIREBASE_API_KEY'),
+    "authDomain": os.environ.get('FIREBASE_AUTH_DOMAIN'),
+    "databaseURL": os.environ.get('FIREBASE_LINK_DATABASE'),
+    "storageBucket": os.environ.get('FIREBASE_STORAGE_BUCKET')
+}
+
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
 
 #===========[ NOTE SAVER ]=======================
 notes = {}
@@ -117,13 +127,14 @@ def handle_follow(event):
             )
         ]
     )
+
     #data = db.reference('/')
-    data = {'user_id':event.source.user_id,
-            'nama':line_bot_api.get_profile(event.source.user_id).display_name,
+    data = {'nama':line_bot_api.get_profile(event.source.user_id).display_name,
             'foto':line_bot_api.get_profile(event.source.user_id).picture_url,
             'status':line_bot_api.get_profile(event.source.user_id).status_message,
             'waktu_add':time.time()}
-    firebase.post('/pengguna', data)
+    db.child("pengguna").child(event.source.user_id).set(data)
+    #firebase.post('/pengguna', data)
     #new_user = data.child('pengguna').set(
     #    {
     #        'user_id':event.source.user_id,
@@ -680,6 +691,9 @@ def handle_message(event):
             elif cmd == "reload":
                 imp.reload(cmds)
                 balas("Reloaded.")
+
+            elif cmd == "users":
+                
 
             elif cmd == "e":
                 if sender != owner:
