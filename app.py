@@ -149,6 +149,12 @@ def handle_postback(event):
     cmds.handle_postback(event)
     yify_torrent.handle_postback(event)
     cinemaxxi.handle_postback(event)
+    if isinstance(event.source, SourceGroup):
+        kirim = gid
+    elif isinstance(event.source, SourceRoom):
+        kirim = event.source.room_id
+    else:
+        kirim = sender
     sender = event.source.user_id
     try:
         if event.postback.data[0] == '/':
