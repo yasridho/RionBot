@@ -254,11 +254,11 @@ def bioskop_terdekat(latitude, longitude):
 	except Exception as e:
 		try:
 			et, ev, tb = sys.exc_info()
-            lineno = tb.tb_lineno
-            fn = tb.tb_frame.f_code.co_filename
-            return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
-        except:
-            return TextSendMessage(text="Undescribeable error detected!!")
+			lineno = tb.tb_lineno
+			fn = tb.tb_frame.f_code.co_filename
+			return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
+		except:
+			return TextSendMessage(text="Undescribeable error detected!!")
 
 def pengaturan(args):
 	try:
