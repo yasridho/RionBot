@@ -117,7 +117,7 @@ def handle_join(event):
         db.child(event.source.type).child("total").set(1)
 
 @handler.add(LeaveEvent)
-def handle_leave():
+def handle_leave(event):
     if isinstance(event.source, SourceGroup):
         ruang = event.source.sender_id
     elif isinstance(event.source, SourceRoom):
