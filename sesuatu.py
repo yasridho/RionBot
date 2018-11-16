@@ -1763,13 +1763,13 @@ def tayang(kode_bioskop):
 					)
 				)
 				num = num + 1
-		hasil = FlexSendMessage(
-			alt_text="Sekarang main di "+bioskop,
-			contents=CarouselContainer(
-				contents=res
-			)	
-		)
-		return hasil
+			hasil = FlexSendMessage(
+				alt_text="Sekarang main di "+bioskop,
+				contents=CarouselContainer(
+					contents=res
+				)	
+			)
+			return hasil
 	except Exception as e:
 		try:
 			et, ev, tb = sys.exc_info()
