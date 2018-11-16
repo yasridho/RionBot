@@ -6,8 +6,5 @@ language_check
 pafy
 youtube-dl
 cinema21
-firebase_admin
 google
-requests
-python-firebase
 pyrebase

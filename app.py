@@ -347,8 +347,10 @@ def handle_message(event):
             komando, waktu = perintah[sender]
 
             if komando == "panggilan":
+                if text == "Ubah nama panggilan":return
                 db.child("pengguna").child(sender).child("tambahan").child("panggilan").set(text)
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Mulai sekarang kakak akan kupanggil "+text+" ;D"))
+                del perintah[sender]
 
         if text.lower() == namaBot:
             pesan = FlexSendMessage(
