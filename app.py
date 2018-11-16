@@ -109,10 +109,7 @@ def handle_join(event):
     elif isinstance(event.source, SourceRoom):
         ruang = event.source.room_id
     
-    data = {"join_by": event.source.user_id,
-            "waktu_join": time.time()}
-    
-    db.child(event.source.type).child(ruang).set(data)
+    db.child(event.source.type).child(ruang).set(time.time())
 
 @handler.add(FollowEvent)
 def handle_follow(event):
