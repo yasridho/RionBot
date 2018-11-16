@@ -193,14 +193,6 @@ def handle_message(event):
         nama = profil.display_name #Ini buat nama
         gambar = profil.picture_url #Ini profile picture
         status = profil.status_message #Ini status di line
-        with open('pengguna.json','r') as f:
-            try:
-                pengguna = json.load(f)
-            except:
-                pengguna = {}
-
-        def data_pengguna():
-            return pengguna
 
         def stimey(total_seconds):
             try:
@@ -431,7 +423,7 @@ def handle_message(event):
                                                 spacing='sm',
                                                 contents=[
                                                     ImageComponent(
-                                                        url='https://i.postimg.cc/YqqXtBh6/settings-3-icon.png',
+                                                        url='https://i.postimg.cc/q75v5Q3X/69.png',
                                                         align='center',
                                                         action=PostbackAction(
                                                             label='Pengingat',
