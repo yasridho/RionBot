@@ -49,11 +49,11 @@ def pengaturan(args):
 				umur = tahun - int(utahun)
 				sekarang = datetime.datetime.utcfromtimestamp(time.time())
 				tanggal = int(sekarang.strftime('%d'))
-				bulan = int(sekarang.strftime('%m'))
+				dbulan = int(sekarang.strftime('%m'))
 				tahun = int(sekarang.strftime('%Y'))
 					
 				if tanggal < int(utanggal):
-					if bulan < int(ubulan):
+					if dbulan < int(ubulan):
 						umur = umur - 1
 				umur = str(umur)+" tahun"
 			except:
