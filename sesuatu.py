@@ -8,7 +8,7 @@ import pafy
 import time
 from linebot.models import *
 from acc import (google_key, db)
-from datetime.datetime import utcfromtimestamp
+from datetime import datetime
 
 def ukuran_file(args):
 	minimal = 2**10
@@ -78,7 +78,7 @@ def pengaturan(args):
 		else:
 			if len(string) == 0:string.append("0 detik")
 
-		tanggal = utcfromtimestamp(member)
+		tanggal = datetime.utcfromtimestamp(member)
 		member = tanggal.strftime('Member sejak %d '+bulan(int(tanggal.strftime('%m')))+' %Y')
 		durasi = "("+string[0]+" yang lalu)"
 
