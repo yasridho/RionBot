@@ -20,14 +20,8 @@ import cinemaxxi
 import yify_torrent
 import acc
 import imp
-import pyrebase
-#import firebase_admin
 
-#from google.auth import app_engine
-#from firebase_admin import db
-#from firebase_admin import credentials
-from firebase import firebase
-from acc import (namaBot, google_key, line_bot_api, handler)
+from acc import (namaBot, google_key, line_bot_api, handler, db, pengaturan)
 from sesuatu import mau_nonton
 from bs4 import BeautifulSoup
 from linebot.exceptions import LineBotApiError
@@ -49,19 +43,6 @@ from linebot.models import (
 app = Flask(__name__)
 
 sleep = False
-
-#cred = credentials.Certificate('Key/serviceAccountKey.json')
-#firebase_admin.initialize_app(cred, os.environ.get('DATABASE_URL'))
-#firebase = firebase.FirebaseApplication(os.environ.get('FIREBASE_LINK_DATABASE'), None)
-config = {
-    "apiKey": os.environ.get('FIREBASE_API_KEY'),
-    "authDomain": os.environ.get('FIREBASE_AUTH_DOMAIN'),
-    "databaseURL": os.environ.get('FIREBASE_LINK_DATABASE'),
-    "storageBucket": os.environ.get('FIREBASE_STORAGE_BUCKET')
-}
-
-firebase = pyrebase.initialize_app(config)
-db = firebase.database()
 
 #===========[ NOTE SAVER ]=======================
 notes = {}
@@ -168,6 +149,17 @@ def handle_postback(event):
     cmds.handle_postback(event)
     yify_torrent.handle_postback(event)
     cinemaxxi.handle_postback(event)
+    sender = event.source.user_id
+    try:
+        if event.postback.data[0] == '/':
+            data = event.postback.data[1:].split(" ",1)
+            if len(data) > 1:
+                cmd, args = data[0].lower(), data[1]
+            else:
+                cmd, args = data[0].lower(), ""
+
+            if cmd == "pengaturan":
+                line_bot_api.reply_message(event.reply_token, pengaturan(sender))
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
@@ -313,131 +305,7 @@ def handle_message(event):
                 original_content_url=args,
                 preview_image_url=args))
 
-        if sender in pertanyaan:
-            try:
-                tau_hobi = list()
-                info = list()
-                bertanya, waktu = pertanyaan[sender]
-                with open('pengguna.json','r') as f:
-                    data = json.load(f)
-                    for para in data['pengguna']:
-                        if sender == para['user_id']:
-                            info.append(para['nama'])
-                            info.append(para['panggilan'])
-                            info.append(para['tempat_lahir'])
-                            info.append(para['tempat_tinggal'])
-                            for hobby in para['hobi']:
-                                tau_hobi.append(hobby)
-                nama, panggilan, kelahiran, tinggal = info
-                if text == "Namaku?":
-                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Kamu "+nama, quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label="Nama", text="Namaku?")),QuickReplyButton(action=MessageAction(label="Panggilan", text="Nama panggilan?")),QuickReplyButton(action=MessageAction(label="Tempat Kelahiran", text="Dimana saya lahir?")),QuickReplyButton(action=MessageAction(label="Tempat Tinggal", text="Saya tinggal dimana?")),QuickReplyButton(action=MessageAction(label="Hobi", text="Hobiku?"))])))
-                elif text == "Nama panggilan?":
-                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Setauku sih "+panggilan, quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label="Nama", text="Namaku?")),QuickReplyButton(action=MessageAction(label="Panggilan", text="Nama panggilan?")),QuickReplyButton(action=MessageAction(label="Tempat Kelahiran", text="Dimana saya lahir?")),QuickReplyButton(action=MessageAction(label="Tempat Tinggal", text="Saya tinggal dimana?")),QuickReplyButton(action=MessageAction(label="Hobi", text="Hobiku?"))])))
-                elif text == "Dimana saya lahir?":
-                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Kamu lahir di "+kelahiran, quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label="Nama", text="Namaku?")),QuickReplyButton(action=MessageAction(label="Panggilan", text="Nama panggilan?")),QuickReplyButton(action=MessageAction(label="Tempat Kelahiran", text="Dimana saya lahir?")),QuickReplyButton(action=MessageAction(label="Tempat Tinggal", text="Saya tinggal dimana?")),QuickReplyButton(action=MessageAction(label="Hobi", text="Hobiku?"))])))
-                elif text == "Saya tinggal dimana?":
-                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Di "+tinggal, quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label="Nama", text="Namaku?")),QuickReplyButton(action=MessageAction(label="Panggilan", text="Nama panggilan?")),QuickReplyButton(action=MessageAction(label="Tempat Kelahiran", text="Dimana saya lahir?")),QuickReplyButton(action=MessageAction(label="Tempat Tinggal", text="Saya tinggal dimana?")),QuickReplyButton(action=MessageAction(label="Hobi", text="Hobiku?"))])))
-                elif text == "Hobiku?":
-                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Hobi kamu ada "+str(len(tau_hobi))+" yaitu "+", ".join(tau_hobi), quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label="Nama", text="Namaku?")),QuickReplyButton(action=MessageAction(label="Panggilan", text="Nama panggilan?")),QuickReplyButton(action=MessageAction(label="Tempat Kelahiran", text="Dimana saya lahir?")),QuickReplyButton(action=MessageAction(label="Tempat Tinggal", text="Saya tinggal dimana?")),QuickReplyButton(action=MessageAction(label="Hobi", text="Hobiku?"))])))
-                else: del pertanyaan[sender]
-            except Exception as e:
-                try:
-                    et, ev, tb = sys.exc_info()
-                    lineno = tb.tb_lineno
-                    fn = tb.tb_frame.f_code.co_filename
-                    message("[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
-                except:
-                    message("Undescribeable error detected!!")
-
-        if sender in kenalan and not text.lower() == namaBot:
-            try:
-                data = kenalan[sender]
-                tanya, waktu = data[0], data[1]
-                
-                if tanya == "nama":
-                    message("Kayaknya kalau manggil "+text+" kurang akrab :/")
-                    time.sleep(1)
-                    message("Jadi, kamu mau dipanggil apa?")
-                    kenalan.update({sender:["panggilan",time.time()]})
-                    kumpul.update({sender:[]})
-                    kumpul[sender].append(text)
-
-                elif tanya == "panggilan":
-                    message("Okee, mulai sekarang kamu kupanggil "+text+" yak.")
-                    time.sleep(1)
-                    teks = TextSendMessage(text="Ohiya, hobi kamu apa?", quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label="Dengar musik", text="Dengar musik")),QuickReplyButton(action=MessageAction(label="Programming", text="Programming")),QuickReplyButton(action=MessageAction(label="Nonton", text="Nonton")),QuickReplyButton(action=MessageAction(label="Membaca", text="Membaca")),QuickReplyButton(action=MessageAction(label="Olahraga", text="Olahraga")),QuickReplyButton(action=MessageAction(label="Kuliner", text="Kuliner")),QuickReplyButton(action=MessageAction(label="Traveling", text="Traveling")),QuickReplyButton(action=MessageAction(label="Hiking", text="Hiking")),QuickReplyButton(action=MessageAction(label="Menggambar", text="Menggambar")),QuickReplyButton(action=MessageAction(label="Melukis", text="Melukis")),QuickReplyButton(action=MessageAction(label="Menyanyi", text="Menyanyi"))]))
-                    line_bot_api.push_message(kirim, teks)
-                    kenalan.update({sender:["hobi",time.time()]})
-                    hobi.update({sender:[]})
-                    kumpul[sender].append(text)
-
-                elif tanya == "hobi":
-                    #rejection = ["tidak ada","gada","ga ada","gak ada","g ada","g punya","ga punya","gak punya","tidak punya"]
-                    #for i in rejection:
-                    #    if i in text.lower():
-                    #        balas("Kok g punya?")
-                    if ", " in text:
-                        jawab = text.split(", ")
-                    elif "," in text:
-                        jawab = text.split(",")
-                    else:
-                        jawab = text
-                    
-                    try:
-                        if "," in text:
-                            for i in jawab:
-                                hobi[sender].append(i)
-                            if len(jawab) > 5:
-                                balas("Lumayan banyak juga hobinya :O")
-                        else:
-                            hobi[sender].append(jawab)
-                    except:
-                        hobi[sender].append(jawab)
-                    time.sleep(1)
-                    message(kumpul[sender][1]+" tinggal dimana?")
-                    kenalan.update({sender:["tempat_tinggal", time.time()]})
-
-                elif tanya == "tempat_tinggal":
-                    balas("Kurasa diriku masih perlu mengenal "+kumpul[sender][1]+" lebih lanjut :D")
-                    time.sleep(1)
-                    message("Kalau boleh tau, "+kumpul[sender][1]+" lahir dimana?")
-                    kenalan.update({sender:["tempat_lahir", time.time()]})
-                    kumpul[sender].append(text)
-
-                elif tanya == "tempat_lahir":
-                    balas("Okee terima kasih")
-                    #kenalan.update({sender:["saudara",time.time()]})
-                    kumpul[sender].append(text)
-                    info = kumpul[sender]
-                    hobby = hobi[sender]
-                    del kenalan[sender]
-                    pengguna["pengguna"] = []
-                    pengguna["pengguna"].append({
-                        "user_id":sender,
-                        "nama":info[0],
-                        "panggilan":info[1],
-                        "hobi":hobby,
-                        "tempat_tinggal":info[2],
-                        "tempat_lahir":info[3]
-                        })
-                    del kumpul[sender]
-                    #message(paste(pengguna["pengguna"]))
-                    #PastebinAPI.paste(api_dev_key='002d3dfb7e78e5f051a0a2da91c5e1f6', api_paste_code=pengguna, api_user_key=paste_key(), paste_name='pengguna.json', paste_format=None, paste_private='unlisted', paste_expire_date=None)
-                    with open('pengguna.json','w') as f:
-                        json.dump(pengguna, f)
-        
-            except Exception as e:
-                try:
-                    et, ev, tb = sys.exc_info()
-                    lineno = tb.tb_lineno
-                    fn = tb.tb_frame.f_code.co_filename
-                    message("[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
-                except:
-                    message("Undescribeable error detected!!")
-
         if text.lower() == namaBot:
-            #balas_pesan = ["Iya ada apa"+nama+"?","Butuh bantuan?","Iya, kenapa?","Kenapa?","Iya "+nama, "Ada apa?",namaBot.capitalize()+" disini! ;D"]
-            #text_message = TextSendMessage(text=random.choice(balas_pesan), quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label="YouTube Search", text="YouTube")),QuickReplyButton(action=MessageAction(label="Google Image Search", text="Google Image")),QuickReplyButton(action=MessageAction(label="Ganteng?", text="Wahai Rion, apakah aku ganteng?")),QuickReplyButton(action=MessageAction(label="Cantik?", text="Wahai Rion, apakah aku cantik?"))]))
             pesan = FlexSendMessage(
                 alt_text="Menu",
                 contents=CarouselContainer(
@@ -536,9 +404,10 @@ def handle_message(event):
                                                     ImageComponent(
                                                         url='https://i.postimg.cc/DzD04rPf/70.png',
                                                         align='center',
-                                                        action=MessageAction(
+                                                        action=PostbackAction(
                                                             label='Main',
-                                                            text='Main yuk'
+                                                            text='Main kuy',
+                                                            data='/main'
                                                         )
                                                     ),
                                                     TextComponent(
@@ -553,15 +422,16 @@ def handle_message(event):
                                                 spacing='sm',
                                                 contents=[
                                                     ImageComponent(
-                                                        url='https://i.postimg.cc/rpzzpnWY/01.png',
+                                                        url='https://i.postimg.cc/YqqXtBh6/settings-3-icon.png',
                                                         align='center',
-                                                        action=MessageAction(
-                                                            label='Lokasi',
-                                                            text='Update Lokasi'
+                                                        action=PostbackAction(
+                                                            label='Pengingat',
+                                                            text='Atur pengingat',
+                                                            data='/pengingat'
                                                         )
                                                     ),
                                                     TextComponent(
-                                                        text='Update Lokasi',
+                                                        text='Pengingat',
                                                         wrap=True,
                                                         size='xs',
                                                         align='center'
@@ -573,15 +443,16 @@ def handle_message(event):
                                                 spacing='sm',
                                                 contents=[
                                                     ImageComponent(
-                                                        url='https://i.postimg.cc/SsMs6ng6/09.png',
+                                                        url='https://i.postimg.cc/YqqXtBh6/settings-3-icon.png',
                                                         align='center',
-                                                        action=MessageAction(
-                                                            label='Tanggal Lahir',
-                                                            text='Update tanggal lahir'
+                                                        action=PostbackAction(
+                                                            label='Pengaturan',
+                                                            text='Pengaturan',
+                                                            data='/pengaturan'
                                                         )
                                                     ),
                                                     TextComponent(
-                                                        text='Tanggal Lahir',
+                                                        text='Pengaturan',
                                                         size='xs',
                                                         align='center',
                                                         wrap=True
@@ -596,7 +467,7 @@ def handle_message(event):
                                 layout='baseline',
                                 contents=[
                                     TextComponent(
-                                        text='© Yasri Ridho Pahlevi',
+                                        text='© YRP',
                                         size='xxs',
                                         align='start'
                                     ),

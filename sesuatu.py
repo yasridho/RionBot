@@ -7,7 +7,8 @@ import urllib
 import pafy
 import time
 from linebot.models import *
-from acc import google_key
+from acc import (google_key, db)
+from datetime.datetime import utcfromtimestamp
 
 def ukuran_file(args):
 	minimal = 2**10
@@ -20,6 +21,196 @@ def ukuran_file(args):
 		return args, ukuran[n]+'byte'
 	else:
 		return args, ukuran[n]+'bytes'
+
+def bulan(args):
+	data = {1:'Januari',2:'Februari',3:'Maret',4:'April',5:'Mei',6:'Juni',7:'Juli',8:'Agustus',9:'September',10:'Oktober',11:'November',12:'Desember'}
+	return data[args]
+
+def pengaturan(args):
+	try:
+		
+		data = db.child("pengguna").get().val()[args]
+		try:
+			tambahan = data["tambahan"]
+			try:
+				lokasi = tambahan["lokasi"]["alamat"]
+			except:
+				lokasi = "Tidak diketahui"
+			try:
+				lahir = tambahan["tanggal_lahir"]
+			except:
+				lahir = "Tidak diketahui"
+		except:
+			lokasi = "Tidak diketahui"
+			lahir = "Tidak diketahui"
+
+		member 	= data["waktu_add"]
+		gambar 	= data["foto"]
+		nama 	= data["nama"]
+		total_seconds = time.time() - member
+
+		MINUTE  = 60
+		HOUR	= MINUTE * 60
+		DAY	 = HOUR * 24
+		MONTH = DAY * 30
+		YEAR = MONTH * 12
+
+		years 	= int( total_seconds / YEAR )
+		months 	= int( (total_seconds % YEAR) / MONTH )
+		days	= int( ( total_seconds % MONTH ) / DAY )
+		hours	= int( ( total_seconds % DAY ) / HOUR )
+		minutes	= int( ( total_seconds % HOUR ) / MINUTE )
+		seconds	= int( total_seconds % MINUTE )
+
+		string = list()
+		if years > 0:
+			string.append(str(years) + " tahun")
+		if months > 0:
+			string.append(str(months) + " bulan")
+		if days > 0:
+			string.append(str(days) + " hari")
+		if hours > 0:
+			string.append(str(hours) + " jam")
+		if minutes > 0:
+			string.append(str(minutes) + " menit")
+		if seconds > 0:
+			string.append(str(seconds) + " detik")
+		else:
+			if len(string) == 0:string.append("0 detik")
+
+		tanggal = utcfromtimestamp(member)
+		member = tanggal.strftime('Member sejak %d '+bulan(int(tanggal.strftime('%m')))+' %Y')
+		durasi = "("+string[0]+" yang lalu)"
+
+		pesan = BubbleContainer(
+			header=BoxComponent(
+				layout='vertical',
+				contents=[
+					TextComponent(
+						text='Pengaturan',
+						align='start',
+						weight='bold',
+						color='#a2a2a2'
+					)
+				]
+			),
+			hero=ImageComponent(
+				url=gambar,
+				size='full',
+				aspect_ratio='1:1',
+				aspect_mode='cover'
+			),
+			body=BoxComponent(
+				layout='vertical',
+				contents=[
+					TextComponent(
+						text=nama,
+						size='lg',
+						align='center',
+						weight='bold'
+					),
+					BoxComponent(
+						layout='horizontal',
+						margin='md',
+						contents=[
+							BoxComponent(
+								layout='baseline',
+								contents=[
+									IconComponent(
+										url='https://mbtskoudsalg.com/images/location-clipart-map-icon-3.jpg',
+										size='xxs'
+									),
+									TextComponent(
+										text=lokasi,
+										margin='sm',
+										size='xs',
+										color='#8f8f8f'
+									)
+								]
+							)
+						]
+					),
+					BoxComponent(
+						layout='baseline',
+						margin='sm',
+						contents=[
+							TextComponent(
+								text='Umur',
+								flex=1,
+								size='xxs',
+								color='#737373'
+							),
+							TextComponent(
+								text=lahir,
+								flex=4,
+								size='xxs',
+								align='start',
+								color='#737373'
+							)
+						]
+					),
+					TextComponent(
+						text=member,
+						flex=1,
+						size='xxs',
+						color='#737373',
+						wrap=True
+					),
+					TextComponent(
+						text=durasi,
+						size='xxs',
+						align='start',
+						color='#737373'
+					)
+				]
+			),
+			footer=BoxComponent(
+				layout='vertical',
+				contents=[
+					ButtonComponent(
+						action=PostbackAction(
+							label='Ubah panggilan',
+							text='Ubah nama panggilan',
+							data='/nick '+args
+						)
+					),
+					ButtonComponent(
+						action=LocationAction(
+							label='Ubah Lokasi'
+						)
+					),
+					ButtonComponent(
+						action=DatetimePickerAction(
+							label='Ubah tanggal lahir',
+							data='/tanggal_lahir '+args,
+							mode='date'
+						)
+					),
+					ButtonComponent(
+						action=PostbackAction(
+							label='Sosial Media',
+							text='Tambah sosial media',
+							data='/sosmed '+args
+						)
+					)
+				]
+			)
+		)
+		kirim = FlexSendMessage(
+			alt_text='Pengaturan',
+			contents=CarouselContainer(
+				contents=pesan
+			)
+		)
+		return kirim
+	except Exception as e:
+		try:
+			et, ev, tb = sys.exc_info()
+			lineno = tb.tb_lineno
+			fn = tb.tb_frame.f_code.co_filename
+			return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
+		except:
+			return TextSendMessage(text="Undescribeable error detected!!")
 
 def info_film(args):
 	try:
