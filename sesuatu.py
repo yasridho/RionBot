@@ -40,16 +40,23 @@ def pengaturan(args):
 		try:
 			tambahan = data["tambahan"]
 			try:
-				lokasi = tambahan["lokasi"]["alamat"]
+				lokasi = tambahan["lokasi"]["nama_lokasi"]
 			except:
 				lokasi = "Tidak diketahui"
 			try:
 				lahir = tambahan["tanggal_lahir"]
+				utahun, ubulan, utanggal = lahir.split('-')
+				umur = tahun - int(utahun)
+					
+				if tanggal < int(utanggal):
+					if bulan < int(ubulan):
+						umur = umur - 1
+				umur = str(umur)+" tahun"
 			except:
-				lahir = "Tidak diketahui"
+				umur = "Tidak diketahui"
 		except:
 			lokasi = "Tidak diketahui"
-			lahir = "Tidak diketahui"
+			umur = "Tidak diketahui"
 
 		member 	= data["waktu_add"]
 		gambar 	= data["foto"]
@@ -152,7 +159,7 @@ def pengaturan(args):
 								color='#737373'
 							),
 							TextComponent(
-								text=lahir,
+								text=umur,
 								flex=4,
 								size='xxs',
 								align='start',
@@ -186,9 +193,10 @@ def pengaturan(args):
 						)
 					),
 					ButtonComponent(
-						action=MessageAction(
-							label='Ubah Lokasi',
-							text='Lokasi'
+						action=PostbackAction(
+							label='Ubah lokasi',
+							text='Ubah lokasi',
+							data='/lokasi'
 						)
 					),
 					ButtonComponent(
@@ -548,223 +556,223 @@ def download(gambar, args):
 			return TextSendMessage(text="Undescribeable error detected!!")
 
 def mau_nonton():
-    pesan = FlexSendMessage(
-                alt_text='MENU FILM',
-                contents=
-                        CarouselContainer(
-                            contents=[
-                                BubbleContainer(
-                                    hero=ImageComponent(
-                                        url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_3_movie.png',
-                                        size='full',
-                                        aspect_ratio='20:13',
-                                        aspect_mode='cover'
-                                    ),
-                                    body=BoxComponent(
-                                        layout='vertical',
-                                        spacing='md',
-                                        contents=[
-                                            TextComponent(
-                                                text='Now Playing',
-                                                size='xl',
-                                                align='center',
-                                                gravity='center',
-                                                weight='bold',
-                                                color='#000000',
-                                                wrap=True
-                                            ),
-                                            TextComponent(
-                                                text='Cek Film di XXI',
-                                                align='center'
-                                            ),
-                                            BoxComponent(
-                                                layout='baseline',
-                                                spacing='sm',
-                                                margin='xl',
-                                                contents=[
-                                                    TextComponent(
-                                                        text='Fungsi',
-                                                        flex=1,
-                                                        size='xs',
-                                                        align='start',
-                                                        weight='bold'
-                                                    ),
-                                                    TextComponent(
-                                                        text='Cek film di bioskop kesayangan kamu',
-                                                        flex=4,
-                                                        size='xs',
-                                                        align='start',
-                                                        wrap=True
-                                                    )
-                                                ]
-                                            )
-                                        ]
-                                    ), 
-                                    footer=BoxComponent(
-                                        layout='horizontal',
-                                        margin='md',
-                                        contents=[
-                                            ButtonComponent(
-                                                style='primary',
-                                                color='#840000',
-                                                action=MessageAction(
-                                                    label='Pilih',
-                                                    text='Cek film bioskop'
-                                                )
-                                            )
-                                        ]
-                                    )
-                                ),
-                                BubbleContainer(
-                                    hero=ImageComponent(
-                                        url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_3_movie.png',
-                                        size='full',
-                                        aspect_ratio='20:13',
-                                        aspect_mode='cover'
-                                    ),
-                                    body=BoxComponent(
-                                        layout='vertical',
-                                        spacing='md',
-                                        contents=[
-                                            TextComponent(
-                                                text='IMDB',
-                                                size='xl',
-                                                align='center',
-                                                gravity='center',
-                                                weight='bold',
-                                                color='#000000',
-                                                wrap=True
-                                            ),
-                                            TextComponent(
-                                                text='Cari info film menarik?',
-                                                align='center'
-                                            ),
-                                            BoxComponent(
-                                                layout='baseline',
-                                                spacing='sm',
-                                                margin='xl',
-                                                contents=[
-                                                    TextComponent(
-                                                        text='Fungsi',
-                                                        flex=1,
-                                                        size='xs',
-                                                        align='start',
-                                                        weight='bold'
-                                                    ),
-                                                    TextComponent(
-                                                        text='Mencari dan menampilkan info film',
-                                                        flex=4,
-                                                        size='xs',
-                                                        align='start',
-                                                        wrap=True
-                                                    )
-                                                ]
-                                            )
-                                        ]
-                                    ), 
-                                    footer=BoxComponent(
-                                        layout='horizontal',
-                                        margin='md',
-                                        contents=[
-                                            ButtonComponent(
-                                                style='primary',
-                                                color='#840000',
-                                                action=MessageAction(
-                                                    label='Pilih',
-                                                    text='Cek film dong'
-                                                )
-                                            )
-                                        ]
-                                    )
-                                ),
-                                BubbleContainer(
-                                    hero=ImageComponent(
-                                        url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_3_movie.png',
-                                        size='full',
-                                        aspect_ratio='20:13',
-                                        aspect_mode='cover'
-                                    ),
-                                    body=BoxComponent(
-                                        layout='vertical',
-                                        spacing='md',
-                                        contents=[
-                                            TextComponent(
-                                                text='Download Film',
-                                                size='xl',
-                                                align='center',
-                                                gravity='center',
-                                                weight='bold',
-                                                color='#000000',
-                                                wrap=True
-                                            ),
-                                            TextComponent(
-                                                text='Gamau ke bioskop?\nDownload aja',
-                                                wrap=True,
-                                                align='center'
-                                            ),
-                                            BoxComponent(
-                                                layout='baseline',
-                                                spacing='sm',
-                                                margin='xl',
-                                                contents=[
-                                                    TextComponent(
-                                                        text='Fungsi',
-                                                        flex=1,
-                                                        size='xs',
-                                                        align='start',
-                                                        weight='bold'
-                                                    ),
-                                                    TextComponent(
-                                                        text='Download film',
-                                                        flex=4,
-                                                        size='xs',
-                                                        align='start',
-                                                        wrap=True
-                                                    )
-                                                ]
-                                            ),
-                                            BoxComponent(
-                                                layout='baseline',
-                                                spacing='sm',
-                                                margin='xl',
-                                                contents=[
-                                                    TextComponent(
-                                                        text='Note',
-                                                        flex=1,
-                                                        size='xs',
-                                                        align='start',
-                                                        weight='bold',
-                                                    ),
-                                                    TextComponent(
-                                                        text='Harus punya torrent downloader untuk mendownload film',
-                                                        flex=4,
-                                                        size='xs',
-                                                        align='start',
-                                                        wrap=True
-                                                    )
-                                                ]
-                                            )
-                                        ]
-                                    ), 
-                                    footer=BoxComponent(
-                                        layout='horizontal',
-                                        margin='md',
-                                        contents=[
-                                            ButtonComponent(
-                                                style='primary',
-                                                color='#840000',
-                                                action=MessageAction(
-                                                    label='Pilih',
-                                                    text='Mau download film'
-                                                )
-                                            )
-                                        ]
-                                    )
-                                )
-                            ]
-                        )
-                    )
-    return pesan
+	pesan = FlexSendMessage(
+				alt_text='MENU FILM',
+				contents=
+						CarouselContainer(
+							contents=[
+								BubbleContainer(
+									hero=ImageComponent(
+										url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_3_movie.png',
+										size='full',
+										aspect_ratio='20:13',
+										aspect_mode='cover'
+									),
+									body=BoxComponent(
+										layout='vertical',
+										spacing='md',
+										contents=[
+											TextComponent(
+												text='Now Playing',
+												size='xl',
+												align='center',
+												gravity='center',
+												weight='bold',
+												color='#000000',
+												wrap=True
+											),
+											TextComponent(
+												text='Cek Film di XXI',
+												align='center'
+											),
+											BoxComponent(
+												layout='baseline',
+												spacing='sm',
+												margin='xl',
+												contents=[
+													TextComponent(
+														text='Fungsi',
+														flex=1,
+														size='xs',
+														align='start',
+														weight='bold'
+													),
+													TextComponent(
+														text='Cek film di bioskop kesayangan kamu',
+														flex=4,
+														size='xs',
+														align='start',
+														wrap=True
+													)
+												]
+											)
+										]
+									), 
+									footer=BoxComponent(
+										layout='horizontal',
+										margin='md',
+										contents=[
+											ButtonComponent(
+												style='primary',
+												color='#840000',
+												action=MessageAction(
+													label='Pilih',
+													text='Cek film bioskop'
+												)
+											)
+										]
+									)
+								),
+								BubbleContainer(
+									hero=ImageComponent(
+										url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_3_movie.png',
+										size='full',
+										aspect_ratio='20:13',
+										aspect_mode='cover'
+									),
+									body=BoxComponent(
+										layout='vertical',
+										spacing='md',
+										contents=[
+											TextComponent(
+												text='IMDB',
+												size='xl',
+												align='center',
+												gravity='center',
+												weight='bold',
+												color='#000000',
+												wrap=True
+											),
+											TextComponent(
+												text='Cari info film menarik?',
+												align='center'
+											),
+											BoxComponent(
+												layout='baseline',
+												spacing='sm',
+												margin='xl',
+												contents=[
+													TextComponent(
+														text='Fungsi',
+														flex=1,
+														size='xs',
+														align='start',
+														weight='bold'
+													),
+													TextComponent(
+														text='Mencari dan menampilkan info film',
+														flex=4,
+														size='xs',
+														align='start',
+														wrap=True
+													)
+												]
+											)
+										]
+									), 
+									footer=BoxComponent(
+										layout='horizontal',
+										margin='md',
+										contents=[
+											ButtonComponent(
+												style='primary',
+												color='#840000',
+												action=MessageAction(
+													label='Pilih',
+													text='Cek film dong'
+												)
+											)
+										]
+									)
+								),
+								BubbleContainer(
+									hero=ImageComponent(
+										url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_3_movie.png',
+										size='full',
+										aspect_ratio='20:13',
+										aspect_mode='cover'
+									),
+									body=BoxComponent(
+										layout='vertical',
+										spacing='md',
+										contents=[
+											TextComponent(
+												text='Download Film',
+												size='xl',
+												align='center',
+												gravity='center',
+												weight='bold',
+												color='#000000',
+												wrap=True
+											),
+											TextComponent(
+												text='Gamau ke bioskop?\nDownload aja',
+												wrap=True,
+												align='center'
+											),
+											BoxComponent(
+												layout='baseline',
+												spacing='sm',
+												margin='xl',
+												contents=[
+													TextComponent(
+														text='Fungsi',
+														flex=1,
+														size='xs',
+														align='start',
+														weight='bold'
+													),
+													TextComponent(
+														text='Download film',
+														flex=4,
+														size='xs',
+														align='start',
+														wrap=True
+													)
+												]
+											),
+											BoxComponent(
+												layout='baseline',
+												spacing='sm',
+												margin='xl',
+												contents=[
+													TextComponent(
+														text='Note',
+														flex=1,
+														size='xs',
+														align='start',
+														weight='bold',
+													),
+													TextComponent(
+														text='Harus punya torrent downloader untuk mendownload film',
+														flex=4,
+														size='xs',
+														align='start',
+														wrap=True
+													)
+												]
+											)
+										]
+									), 
+									footer=BoxComponent(
+										layout='horizontal',
+										margin='md',
+										contents=[
+											ButtonComponent(
+												style='primary',
+												color='#840000',
+												action=MessageAction(
+													label='Pilih',
+													text='Mau download film'
+												)
+											)
+										]
+									)
+								)
+							]
+						)
+					)
+	return pesan
 
 def youtube(args):
 	try:
@@ -1048,13 +1056,13 @@ def info_film(args):
 		genre = re.findall('<div>(.*?)</div>',data, re.S)[1]
 		sinopsis = re.findall('<div>(.*?)</div>',data, re.S)[2]
 		sinopsis = sinopsis.replace('<p id="description">','').replace('</p><span id="readMore" style="text-decoration: underline"></span>','').replace('<br />','\n')
-		trailer = re.findall(' BUY TICKET </button></p>                                        <p><button onclick="location.href = (.*?);" class="btn icon-btn btn-success" style="margin-top: 10px; width:90%;" > TRAILER </button></p>',data, re.S)[0]
+		trailer = re.findall(' BUY TICKET </button></p>										<p><button onclick="location.href = (.*?);" class="btn icon-btn btn-success" style="margin-top: 10px; width:90%;" > TRAILER </button></p>',data, re.S)[0]
 		trailer = trailer.replace("'","")
-		writer = re.findall('<strong>Writer</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
-		producer = re.findall('<br /><p style="margin-bottom: 5px"><strong>Producer</strong>:</p>                            <p> (.*?)</p>',data, re.S)[0]
-		director = re.findall('<p style="margin-bottom: 5px"><strong>Director</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
-		cast = re.findall('<p style="margin-bottom: 5px"><strong>Cast</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
-		distributor = re.findall('<p style="margin-bottom: 5px"><strong>Distributor</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
+		writer = re.findall('<strong>Writer</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
+		producer = re.findall('<br /><p style="margin-bottom: 5px"><strong>Producer</strong>:</p>							<p> (.*?)</p>',data, re.S)[0]
+		director = re.findall('<p style="margin-bottom: 5px"><strong>Director</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
+		cast = re.findall('<p style="margin-bottom: 5px"><strong>Cast</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
+		distributor = re.findall('<p style="margin-bottom: 5px"><strong>Distributor</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
 		durasi = re.findall('<p><span class="glyphicon glyphicon-time" style="margin-bottom: 10px"></span> (.*?)</p>',data, re.S)[0]
 		tipe = re.findall('<p><a class="btn btn-default btn-outline disabled" style="color: #005350; font-weight: bold;"> (.*?)</a></p>',data, re.S)[0]
 
@@ -1342,16 +1350,16 @@ def tayang(kode_bioskop):
 		judul = re.findall('<a >(.*?)</a>',udict, re.S)
 		judul = judul[1:]
 
-		tipe = re.findall('<br>                     <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
+		tipe = re.findall('<br>					 <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
 		tipe = tipe[1:]
 
-		rating = re.findall('</span>                     <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
+		rating = re.findall('</span>					 <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
 		rating = rating[1:]
 
 		durasi = re.findall('<span class="glyphicon glyphicon-time"></span> (.*?)</div>',udict, re.S)
 		durasi = durasi[2:]
 
-		tanggal = re.findall('<div class="row">                            <div class="col-xs-7" style="text-align:left"><p class="p_date"><p class="p_date">(.*?)</p></div>',udict, re.S)
+		tanggal = re.findall('<div class="row">							<div class="col-xs-7" style="text-align:left"><p class="p_date"><p class="p_date">(.*?)</p></div>',udict, re.S)
 		bioskop = re.findall('<h4><span><strong>(.*?)</strong></span></h4>',udict, re.S)[0]
 
 		harga = re.findall('</p></div><div class="col-xs-5" style="text-align:right"><span class="p_price">(.*?)</span></div><br><p class="p_time pull-left" style="margin: 10px">',udict, re.S)

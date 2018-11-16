@@ -165,6 +165,10 @@ def handle_postback(event):
             if cmd == "pengaturan":
                 line_bot_api.reply_message(event.reply_token, pengaturan(sender))
 
+            elif cmd == "lokasi":
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Share lokasi dulu kak '+panggil(sender)+' ;)', quick_reply=QuickReply(items=[QuickReplyButton(action=LocationSendMessage(label='Share lokasi'))])))
+                perintah.update({sender:['lokasi',time.time()]})
+
             elif cmd == "nick":
 
                 if args == sender:
@@ -210,6 +214,16 @@ def handle_postback(event):
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
     cinemaxxi.handle_location_message(event)
+    if event.source.user_id in perintah:
+        komando, waktu = perintah[event.source.user_id]
+        if komando == "lokasi":
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(event.source.user_id)+' sekarang berada di '+event.message.address+' ;)'))
+            data = {'nama_lokasi':event.message.address,
+                    'latitude':event.message.latitude,
+                    'longitude':event.message.longitude}
+            db.child("pengguna").child(event.source.user_id).child("tambahan").child("lokasi").set(data)
+            del perintah[event.source.user_id]
+
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
