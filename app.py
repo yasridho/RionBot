@@ -692,9 +692,6 @@ def handle_message(event):
                 imp.reload(cmds)
                 balas("Reloaded.")
 
-            elif cmd == "users":
-                
-
             elif cmd == "e":
                 if sender != owner:
                     message('STFU!')
