@@ -22,7 +22,7 @@ import acc
 import imp
 
 from acc import (namaBot, google_key, line_bot_api, handler, db)
-from sesuatu import (mau_nonton, pengaturan)
+from sesuatu import (mau_nonton, pengaturan, panggil)
 from bs4 import BeautifulSoup
 from linebot.exceptions import LineBotApiError
 from linebot.models import (
@@ -47,10 +47,7 @@ sleep = False
 #===========[ NOTE SAVER ]=======================
 notes = {}
 
-kenalan = dict()
-hobi = dict()
-kumpul = dict()
-pertanyaan = dict()
+perintah = {}
 
 # Post Request
 @app.route("/callback", methods=['POST'])
@@ -168,6 +165,39 @@ def handle_postback(event):
             if cmd == "pengaturan":
                 line_bot_api.reply_message(event.reply_token, pengaturan(sender))
 
+            elif cmd == "nick":
+
+                if args == sender:
+                    gunakan = args
+                else:
+                    gunakan = sender
+
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Kak "+panggil(gunakan)+" mau dipanggil apa?"))
+                perintah.update({sender:['panggilan', time.time()]})
+
+            elif cmd == "tanggal_lahir":
+                
+                if args == sender:
+                    gunakan = args
+                else:
+                    gunakan = sender
+                    
+                db.child("pengguna").child(gunakan).child("tambahan").child("tanggal_lahir").set(event.postback.params['date'])
+                sekarang = datetime.datetime.utcfromtimestamp(time.time())
+                tanggal = int(sekarang.strftime('%d'))
+                bulan = int(sekarang.strftime('%m'))
+                tahun = int(sekarang.strftime('%Y'))
+                utahun, ubulan, utanggal = event.postback.params['date'].split('-')
+                umur = tahun - int(utahun)
+                    
+                if tanggal < int(utanggal):
+                    if bulan < int(ubulan):
+                        umur = umur - 1
+
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Kak "+panggil(gunakan)+" sekarang berumur "+str(umur)+" tahun ;D"))
+
+
+
     except Exception as e:
         try:
             et, ev, tb = sys.exc_info()
@@ -197,7 +227,7 @@ def handle_message(event):
         sender = event.source.user_id #get user_id
         gid = event.source.sender_id #get group_id
         profil = line_bot_api.get_profile(sender)
-        nama = profil.display_name #Ini buat nama
+        nama = panggil(sender) #Ini buat nama
         gambar = profil.picture_url #Ini profile picture
         status = profil.status_message #Ini status di line
 
@@ -312,6 +342,13 @@ def handle_message(event):
             line_bot_api.push_message(kirim, ImageSendMessage(
                 original_content_url=args,
                 preview_image_url=args))
+
+        if sender in perintah:
+            komando, waktu = perintah[sender]
+
+            if komando == "panggilan":
+                db.child("pengguna").child(sender).child("tambahan").child("panggilan").set(text)
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Mulai sekarang kakak akan kupanggil "+text+" ;D"))
 
         if text.lower() == namaBot:
             pesan = FlexSendMessage(
@@ -480,7 +517,7 @@ def handle_message(event):
                                         align='start'
                                     ),
                                     TextComponent(
-                                        text=os.environ.get('HEROKU_RELEASE_VERSION'),
+                                        text=namaBot.capitalize()+' '+os.environ.get('HEROKU_RELEASE_VERSION'),
                                         size='xxs',
                                         align='end'
                                     )
@@ -491,7 +528,6 @@ def handle_message(event):
                 )
             )
             line_bot_api.reply_message(event.reply_token, [TextComponent(text="Kamu ingin apa hari ini?"), pesan])
-            #line_bot_api.push_message(kirim, pesan)
 
         elif text == "Nonton film kuy":
             balas("Ini aku punya beberapa fungsi kalau kak "+nama+" mau nonton film ;)")
@@ -504,37 +540,6 @@ def handle_message(event):
                     balas(random.choice(["Ya","Tidak","Terkadang","Mungkin","Coba tanya lagi","Entah","Hmm..."]))
                 else:
                     balas("Situ bertanya?")
-            
-            elif "kenalan" in text.lower():
-                info = list()
-                tau_hobi = list()
-                with open('pengguna.json','r') as f:
-                    try:
-                        data = json.load(f)
-                    except:
-                        data = {}
-                    try:
-                        for para in data['pengguna']:
-                            if sender == para['user_id']:
-                                info.append(para['nama'])
-                                info.append(para['panggilan'])
-                                info.append(para['tempat_lahir'])
-                                info.append(para['tempat_tinggal'])
-                                for hobby in para['hobi']:
-                                    tau_hobi.append(hobby)
-                    except:pass
-                    if len(info) > 0:
-                        line_bot_api.push_message(kirim, TextSendMessage(text="Kita kan udah kenalan",quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label="Nama", text="Namaku?")),QuickReplyButton(action=MessageAction(label="Panggilan", text="Nama panggilan?")),QuickReplyButton(action=MessageAction(label="Tempat Kelahiran", text="Dimana saya lahir?")),QuickReplyButton(action=MessageAction(label="Tempat Tinggal", text="Saya tinggal dimana?")),QuickReplyButton(action=MessageAction(label="Hobi", text="Hobiku?"))])))
-                        pertanyaan.update({sender:[text, time.time()]})
-                        #time.sleep(1)
-                        #message("Nama lengkap: "+info[0]+"\nNama Panggilan: "+info[1]+"\nTempat Lahir: "+info[2]+"\nTempat Tinggal: "+info[3]+"\nHobi: "+", ".join(tau_hobi))
-                    else:
-                        balas("Boleh")
-                        time.sleep(1)
-                        message("Namaku Rion, kamu?")
-                        time.sleep(1)
-                        message("Nama lengkap yak ;D")
-                        kenalan.update({sender:["nama",time.time()]})
 
     #=====[ LEAVE GROUP OR ROOM ]==========
         elif 'get out' == text.lower() or 'bye' == text.lower():

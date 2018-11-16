@@ -26,6 +26,13 @@ def bulan(args):
 	data = {1:'Januari',2:'Februari',3:'Maret',4:'April',5:'Mei',6:'Juni',7:'Juli',8:'Agustus',9:'September',10:'Oktober',11:'November',12:'Desember'}
 	return data[args]
 
+def panggil(args):
+	data = db.child("pengguna").get().val()[args]
+	try:
+		panggilan = data["tambahan"]["panggilan"]
+		return panggilan
+	except: return data["nama"]
+
 def pengaturan(args):
 	try:
 		
@@ -80,6 +87,10 @@ def pengaturan(args):
 
 		tanggal = datetime.utcfromtimestamp(member)
 		member = tanggal.strftime('Member sejak %d '+bulan(int(tanggal.strftime('%m')))+' %Y')
+		sekarang = datetime.utcfromtimestamp(time.time())
+		minimum = str(int(sekarang.strftime('%Y')) - 60)
+		maksimum = str(int(sekarang.strftime('%Y')) - 13)
+		initial = str(int(sekarang.strftime('%Y')) - 19)
 		durasi = "("+string[0]+" yang lalu)"
 
 		pesan = BubbleContainer(
@@ -184,7 +195,10 @@ def pengaturan(args):
 						action=DatetimePickerAction(
 							label='Ubah tanggal lahir',
 							data='/tanggal_lahir '+args,
-							mode='date'
+							mode='date',
+							max=maksimum+'-12-31',
+							min=minimum+'-01-01',
+							initial=initial+'-01-01'
 						)
 					),
 					ButtonComponent(
