@@ -110,6 +110,25 @@ def handle_join(event):
         ruang = event.source.room_id
     
     db.child(event.source.type).child(ruang).set(time.time())
+    try:
+        jumlah = db.child(event.source.type).get().val()["total"]
+        db.child(event.source.type).child("total").update(jumlah+1)
+    except:
+        db.child(event.source.type).child("total").set(1)
+
+@handler.add(LeaveEvent)
+def handle_leave():
+    if isinstance(event.source, SourceGroup):
+        ruang = event.source.sender_id
+    elif isinstance(event.source, SourceRoom):
+        ruang = event.source.room_id
+
+    db.child(event.source.type).child(ruang).remove()
+    try:
+        jumlah = db.child(event.source.type).get().val()["total"]
+        db.child(event.source.type).child("total").update(jumlah-1)
+    except:
+        db.child(event.source.type).child("total").set(0)
 
 @handler.add(FollowEvent)
 def handle_follow(event):
