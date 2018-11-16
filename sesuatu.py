@@ -6,6 +6,7 @@ import re
 import urllib
 import pafy
 import time
+import cinema21
 from linebot.models import *
 from acc import (google_key, db)
 from datetime import datetime
