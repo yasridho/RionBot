@@ -356,14 +356,14 @@ def handle_message(event):
 		# CHAT BIASA
 		if text == "Cek film bioskop":
 			data = db.child("pengguna").get().val()[sender]
-			try:
-				lokasi = data["tambahan"]["lokasi"]
-				latitude = lokasi["latitude"]
-				longitude = lokasi["longitude"]
-				line_bot_api.reply_message(event.reply_token, bioskop_terdekat(latitude, longitude))
-			except:
-				perintah.update({sender:['Cek bioskop terdekat', time.time()]})
-				line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Share lokasi dulu kak "+panggil(sender)+", nanti kucarikan bioskop terdekat ;)", quick_reply=QuickReply(items=[QuickReplyButton(action=LocationAction(label='Share lokasi'))])))
+			#try:
+			lokasi = data["tambahan"]["lokasi"]
+			latitude = lokasi["latitude"]
+			longitude = lokasi["longitude"]
+			line_bot_api.reply_message(event.reply_token, bioskop_terdekat(latitude, longitude))
+			#except:
+			perintah.update({sender:['Cek bioskop terdekat', time.time()]})
+			line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Share lokasi dulu kak "+panggil(sender)+", nanti kucarikan bioskop terdekat ;)", quick_reply=QuickReply(items=[QuickReplyButton(action=LocationAction(label='Share lokasi'))])))
 
 	except Exception as e:
 		try:
