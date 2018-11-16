@@ -46,11 +46,12 @@ def pengaturan(args):
 			try:
 				lahir = tambahan["tanggal_lahir"]
 				utahun, ubulan, utanggal = lahir.split('-')
-				umur = tahun - int(utahun)
+				
 				sekarang = datetime.utcfromtimestamp(time.time())
 				tanggal = int(sekarang.strftime('%d'))
 				dbulan = int(sekarang.strftime('%m'))
 				tahun = int(sekarang.strftime('%Y'))
+				umur = tahun - int(utahun)
 					
 				if tanggal < int(utanggal):
 					if dbulan < int(ubulan):
