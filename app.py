@@ -161,6 +161,15 @@ def handle_postback(event):
             if cmd == "pengaturan":
                 line_bot_api.reply_message(event.reply_token, pengaturan(sender))
 
+    except Exception as e:
+        try:
+            et, ev, tb = sys.exc_info()
+            lineno = tb.tb_lineno
+            fn = tb.tb_frame.f_code.co_filename
+            line_bot_api.push_message(kirim, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
+        except:
+            line_bot_api.push_message(kirim, TextSendMessage(text="Undescribeable error detected!!"))
+
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
     cinemaxxi.handle_location_message(event)
