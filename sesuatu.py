@@ -47,7 +47,7 @@ def pengaturan(args):
 				lahir = tambahan["tanggal_lahir"]
 				utahun, ubulan, utanggal = lahir.split('-')
 				umur = tahun - int(utahun)
-				sekarang = datetime.datetime.utcfromtimestamp(time.time())
+				sekarang = datetime.utcfromtimestamp(time.time())
 				tanggal = int(sekarang.strftime('%d'))
 				dbulan = int(sekarang.strftime('%m'))
 				tahun = int(sekarang.strftime('%Y'))
