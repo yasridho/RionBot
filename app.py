@@ -481,7 +481,7 @@ def handle_message(event):
                                         align='start'
                                     ),
                                     TextComponent(
-                                        text='2018',
+                                        text=os.environ.get('HEROKU_RELEASE_VERSION'),
                                         size='xxs',
                                         align='end'
                                     )
