@@ -175,8 +175,9 @@ def pengaturan(args):
 						)
 					),
 					ButtonComponent(
-						action=LocationAction(
-							label='Ubah Lokasi'
+						action=MessageAction(
+							label='Ubah Lokasi',
+							text='Lokasi'
 						)
 					),
 					ButtonComponent(
