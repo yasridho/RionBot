@@ -21,8 +21,8 @@ import yify_torrent
 import acc
 import imp
 
-from acc import (namaBot, google_key, line_bot_api, handler, db, pengaturan)
-from sesuatu import mau_nonton
+from acc import (namaBot, google_key, line_bot_api, handler, db)
+from sesuatu import (mau_nonton, pengaturan)
 from bs4 import BeautifulSoup
 from linebot.exceptions import LineBotApiError
 from linebot.models import (
