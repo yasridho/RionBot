@@ -166,7 +166,7 @@ def handle_postback(event):
                 line_bot_api.reply_message(event.reply_token, pengaturan(sender))
 
             elif cmd == "lokasi":
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Share lokasi dulu kak '+panggil(sender)+' ;)', quick_reply=QuickReply(items=[QuickReplyButton(action=LocationSendMessage(label='Share lokasi'))])))
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Share lokasi dulu kak '+panggil(sender)+' ;)', quick_reply=QuickReply(items=[QuickReplyButton(action=LocationAction(label='Share lokasi'))])))
                 perintah.update({sender:['lokasi',time.time()]})
 
             elif cmd == "nick":
