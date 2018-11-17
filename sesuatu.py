@@ -1599,6 +1599,10 @@ def tayang(kode_bioskop):
 							size='xxs'
 						)
 					)
+					puluh = 10
+					while (len(jamku[num]) - 7 == puluh) or (len(jamku[num]) - 7 == 0):
+						jamku[num].append(SeparatorComponent())
+						puluh = puluh + 10
 					jamku[num].append(SeparatorComponent())
 				except:
 					jamku.update({num:[]})
@@ -1642,7 +1646,7 @@ def tayang(kode_bioskop):
 			for y in gabungin:
 				img, title, tpe, rate, lama, tgl, rupiah = y
 				clock = list()
-				if len(jamku[num]) < 6:
+				if len(jamku[num]) < 7:
 					clock.append(
 						BoxComponent(
 							layout='horizontal',
@@ -1652,9 +1656,9 @@ def tayang(kode_bioskop):
 					)
 				else:
 					jwaktu = len(jamku[num])
-					batas = 6
+					batas = 7
 					while batas < jwaktu:
-						awal = batas - 6
+						awal = batas - 7
 						clock.append(
 							BoxComponent(
 								layout='horizontal',
@@ -1662,7 +1666,7 @@ def tayang(kode_bioskop):
 								contents=jamku[num][awal:batas]
 							)
 						)
-						batas = batas + 6
+						batas = batas + 7
 				res.append(
 					BubbleContainer(
 						header=BoxComponent(
