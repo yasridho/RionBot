@@ -1615,7 +1615,6 @@ def tayang(kode_bioskop):
 						)
 					)
 					jamku[num].append(SeparatorComponent())
-			puluh = 0
 			for klik, jam in data:
 				if tanggal[0] in klik:
 					try:
