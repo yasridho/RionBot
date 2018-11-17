@@ -1591,6 +1591,9 @@ def tayang(kode_bioskop):
 			puluh = 0
 			for jam in data1:
 				try:
+					if (len(jamku[num]) - 8 == puluh):
+						jamku[num].append(SeparatorComponent())
+						puluh = puluh + 10
 					jamku[num].append(
 						TextComponent(
 							text=jam,
@@ -1599,9 +1602,6 @@ def tayang(kode_bioskop):
 							size='xxs'
 						)
 					)
-					if (len(jamku[num]) - 8 == puluh):
-						jamku[num].append(SeparatorComponent())
-						puluh = puluh + 10
 					jamku[num].append(SeparatorComponent())
 				except:
 					jamku.update({num:[]})
@@ -1618,6 +1618,9 @@ def tayang(kode_bioskop):
 			for klik, jam in data:
 				if tanggal[0] in klik:
 					try:
+						if (len(jamku[num]) - 8 == puluh):
+							jamku[num].append(SeparatorComponent())
+							puluh = puluh + 10
 						jamku[num].append(
 							TextComponent(
 								text=jam,
@@ -1625,9 +1628,6 @@ def tayang(kode_bioskop):
 								size='xxs'
 							)
 						)
-						if (len(jamku[num]) - 8 == puluh):
-							jamku[num].append(SeparatorComponent())
-							puluh = puluh + 10
 						jamku[num].append(SeparatorComponent())
 					except:
 						jamku.update({num:[]})
