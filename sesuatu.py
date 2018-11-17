@@ -1551,9 +1551,9 @@ def info_film(args):
 			et, ev, tb = sys.exc_info()
 			lineno = tb.tb_lineno
 			fn = tb.tb_frame.f_code.co_filename
-			return "[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))
+			return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
 		except:
-			return "Undescribeable error detected!!"
+			return TextSendMessage(text="Undescribeable error detected!!")
 
 def tayang(kode_bioskop):
 	try:
