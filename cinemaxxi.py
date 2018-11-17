@@ -49,7 +49,7 @@ def handle_postback(event):
 				bioskop = bioskop.replace("+"," ")
 				jam, menit = jamku.split(":")
 				x = datetime.today()
-				y = x.replace(hour=x.hour+jam, minute=x.minute+menit)
+				y = x.replace(hour=x.hour+int(jam), minute=x.minute+int(menit))
 				delta_t = y - x
 				secs = delta_t.seconds+1
 				t = Timer(secs, ingetin, (event.source.user_id, jamku, judul, bioskop))
