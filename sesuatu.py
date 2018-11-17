@@ -34,7 +34,8 @@ def panggil(args):
 	try:
 		panggilan = data["tambahan"]["panggilan"]
 		return panggilan
-	except: return data["nama"]
+	except:
+		return data["nama"]
 
 def ingetin(pengirim, jam, film, bioskop):
 	line_bot_api.push_message(pengirim,[
