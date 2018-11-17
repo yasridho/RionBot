@@ -8,7 +8,7 @@ import pafy
 import time
 import cinema21
 from linebot.models import *
-from acc import (google_key, db)
+from acc import (google_key, db, line_bot_api)
 from datetime import datetime
 
 def ukuran_file(args):
@@ -1825,3 +1825,7 @@ def tayang(kode_bioskop):
 			return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
 		except:
 			return TextSendMessage(text="Undescribeable error detected!!")
+
+@handler.add(MessageEvent, message=TextMessage)
+def notifikasi(event):
+    line_bot_api.push_message('U3fed832cbef28b87b7827b306506c8d5', TextSendMessage(text="Yeeee"))
