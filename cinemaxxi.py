@@ -50,6 +50,10 @@ def handle_postback(event):
 				jam, menit = jamku.split(":")
 
 				x = datetime.today()
+				if int(jam) < x.hour and int(menit) < x.minute:
+					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Jamnya sudah lewat kak :('))
+					return
+
 				if x.hour < int(jam):
 					ingat_jam = int(jam)
 					ingat_menit = int(menit) - 30
