@@ -1648,9 +1648,9 @@ def tayang(kode_bioskop):
 					)
 				else:
 					jwaktu = len(jamku[num])
-					batas = 4
+					batas = 6
 					while batas < jwaktu:
-						awal = batas - 4
+						awal = batas - 6
 						clock.append(
 							BoxComponent(
 								layout='horizontal',
@@ -1658,7 +1658,7 @@ def tayang(kode_bioskop):
 								contents=jamku[num][awal:batas]
 							)
 						)
-						batas = batas + 4
+						batas = batas + 6
 				res.append(
 					BubbleContainer(
 						header=BoxComponent(
