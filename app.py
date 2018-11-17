@@ -22,6 +22,7 @@ import acc
 import sesuatu
 import imp
 import schedule
+import notif
 
 from acc import (namaBot, google_key, line_bot_api, handler, db)
 from sesuatu import (mau_nonton, pengaturan, panggil)
@@ -238,6 +239,7 @@ def handle_message(event):
         cmds.handle_message(event)
         cinemaxxi.handle_message(event)
         yify_torrent.handle_message(event)
+        notif.handle_message(event)
 
         text = event.message.text #simplify for receove message
         sender = event.source.user_id #get user_id

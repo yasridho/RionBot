@@ -16,3 +16,5 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
+
+notifikasi = False
