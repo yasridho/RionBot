@@ -1600,7 +1600,7 @@ def tayang(kode_bioskop):
 						)
 					)
 					puluh = 10
-					while (len(jamku[num]) - 7 == puluh) or (len(jamku[num]) - 7 == 0):
+					if (len(jamku[num]) - 7 == puluh) or (len(jamku[num]) - 7 == 0):
 						jamku[num].append(SeparatorComponent())
 						puluh = puluh + 10
 					jamku[num].append(SeparatorComponent())
@@ -1627,7 +1627,7 @@ def tayang(kode_bioskop):
 							)
 						)
 						puluh = 10
-						while (len(jamku[num]) - 7 == puluh) or (len(jamku[num]) - 7 == 0):
+						if (len(jamku[num]) - 7 == puluh) or (len(jamku[num]) - 7 == 0):
 							jamku[num].append(SeparatorComponent())
 							puluh = puluh + 10
 						jamku[num].append(SeparatorComponent())
