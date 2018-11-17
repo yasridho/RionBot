@@ -358,9 +358,9 @@ def handle_message(event):
 			data = db.child("pengguna").get().val()[sender]
 			try:
 				lokasi = data["tambahan"]["lokasi"]
-				latitude = lokasi["latitude"]
-				longitude = lokasi["longitude"]
-				line_bot_api.push_message(kirim, bioskop_terdekat(latitude, longitude))
+				lat = lokasi["latitude"]
+				lng = lokasi["longitude"]
+				line_bot_api.push_message(kirim, bioskop_terdekat(lat, lng))
 			except:
 				perintah.update({sender:['Cek bioskop terdekat', time.time()]})
 				line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Share lokasi dulu kak "+panggil(sender)+", nanti kucarikan bioskop terdekat ;)", quick_reply=QuickReply(items=[QuickReplyButton(action=LocationAction(label='Share lokasi'))])))
