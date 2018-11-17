@@ -7,7 +7,7 @@ import urllib
 import acc
 import cinema21
 
-from sesuatu import (tayang, info_film, panggil, bioskop_terdekat)
+from sesuatu import (tayang, info_film, panggil, bioskop_terdekat, ingetin)
 from acc import (namaBot, google_key, line_bot_api, handler, db)
 from threading import Timer
 from datetime import datetime
