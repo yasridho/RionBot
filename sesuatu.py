@@ -1595,7 +1595,8 @@ def tayang(kode_bioskop):
 						TextComponent(
 							text=jam,
 							align='center',
-							color='#A5A5A5'
+							color='#A5A5A5',
+							size='xxs'
 						)
 					)
 					jamku[num].append(SeparatorComponent())
@@ -1606,7 +1607,8 @@ def tayang(kode_bioskop):
 						TextComponent(
 							text=jam,
 							align='center',
-							color='#A5A5A5'
+							color='#A5A5A5',
+							size='xxs'
 						)
 					)
 					jamku[num].append(SeparatorComponent())
@@ -1616,7 +1618,8 @@ def tayang(kode_bioskop):
 						jamku[num].append(
 							TextComponent(
 								text=jam,
-								align='center'
+								align='center',
+								size='xxs'
 							)
 						)
 						jamku[num].append(SeparatorComponent())
@@ -1626,7 +1629,8 @@ def tayang(kode_bioskop):
 						jamku[num].append(
 							TextComponent(
 								text=jam,
-								align='center'
+								align='center',
+								size='xxs'
 							)
 						)
 						jamku[num].append(SeparatorComponent())
