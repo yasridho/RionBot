@@ -1273,7 +1273,7 @@ def info_film(args):
 		genre = re.findall('<div>(.*?)</div>',data, re.S)[1]
 		sinopsis = re.findall('<div>(.*?)</div>',data, re.S)[2]
 		sinopsis = sinopsis.replace('<p id="description">','').replace('</p><span id="readMore" style="text-decoration: underline"></span>','').replace('<br />','\n')
-		trailer = re.findall(' BUY TICKET </button></p>										<p><button onclick="location.href = (.*?);" class="btn icon-btn btn-success" style="margin-top: 10px; width:90%;" > TRAILER </button></p>',data, re.S)[0]
+		trailer = re.findall(' BUY TICKET </button></p>                                        <p><button onclick="location.href = (.*?);" class="btn icon-btn btn-success" style="margin-top: 10px; width:90%;" > TRAILER </button></p>',data, re.S)[0]
 		trailer = trailer.replace("'","")
 		writer = re.findall('<strong>Writer</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
 		producer = re.findall('<br /><p style="margin-bottom: 5px"><strong>Producer</strong>:</p>							<p> (.*?)</p>',data, re.S)[0]
