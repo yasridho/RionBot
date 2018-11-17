@@ -1276,10 +1276,10 @@ def info_film(args):
 		trailer = re.findall(' BUY TICKET </button></p>                                        <p><button onclick="location.href = (.*?);" class="btn icon-btn btn-success" style="margin-top: 10px; width:90%;" > TRAILER </button></p>',data, re.S)[0]
 		trailer = trailer.replace("'","")
 		writer = re.findall('<strong>Writer</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
-		producer = re.findall('<br /><p style="margin-bottom: 5px"><strong>Producer</strong>:</p>							<p> (.*?)</p>',data, re.S)[0]
-		director = re.findall('<p style="margin-bottom: 5px"><strong>Director</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
-		cast = re.findall('<p style="margin-bottom: 5px"><strong>Cast</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
-		distributor = re.findall('<p style="margin-bottom: 5px"><strong>Distributor</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
+		producer = re.findall('<br /><p style="margin-bottom: 5px"><strong>Producer</strong>:</p>                            <p> (.*?)</p>',data, re.S)[0]
+		director = re.findall('<p style="margin-bottom: 5px"><strong>Director</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
+		cast = re.findall('<p style="margin-bottom: 5px"><strong>Cast</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
+		distributor = re.findall('<p style="margin-bottom: 5px"><strong>Distributor</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
 		durasi = re.findall('<p><span class="glyphicon glyphicon-time" style="margin-bottom: 10px"></span> (.*?)</p>',data, re.S)[0]
 		tipe = re.findall('<p><a class="btn btn-default btn-outline disabled" style="color: #005350; font-weight: bold;"> (.*?)</a></p>',data, re.S)[0]
 
