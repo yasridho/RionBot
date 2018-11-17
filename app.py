@@ -228,8 +228,6 @@ def handle_location_message(event):
 
 
 @handler.add(MessageEvent, message=TextMessage)
-def notifikasi(event):
-    line_bot_api.push_message('U3fed832cbef28b87b7827b306506c8d5', TextSendMessage(text="Yeeee"))
 def handle_message(event):
     try:
 
