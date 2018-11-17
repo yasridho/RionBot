@@ -67,7 +67,7 @@ def bioskop_terdekat(latitude, longitude):
 							url='https://i.postimg.cc/28r8Vsnt/premiere.png',
 							size='full',
 							aspect_ratio='3:1',
-							aspect_mode='covr'
+							aspect_mode='cover'
 						),
 						body=BoxComponent(
 							layout='vertical',
