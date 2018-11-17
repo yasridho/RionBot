@@ -46,7 +46,7 @@ def ingetin(pengirim, jam, film, bioskop):
 def ingetin30(pengirim, jam, film, bioskop):
 	line_bot_api.push_message(pengirim,[
 		TextSendMessage(
-			text='Kak '+panggil(pengirim)+'..')
+			text='Kak '+panggil(pengirim)+'..'),
 		TextSendMessage(
 			text='Mau ngingetin kalau 30 menit lagi film '+film.capitalize()+' main kak '),
 		TextSendMessage(
