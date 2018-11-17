@@ -1588,7 +1588,7 @@ def tayang(kode_bioskop):
 		for i in waktu:
 			data = re.findall('<a class="btn btn-outline-primary div_schedule" style="border-color: #337ab7;font-size:14px; margin-left:3px; margin-top:15px" href="#" onClick="(.*?)">(.*?)</a>',i, re.S)
 			data1 = re.findall('<a class="btn btn-default btn-outline disabled div_schedule" style="color: #FFFFFF; background-color: #737373;font-size:14px; margin-left:3px; margin-top:15px" >(.*?)</a>',i, re.S)
-			
+			puluh = 0
 			for jam in data1:
 				try:
 					jamku[num].append(
@@ -1599,7 +1599,6 @@ def tayang(kode_bioskop):
 							size='xxs'
 						)
 					)
-					puluh = 0
 					if (len(jamku[num]) - 7 == puluh):
 						jamku[num].append(SeparatorComponent())
 						puluh = puluh + 10
@@ -1616,6 +1615,7 @@ def tayang(kode_bioskop):
 						)
 					)
 					jamku[num].append(SeparatorComponent())
+			puluh = 0
 			for klik, jam in data:
 				if tanggal[0] in klik:
 					try:
@@ -1626,7 +1626,6 @@ def tayang(kode_bioskop):
 								size='xxs'
 							)
 						)
-						puluh = 0
 						if (len(jamku[num]) - 7 == puluh):
 							jamku[num].append(SeparatorComponent())
 							puluh = puluh + 10
