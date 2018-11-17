@@ -1567,16 +1567,16 @@ def tayang(kode_bioskop):
 		judul = re.findall('<a >(.*?)</a>',udict, re.S)
 		judul = judul[1:]
 
-		tipe = re.findall('<br>					 <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
+		tipe = re.findall('<br>                     <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
 		tipe = tipe[1:]
 
-		rating = re.findall('</span>					 <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
+		rating = re.findall('</span>                     <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
 		rating = rating[1:]
 
 		durasi = re.findall('<span class="glyphicon glyphicon-time"></span> (.*?)</div>',udict, re.S)
 		durasi = durasi[2:]
 
-		tanggal = re.findall('<div class="row">							<div class="col-xs-7" style="text-align:left"><p class="p_date"><p class="p_date">(.*?)</p></div>',udict, re.S)
+		tanggal = re.findall('<div class="row">                            <div class="col-xs-7" style="text-align:left"><p class="p_date"><p class="p_date">(.*?)</p></div>',udict, re.S)
 		bioskop = re.findall('<h4><span><strong>(.*?)</strong></span></h4>',udict, re.S)[0]
 
 		harga = re.findall('</p></div><div class="col-xs-5" style="text-align:right"><span class="p_price">(.*?)</span></div><br><p class="p_time pull-left" style="margin: 10px">',udict, re.S)
@@ -1625,7 +1625,12 @@ def tayang(kode_bioskop):
 							TextComponent(
 								text=jam,
 								align='center',
-								size='xs'
+								size='xs',
+								action=PostbackAction(
+									label='Ingetin',
+									text='Ingetin jam '+jam+' buat nonton '+judul[num]+' di '+bioskop.capitalize(),
+									data='/reminder '+jam+' '+judul[num]+' '+bioskop.capitalize()
+								)
 							)
 						)
 						jamku[num].append(SeparatorComponent())
@@ -1636,7 +1641,12 @@ def tayang(kode_bioskop):
 							TextComponent(
 								text=jam,
 								align='center',
-								size='xs'
+								size='xs',
+								action=PostbackAction(
+									label='Ingetin',
+									text='Ingetin jam '+jam+' buat nonton '+judul[num]+' di '+bioskop.capitalize(),
+									data='/reminder '+jam+' '+judul[num]+' '+bioskop.capitalize()
+								)
 							)
 						)
 						jamku[num].append(SeparatorComponent())
@@ -1825,6 +1835,3 @@ def tayang(kode_bioskop):
 			return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
 		except:
 			return TextSendMessage(text="Undescribeable error detected!!")
-
-def notifikasi():
-	line_bot_api.push_message('U3fed832cbef28b87b7827b306506c8d5', TextSendMessage(text="Yeeee"))

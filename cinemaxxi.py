@@ -9,6 +9,8 @@ import cinema21
 
 from sesuatu import (tayang, info_film, panggil, bioskop_terdekat)
 from acc import (namaBot, google_key, line_bot_api, handler, db)
+from threading import Timer
+from datetime import datetime
 from linebot.exceptions import LineBotApiError
 from linebot.models import *
 from linebot.exceptions import (
@@ -40,6 +42,10 @@ def handle_postback(event):
 
 			elif cmd == 'cek_film_bioskop':
 				line_bot_api.reply_message(event.reply_token, info_film(args))
+
+			elif cmd == 'reminder':
+				try:
+					jam, judul, bioskop = args.split(" ")
 
 	except Exception as e:
 		try:
