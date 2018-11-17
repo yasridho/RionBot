@@ -10,10 +10,12 @@ from linebot.models import *
 
 Jalankan = False
 
+
+
 def yee():
 	line_bot_api.push_message('U3fed832cbef28b87b7827b306506c8d5', TextSendMessage(text="Yeeee"))
 
-t = Timer(datetime.today().replace(second=datetime.today().second+10) - datetime.today().seconds+1, yee)
+
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -23,6 +25,11 @@ def handle_message(event):
 	if text == "Run notif":
 		Jalankan = True
 		line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Notif berjalan"))
+		x = datetime.today()
+		y = x.replace(second=x.second+10)
+		delta_t = y - x
+		secs = delta_t.seconds+1
+		t = Timer(secs, yee)
 		t.start()
 		
 	elif text == "Stop notif":
