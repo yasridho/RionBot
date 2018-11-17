@@ -10,17 +10,10 @@ from linebot.models import *
 
 Jalankan = False
 
-x = datetime.today()
-y = x.replace(second=x.second+10)
-
-
-delta_t = y - x
-secs = delta_t.seconds+1
-
 def yee():
 	line_bot_api.push_message('U3fed832cbef28b87b7827b306506c8d5', TextSendMessage(text="Yeeee"))
 
-t = Timer(secs, yee)
+t = Timer(datetime.today().replace(second=x.second+10) - datetime.today().seconds+1, yee)
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
