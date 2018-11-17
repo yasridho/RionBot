@@ -1604,27 +1604,46 @@ def tayang(kode_bioskop):
 		for i in waktu:
 			data = re.findall('<a class="btn btn-outline-primary div_schedule" style="border-color: #337ab7;font-size:14px; margin-left:3px; margin-top:15px" href="#" onClick="(.*?)">(.*?)</a>',i, re.S)
 			data1 = re.findall('<a class="btn btn-default btn-outline disabled div_schedule" style="color: #FFFFFF; background-color: #737373;font-size:14px; margin-left:3px; margin-top:15px" >(.*?)</a>',i, re.S)
-			jamku.update({num:[]})
+			
 			for jam in data1:
-				if len(jamku[num]) > 0:
-					jamku[num].append(SeparatorComponent())
-				jamku[num].append(
-					TextComponent(
-						text=jam,
-						align='center',
-						color='#A5A5A5'
-					)
-				)
-			for klik, jam in data:
-				if tanggal[0] in klik:
+				try:
 					if len(jamku[num]) > 0:
 						jamku[num].append(SeparatorComponent())
 					jamku[num].append(
 						TextComponent(
 							text=jam,
-							align='center'
+							align='center',
+							color='#A5A5A5'
 						)
 					)
+				except:
+					jamku.update({num:[]})
+					jamku[num].append(
+						TextComponent(
+							text=jam,
+							align='center',
+							color='#A5A5A5'
+						)
+					)
+			for klik, jam in data:
+				if tanggal[0] in klik:
+					try:
+						if len(jamku[num]) > 0:
+							jamku[num].append(SeparatorComponent())
+						jamku[num].append(
+							TextComponent(
+								text=jam,
+								align='center'
+							)
+						)
+					except:
+						jamku.update({num:[]})
+						jamku[num].append(
+							TextComponent(
+								text=jam,
+								align='center'
+							)
+						)
 			num = len(jamku) + 1
 		num = 1
 		gabungin = zip(gambar, judul, tipe, rating, durasi, tanggal, harga)
