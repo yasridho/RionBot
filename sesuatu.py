@@ -1626,6 +1626,9 @@ def tayang(kode_bioskop):
 								size='xxs'
 							)
 						)
+						while (len(jamku[num]) - 7 == puluh) or (len(jamku[num]) - 7 == 0):
+							jamku[num].append(SeparatorComponent())
+							puluh = puluh + 10
 						jamku[num].append(SeparatorComponent())
 					except:
 						jamku.update({num:[]})
