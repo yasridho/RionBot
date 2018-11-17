@@ -1616,15 +1616,16 @@ def tayang(kode_bioskop):
 					)
 				)
 			for klik, jam in data:
-				if len(jamku[num]) > 0:
-					jamku[num].append(SeparatorComponent())
-				jamku[num].append(
-					TextComponent(
-						text=jam,
-						align='center'
+				if tanggal[0] in klik:
+					if len(jamku[num]) > 0:
+						jamku[num].append(SeparatorComponent())
+					jamku[num].append(
+						TextComponent(
+							text=jam,
+							align='center'
+						)
 					)
-				)
-			num = num + 1
+			num = len(jamku) + 1
 		num = 1
 		gabungin = zip(gambar, judul, tipe, rating, durasi, tanggal, harga)
 		if gabungin:
