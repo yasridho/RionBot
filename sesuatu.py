@@ -43,6 +43,15 @@ def ingetin(pengirim, jam, film, bioskop):
 		TextSendMessage(
 			text='Langsung ke '+bioskop+' biar g kelewatan nonton '+film+' kak ;)')])
 
+def ingetin30(pengirim, jam, film, bioskop):
+	line_bot_api.push_message(pengirim,[
+		TextSendMessage(
+			text='Kak '+panggil(pengirim)+'..')
+		TextSendMessage(
+			text='Mau ngingetin kalau 30 menit lagi film '+film.capitalize()+' main kak '),
+		TextSendMessage(
+			text='Sebaiknya langsung ke bioskop '+bioskop+' biar g kelewatan nonton '+film+' ya kak ;D')])
+
 def bioskop_terdekat(latitude, longitude):
 	try:
 		cinema = cinema21.Cinema21()

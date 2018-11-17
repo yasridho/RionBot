@@ -7,7 +7,7 @@ import urllib
 import acc
 import cinema21
 
-from sesuatu import (tayang, info_film, panggil, bioskop_terdekat, ingetin)
+from sesuatu import (tayang, info_film, panggil, bioskop_terdekat, ingetin, ingetin30)
 from acc import (namaBot, google_key, line_bot_api, handler, db)
 from threading import Timer
 from datetime import datetime
@@ -48,7 +48,20 @@ def handle_postback(event):
 				judul = judul.replace("+"," ")
 				bioskop = bioskop.replace("+"," ")
 				jam, menit = jamku.split(":")
+
 				x = datetime.today()
+				if x.hour < int(jam):
+					ingat_jam = int(jam)
+					ingat_menit = int(menit) - 30
+					if ingat_menit < 0:
+						ingat_jam = int(jam) - 1
+						ingat_menit = abs(ingat_menit)
+					r = x.replace(hour=x.hour+(ingat_jam-x.hour), minute=x.minute+(ingat_menit-x.minute))
+					delta_b = r - x
+					detik = delta_b.seconds+1
+					b = Timer(detik, ingetin30, (event.source.user_id, jamku, judul, bioskop))
+					b.start()
+				
 				y = x.replace(hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
 				delta_t = y - x
 				secs = delta_t.seconds+1
