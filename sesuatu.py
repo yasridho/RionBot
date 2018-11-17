@@ -1633,8 +1633,31 @@ def tayang(kode_bioskop):
 		gabungin = zip(gambar, judul, tipe, rating, durasi, tanggal, harga)
 		if gabungin:
 			res = list()
+			clock = list()
 			for y in gabungin:
 				img, title, tpe, rate, lama, tgl, rupiah = y
+				if len(jamku[num]) > 6:
+					clock.append(
+						BoxComponent(
+							layout='horizontal',
+							margin='md',
+							contents=jamku[num][:6]
+						)
+					clock.append(
+						BoxComponent(
+							layout='horizontal',
+							margin='md',
+							contents=jamku[num][7:]
+						)
+					)
+				else:
+					clock.append(
+						BoxComponent(
+							layout='horizontal',
+							margin='md',
+							contents=jamku[num]
+						)
+					)
 				res.append(
 					BubbleContainer(
 						header=BoxComponent(
@@ -1735,11 +1758,7 @@ def tayang(kode_bioskop):
 									align='center'
 								),
 								SeparatorComponent(margin='md'),
-								BoxComponent(
-									layout='horizontal',
-									margin='md',
-									contents=jamku[num]
-								)
+								[d for d in clock]
 							]
 						),
 						footer=BoxComponent(
