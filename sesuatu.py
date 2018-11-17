@@ -1637,8 +1637,8 @@ def tayang(kode_bioskop):
 								size='xs',
 								action=PostbackAction(
 									label='Ingetin',
-									text='Ingetin jam '+jam+' buat nonton '+judul[num]+' di '+bioskop.capitalize(),
-									data='/reminder '+jam+' '+judul[num]+' '+bioskop.capitalize()
+									text='Ingetin jam '+jam+' buat nonton '+judul[num-1]+' di '+bioskop.capitalize(),
+									data='/reminder '+jam+' '+judul[num-1]+' '+bioskop.capitalize()
 								)
 							)
 						)
@@ -1653,8 +1653,8 @@ def tayang(kode_bioskop):
 								size='xs',
 								action=PostbackAction(
 									label='Ingetin',
-									text='Ingetin jam '+jam+' buat nonton '+judul[num]+' di '+bioskop.capitalize(),
-									data='/reminder '+jam+' '+judul[num]+' '+bioskop.capitalize()
+									text='Ingetin jam '+jam+' buat nonton '+judul[num-1]+' di '+bioskop.capitalize(),
+									data='/reminder '+jam+' '+judul[num-1]+' '+bioskop.capitalize()
 								)
 							)
 						)
