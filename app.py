@@ -244,8 +244,9 @@ def handle_message(event):
         text = event.message.text #simplify for receove message
         sender = event.source.user_id #get user_id
         gid = event.source.sender_id #get group_id
-        try:
-            profil = line_bot_api.get_profile(sender)
+        profil = line_bot_api.get_profile(sender)
+        try:       
+            nama = panggil(sender) #Ini buat nama
         except:
             data = {'nama':line_bot_api.get_profile(event.source.user_id).display_name,
                     'foto':line_bot_api.get_profile(event.source.user_id).picture_url,
@@ -256,8 +257,7 @@ def handle_message(event):
                 jumlah = db.child("pengguna").get().val()["total"]
                 db.child("pengguna").child("total").update(jumlah+1)
             except:
-                db.child("pengguna").child("total").set(1)            
-        nama = panggil(sender) #Ini buat nama
+                db.child("pengguna").child("total").set(1)  
         gambar = profil.picture_url #Ini profile picture
         status = profil.status_message #Ini status di line
 
