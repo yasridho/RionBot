@@ -370,6 +370,6 @@ def handle_message(event):
 			et, ev, tb = sys.exc_info()
 			lineno = tb.tb_lineno
 			fn = tb.tb_frame.f_code.co_filename
-			line_bot_api.reply_message(event.reply_token, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
+			line_bot_api.push_message(event.source.user_id, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 		except:
-			line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Undescribeable error detected!!"))
+			line_bot_api.push_message(event.source.user_id, TextSendMessage(text="Undescribeable error detected!!"))
