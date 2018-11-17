@@ -11,6 +11,8 @@ from linebot.models import *
 from acc import (google_key, db, line_bot_api)
 from datetime import datetime
 
+
+
 def ukuran_file(args):
 	minimal = 2**10
 	n = 0
@@ -33,6 +35,13 @@ def panggil(args):
 		panggilan = data["tambahan"]["panggilan"]
 		return panggilan
 	except: return data["nama"]
+
+def ingetin(pengirim, jam, film, bioskop):
+	line_bot_api.push_message(pengirim,[
+		TextSendMessage(
+			text='Sudah jam '+jam+' kak '+panggil(pengirim)),
+		TextSendMessage(
+			text='Langsung ke '+bioskop+' biar g kelewatan nonton '+film+' kak ;)')])
 
 def bioskop_terdekat(latitude, longitude):
 	try:

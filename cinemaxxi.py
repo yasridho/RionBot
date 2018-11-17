@@ -44,8 +44,15 @@ def handle_postback(event):
 				line_bot_api.reply_message(event.reply_token, info_film(args))
 
 			elif cmd == 'reminder':
-				try:
-					jam, judul, bioskop = args.split(" ")
+				jamku, judul, bioskop = args.split(" ")
+				jam, menit = jamku.split(":")
+				x = datetime.today()
+				y = x.replace(hour=x.hour+jam, minute=x.minute+menit)
+				delta_t = y - x
+				secs = delta_t.seconds+1
+				t = Timer(secs, ingetin, (event.source.user_id, jamku, judul, bioskop))
+				t.start()
+				line_bot_api.reply_message(event.reply_token, TextSendMessage('Okee kak ;D'))
 
 	except Exception as e:
 		try:
