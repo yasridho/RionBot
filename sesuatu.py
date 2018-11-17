@@ -1591,8 +1591,6 @@ def tayang(kode_bioskop):
 			
 			for jam in data1:
 				try:
-					if len(jamku[num]) > 0:
-						jamku[num].append(SeparatorComponent())
 					jamku[num].append(
 						TextComponent(
 							text=jam,
@@ -1600,8 +1598,10 @@ def tayang(kode_bioskop):
 							color='#A5A5A5'
 						)
 					)
+					jamku[num].append(SeparatorComponent())
 				except:
 					jamku.update({num:[]})
+					jamku[num].append(SeparatorComponent())
 					jamku[num].append(
 						TextComponent(
 							text=jam,
@@ -1612,16 +1612,16 @@ def tayang(kode_bioskop):
 			for klik, jam in data:
 				if tanggal[0] in klik:
 					try:
-						if len(jamku[num]) > 0:
-							jamku[num].append(SeparatorComponent())
 						jamku[num].append(
 							TextComponent(
 								text=jam,
 								align='center'
 							)
 						)
+						jamku[num].append(SeparatorComponent())
 					except:
 						jamku.update({num:[]})
+						jamku[num].append(SeparatorComponent())
 						jamku[num].append(
 							TextComponent(
 								text=jam,
@@ -1636,7 +1636,15 @@ def tayang(kode_bioskop):
 			for y in gabungin:
 				img, title, tpe, rate, lama, tgl, rupiah = y
 				clock = list()
-				if len(jamku[num]) > 6:
+				if len(jamku[num]) < 6:
+					clock.append(
+						BoxComponent(
+							layout='horizontal',
+							margin='md',
+							contents=jamku[num]
+						)
+					)
+				else:
 					clock.append(
 						BoxComponent(
 							layout='horizontal',
@@ -1649,14 +1657,6 @@ def tayang(kode_bioskop):
 							layout='horizontal',
 							margin='md',
 							contents=jamku[num][7:]
-						)
-					)
-				else:
-					clock.append(
-						BoxComponent(
-							layout='horizontal',
-							margin='md',
-							contents=jamku[num]
 						)
 					)
 				res.append(
