@@ -1609,6 +1609,7 @@ def tayang(kode_bioskop):
 							color='#A5A5A5'
 						)
 					)
+					jamku[num].append(SeparatorComponent())
 			for klik, jam in data:
 				if tanggal[0] in klik:
 					try:
@@ -1628,6 +1629,7 @@ def tayang(kode_bioskop):
 								align='center'
 							)
 						)
+						jamku[num].append(SeparatorComponent())
 			num = len(jamku) + 1
 		num = 1
 		gabungin = zip(gambar, judul, tipe, rating, durasi, tanggal, harga)
@@ -1652,6 +1654,7 @@ def tayang(kode_bioskop):
 							contents=jamku[num][:6]
 						)
 					)
+					clock.append(SeparatorComponent())
 					clock.append(
 						BoxComponent(
 							layout='horizontal',
