@@ -1592,7 +1592,7 @@ def tayang(kode_bioskop):
 		durasi = re.findall('<span class="glyphicon glyphicon-time"></span> (.*?)</div>',udict, re.S)
 		durasi = durasi[2:]
 
-		tanggal = re.findall('<div class="row">							<div class="col-xs-7" style="text-align:left"><p class="p_date"><p class="p_date">(.*?)</p></div>',udict, re.S)
+		tanggal = re.findall('<div class="row">                            <div class="col-xs-7" style="text-align:left"><p class="p_date"><p class="p_date">(.*?)</p></div>',udict, re.S)
 		bioskop = re.findall('<h4><span><strong>(.*?)</strong></span></h4>',udict, re.S)[0]
 
 		harga = re.findall('</p></div><div class="col-xs-5" style="text-align:right"><span class="p_price">(.*?)</span></div><br><p class="p_time pull-left" style="margin: 10px">',udict, re.S)
