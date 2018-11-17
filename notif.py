@@ -1,6 +1,7 @@
 import sesuatu
 import os
 import schedule
+import time
 
 from acc import (namaBot, google_key, line_bot_api, handler, db)
 from linebot.models import *
@@ -8,7 +9,7 @@ from linebot.models import *
 def notifikasi():
 	line_bot_api.push_message('U3fed832cbef28b87b7827b306506c8d5', TextSendMessage(text="Yeeee"))
 
-schedule.every(1).minutes.do(notifikasi)
+schedule.every(10).seconds.do(notifikasi)
 
 while True:
 	schedule.run_pending()
