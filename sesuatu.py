@@ -1759,7 +1759,11 @@ def tayang(kode_bioskop):
 									align='center'
 								),
 								SeparatorComponent(margin='md'),
-								[d for d in clock]
+								BoxComponent(
+									layout='vertical',
+									margin='md',
+									contents=clock
+								)
 							]
 						),
 						footer=BoxComponent(
