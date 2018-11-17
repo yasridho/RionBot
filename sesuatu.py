@@ -466,22 +466,6 @@ def pengaturan(args):
 		except:
 			return TextSendMessage(text="Undescribeable error detected!!")
 
-def info_film(args):
-	try:
-		url = urllib.request.urlopen('https://mtix.21cineplex.com/gui.movie_details.php?sid=&movie_id='+args)
-		udict = url.read().decode('utf-8').replace('\r','').replace('\n','')
-		data = re.findall('<div class="main-content">(.*?)<div class="col-xs-8 col-sm-11 col-md-11" style="font-weight: bold">',udict, re.S)[0]
-		gambar = re.findall('<img src="(.*?)" width="50" height="50"/>', data, re.S)
-		return gambar
-	except Exception as e:
-		try:
-			et, ev, tb = sys.exc_info()
-			lineno = tb.tb_lineno
-			fn = tb.tb_frame.f_code.co_filename
-			return "[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))
-		except:
-			return "Undescribeable error detected!!"
-
 def download_film(args):
 	result = list()
 	try:
