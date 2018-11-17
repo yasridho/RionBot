@@ -13,6 +13,8 @@ Jalankan = False
 x = datetime.today()
 y = x.replace(second=x.second+10)
 
+
+delta_t = y - x
 secs = delta_t.seconds+1
 
 def yee():
