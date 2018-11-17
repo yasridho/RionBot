@@ -21,6 +21,7 @@ import yify_torrent
 import acc
 import sesuatu
 import imp
+import schedule
 
 from acc import (namaBot, google_key, line_bot_api, handler, db)
 from sesuatu import (mau_nonton, pengaturan, panggil)
@@ -802,3 +803,4 @@ import os
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+    schedule.run_pending()
