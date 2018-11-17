@@ -1273,13 +1273,13 @@ def info_film(args):
 		genre = re.findall('<div>(.*?)</div>',data, re.S)[1]
 		sinopsis = re.findall('<div>(.*?)</div>',data, re.S)[2]
 		sinopsis = sinopsis.replace('<p id="description">','').replace('</p><span id="readMore" style="text-decoration: underline"></span>','').replace('<br />','\n')
-		trailer = re.findall(' BUY TICKET </button></p>                                        <p><button onclick="location.href = (.*?);" class="btn icon-btn btn-success" style="margin-top: 10px; width:90%;" > TRAILER </button></p>',data, re.S)[0]
+		trailer = re.findall(' BUY TICKET </button></p>										<p><button onclick="location.href = (.*?);" class="btn icon-btn btn-success" style="margin-top: 10px; width:90%;" > TRAILER </button></p>',data, re.S)[0]
 		trailer = trailer.replace("'","")
-		writer = re.findall('<strong>Writer</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
-		producer = re.findall('<br /><p style="margin-bottom: 5px"><strong>Producer</strong>:</p>                            <p> (.*?)</p>',data, re.S)[0]
-		director = re.findall('<p style="margin-bottom: 5px"><strong>Director</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
-		cast = re.findall('<p style="margin-bottom: 5px"><strong>Cast</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
-		distributor = re.findall('<p style="margin-bottom: 5px"><strong>Distributor</strong>:</p>                            <p>(.*?)</p>',data, re.S)[0]
+		writer = re.findall('<strong>Writer</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
+		producer = re.findall('<br /><p style="margin-bottom: 5px"><strong>Producer</strong>:</p>							<p> (.*?)</p>',data, re.S)[0]
+		director = re.findall('<p style="margin-bottom: 5px"><strong>Director</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
+		cast = re.findall('<p style="margin-bottom: 5px"><strong>Cast</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
+		distributor = re.findall('<p style="margin-bottom: 5px"><strong>Distributor</strong>:</p>							<p>(.*?)</p>',data, re.S)[0]
 		durasi = re.findall('<p><span class="glyphicon glyphicon-time" style="margin-bottom: 10px"></span> (.*?)</p>',data, re.S)[0]
 		tipe = re.findall('<p><a class="btn btn-default btn-outline disabled" style="color: #005350; font-weight: bold;"> (.*?)</a></p>',data, re.S)[0]
 
@@ -1567,16 +1567,16 @@ def tayang(kode_bioskop):
 		judul = re.findall('<a >(.*?)</a>',udict, re.S)
 		judul = judul[1:]
 
-		tipe = re.findall('<br>                     <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
+		tipe = re.findall('<br>					 <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
 		tipe = tipe[1:]
 
-		rating = re.findall('</span>                     <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
+		rating = re.findall('</span>					 <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
 		rating = rating[1:]
 
 		durasi = re.findall('<span class="glyphicon glyphicon-time"></span> (.*?)</div>',udict, re.S)
 		durasi = durasi[2:]
 
-		tanggal = re.findall('<div class="row">                            <div class="col-xs-7" style="text-align:left"><p class="p_date"><p class="p_date">(.*?)</p></div>',udict, re.S)
+		tanggal = re.findall('<div class="row">							<div class="col-xs-7" style="text-align:left"><p class="p_date"><p class="p_date">(.*?)</p></div>',udict, re.S)
 		bioskop = re.findall('<h4><span><strong>(.*?)</strong></span></h4>',udict, re.S)[0]
 
 		harga = re.findall('</p></div><div class="col-xs-5" style="text-align:right"><span class="p_price">(.*?)</span></div><br><p class="p_time pull-left" style="margin: 10px">',udict, re.S)
@@ -1826,6 +1826,5 @@ def tayang(kode_bioskop):
 		except:
 			return TextSendMessage(text="Undescribeable error detected!!")
 
-@handler.add(MessageEvent, message=TextMessage)
-def notifikasi(event):
-    line_bot_api.push_message('U3fed832cbef28b87b7827b306506c8d5', TextSendMessage(text="Yeeee"))
+def notifikasi():
+	line_bot_api.push_message('U3fed832cbef28b87b7827b306506c8d5', TextSendMessage(text="Yeeee"))
