@@ -45,6 +45,8 @@ def handle_postback(event):
 
 			elif cmd == 'reminder':
 				jamku, judul, bioskop = args.split(" ")
+				judul = judul.replace("+"," ")
+				bioskop = bioskop.replace("+"," ")
 				jam, menit = jamku.split(":")
 				x = datetime.today()
 				y = x.replace(hour=x.hour+jam, minute=x.minute+menit)
