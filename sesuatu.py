@@ -1643,6 +1643,7 @@ def tayang(kode_bioskop):
 							margin='md',
 							contents=jamku[num][:6]
 						)
+					)
 					clock.append(
 						BoxComponent(
 							layout='horizontal',
