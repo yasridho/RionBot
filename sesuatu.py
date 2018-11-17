@@ -1599,7 +1599,7 @@ def tayang(kode_bioskop):
 							size='xxs'
 						)
 					)
-					if (len(jamku[num]) - 7 == puluh):
+					if (len(jamku[num]) - 8 == puluh):
 						jamku[num].append(SeparatorComponent())
 						puluh = puluh + 10
 					jamku[num].append(SeparatorComponent())
@@ -1625,7 +1625,7 @@ def tayang(kode_bioskop):
 								size='xxs'
 							)
 						)
-						if (len(jamku[num]) - 7 == puluh):
+						if (len(jamku[num]) - 8 == puluh):
 							jamku[num].append(SeparatorComponent())
 							puluh = puluh + 10
 						jamku[num].append(SeparatorComponent())
