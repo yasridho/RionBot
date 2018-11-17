@@ -1583,10 +1583,10 @@ def tayang(kode_bioskop):
 		judul = re.findall('<a >(.*?)</a>',udict, re.S)
 		judul = judul[1:]
 
-		tipe = re.findall('<br>					 <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
+		tipe = re.findall('<br>                     <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
 		tipe = tipe[1:]
 
-		rating = re.findall('</span>					 <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
+		rating = re.findall('</span>                     <span class="btn btn-default btn-outline disabled" style="color: #005350;">(.*?)</span>',udict, re.S)
 		rating = rating[1:]
 
 		durasi = re.findall('<span class="glyphicon glyphicon-time"></span> (.*?)</div>',udict, re.S)
