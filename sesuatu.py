@@ -1669,6 +1669,7 @@ def tayang(kode_bioskop):
 							)
 						)
 						batas = batas + 7
+					awal = batas - 7
 					if awal < jwaktu:
 						clock.append(
 							BoxComponent(
