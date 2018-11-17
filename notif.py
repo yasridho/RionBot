@@ -20,11 +20,9 @@ def handle_message(event):
 		Jalankan = True
 		line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Notif berjalan"))
 		schedule.every(10).seconds.do(yee)
+		schedule.run_continuously()
 		
 	elif text == "Stop notif":
 		Jalankan = False
 		line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Notif berhenti"))
 
-	while Jalankan:
-		schedule.run_pending()
-		time.sleep(1)
