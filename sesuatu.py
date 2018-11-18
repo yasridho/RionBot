@@ -80,7 +80,8 @@ def reminder():
 					b.start()
 					c.start()
 
-				y = x.replace(year=x.year+(int(thn)-x.year),month=x.month+(int(bln)-x.month),day=x.day+(int(tgl)-x.day),hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
+				y = datetime.date(int(thn), int(bln), int(tgl))
+				#y = x.replace(year=x.year+(int(thn)-x.year),month=x.month+(int(bln)-x.month),day=x.day+(int(tgl)-x.day),hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
 				delta_t = y - x
 				secs = delta_t.seconds+1
 				t = Timer(secs, pengingat, (user, 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm, alarm))
