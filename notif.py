@@ -22,7 +22,7 @@ def handle_postback(event):
 			else:
 				cmd, args = data[0].lower(), ""
 
-			if cmd == "/pengingat":
+			if cmd == "pengingat":
 				sekarang = datetime.today()
 				pesan = TemplateSendMessage(
 					alt_text='Liat pengingat atau mau nambahin pengingat?',
