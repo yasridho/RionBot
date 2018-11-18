@@ -77,8 +77,10 @@ def reminder():
 						r = x.replace(year=x.year+(int(thn)-x.year),month=x.month+(int(bln)-x.month),day=x.day+(int(tgl)-x.day),hour=x.hour+(ingat_jam-x.hour), minute=x.minute+(ingat_menit-x.minute))
 						delta_b = r - x
 						detik = delta_b.seconds+1
-						b = Timer(detik, pengingat,  (user, 'Kak '+panggil(user)+' punya kegiatan 30 menit lagi ;D', alarm))
-						c = Timer(detik, pengingat, (user, 'Agenda yang akan dilakukan: '+alarm, alarm))
+						teks1 = 'Kak '+panggil(user)+' punya kegiatan 30 menit lagi ;D'
+						teks2 = 'Agenda yang akan dilakukan: '+alarm
+						b = Timer(detik, pengingat, (user, teks1, alarm))
+						c = Timer(detik, pengingat, (user, teks2, alarm))
 						b.start()
 						c.start()
 
@@ -89,7 +91,8 @@ def reminder():
 					y = x.replace(year=year,month=month,day=day,hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
 					delta_t = y - x
 					secs = delta_t.seconds+1
-					t = Timer(secs, pengingat, (user, 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm, alarm))
+					teks = 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm
+					t = Timer(secs, pengingat, (user, teks, alarm))
 					t.start()
 			except:pass
 def ingetin(pengirim, jam, film, bioskop):
