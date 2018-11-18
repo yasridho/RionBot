@@ -64,7 +64,7 @@ def handle_postback(event):
 				line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' mau diingatkan apa pada tanggal '+tgl+' bulan '+bulan(int(bln))+' tahun '+thn+' jam '+jamku+'?'))
 
 			elif cmd == 'cek_pengingat':
-				try:
+				#try:
 					kumpulan = list()
 					reminder = db.child("pengguna").child(sender).child("tambahan").child("pengingat").get().val()
 					for alarm in reminder:
@@ -180,8 +180,8 @@ def handle_postback(event):
 						contents=jadwal
 					)
 					line_bot_api.reply_message(event.reply_token, kirim)
-				except:
-					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kamu tidak memiliki pengingat.'))
+				#except:
+				#	line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kamu tidak memiliki pengingat.'))
 	except Exception as e:
 		try:
 			et, ev, tb = sys.exc_info()
