@@ -13,8 +13,8 @@ remind_me = {}
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
+	sender = event.source.user_id
 	try:
-		sender = event.source.user_id
 		if event.postback.data[0] == '/':
 			data = event.postback.data[1:].split(" ",1)
 			if len(data) > 1:
@@ -179,9 +179,9 @@ def handle_postback(event):
 			et, ev, tb = sys.exc_info()
 			lineno = tb.tb_lineno
 			fn = tb.tb_frame.f_code.co_filename
-			line_bot_api.push_message(kirim, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
+			line_bot_api.push_message(sender, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 		except:
-			line_bot_api.push_message(kirim, TextSendMessage(text="Undescribeable error detected!!"))
+			line_bot_api.push_message(sender, TextSendMessage(text="Undescribeable error detected!!"))
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
