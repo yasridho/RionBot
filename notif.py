@@ -40,7 +40,7 @@ def handle_postback(event):
 								text='Mau nambahin pengingat',
 								data='/tambah_pengingat',
 								mode='datetime',
-								initial=str(sekarang.year)+'-'+str(sekarang.month)+'-'+str(sekarang.day+1)+'t'+str(sekarang.hour+5)+':'+str(sekarang.minute),
+								initial=str(sekarang.year)+'-'+str(sekarang.month)+'-'+str(sekarang.day+1)+'t'+str(sekarang.hour)+':'+str(sekarang.minute),
 								min=str(sekarang.date())+'t'+str(sekarang.hour)+':'+str(sekarang.minute)
 							)
 						]
