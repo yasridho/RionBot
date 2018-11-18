@@ -171,7 +171,7 @@ def handle_postback(event):
 				)
 				line_bot_api.reply_message(event.reply_token, kirim)
 			except:
-				line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kamu tidak memiliki pengingat.')))
+				line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kamu tidak memiliki pengingat.'))
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
