@@ -202,4 +202,4 @@ def handle_message(event):
 		db.child("pengguna").child(sender).child("tambahan").child("pengingat").child(text).set(data)
 		line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Okee kak ;D'))
 		sesuatu.reminder()
-		del remind_me[sender]
+		del remind_me.pop(sender)
