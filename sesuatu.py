@@ -55,7 +55,7 @@ def reminder():
 				waktu = pengingat[alarm]["jam"]
 				tanggal = pengingat[alarm]["tanggal"]
 				jam, menit = waktu.split(":")
-				tgl, bln, thn = tanggal.split("-")
+				thn, bln, tgl = tanggal.split("-")
 				if not alarm in running_notif[user]:
 					running_notif[user].append(alarm)
 				else:return
@@ -85,10 +85,6 @@ def reminder():
 				day = x.day + (int(tgl) - x.day)
 				month = x.month + (int(bln) - x.month)
 				year = x.year + (int(thn) - x.year)
-				if day > monthrange(int(thn), int(bln))[1]:
-					month = month + 1
-				if month > 12:
-					year = year + 1
 				y = x.replace(year=year,month=month,day=day,hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
 				delta_t = y - x
 				secs = delta_t.seconds+1
