@@ -35,7 +35,7 @@ def handle_postback(event):
 								text='Mau cek pengingat',
 								data='/cek_pengingat'
 							),
-							DatetimePickerkAction(
+							DatetimePickerAction(
 								label='Tambah pengingat',
 								text='Mau nambahin pengingat',
 								data='/tambah_pengingat',
