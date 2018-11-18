@@ -196,7 +196,7 @@ def handle_message(event):
 	sender = event.source.user_id
 	if sender in remind_me:
 		kalender = remind_me[sender]
-		tanggal, jamku = kalender.split("t")
+		tanggal, jamku = kalender.split("T")
 		data = {'tanggal':tanggal,'jam':jamku,'ulang':False}
 		db.child("pengguna").child(sender).child("tambahan").child("pengingat").child(text).set(data)
 		line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Okee kak ;D'))
