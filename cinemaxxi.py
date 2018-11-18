@@ -44,16 +44,20 @@ def handle_postback(event):
 				line_bot_api.reply_message(event.reply_token, info_film(args))
 
 			elif cmd == 'reminder':
-				jamku, judul, bioskop = args.split(" ")
+				jamku, judul, bioskop, tanggalku = args.split(" ")
 				judul = judul.replace("+"," ")
 				bioskop = bioskop.replace("+"," ")
 				jam, menit = jamku.split(":")
+				tgl, bln, thn = tanggalku.split("-")
 
 				x = datetime.today()
-				if int(jam) <= x.hour:
-					if int(menit) <= x.minute:
-						line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Jamnya sudah lewat kak :('))
-						return
+				if int(thn) <= x.year:
+					if int(bln) <= x.month:
+						if int(tgl) <= x.day:
+							if int(jam) <= x.hour:
+								if int(menit) <= x.minute:
+									line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Waktunya sudah lewat kak :('))
+									return
 
 				if x.hour < int(jam):
 					ingat_jam = int(jam)
@@ -73,6 +77,8 @@ def handle_postback(event):
 				t = Timer(secs, ingetin, (event.source.user_id, jamku, judul, bioskop))
 				t.start()
 				line_bot_api.reply_message(event.reply_token, TextSendMessage('Okee kak ;D'))
+				data = {'tanggal':tanggalku,'jam':jamku,'ulang':False}
+				db.child("pengguna").child(event.source.user_id).child("tambahan").child("pengingat").child('Nonton '+judul.capitalize()+' di '+bioskop).set(data)
 
 	except Exception as e:
 		try:

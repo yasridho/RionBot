@@ -1,38 +1,185 @@
 import sesuatu
 import os
-import schedule
 import time
 
 from datetime import datetime
 from threading import Timer
-from acc import (namaBot, google_key, line_bot_api, handler, db, notifikasi)
+from sesuatu import (panggil, bulan)
+from acc import (namaBot, google_key, line_bot_api, handler, db)
 from linebot.models import *
 
-Jalankan = False
+remind_me = {}
 
+@handler.add(PostbackEvent)
+def handle_postback(event):
+	sender = event.source.user_id
+	if event.postback.data[0] == '/':
+		data = event.postback.data[1:].split(" ",1)
+		if len(data) > 1:
+			cmd, args = data[0].lower(), data[1]
+		else:
+			cmd, args = data[0].lower(), ""
 
+		if cmd == "/pengingat":
+			sekarang = datetime.today()
+			pesan = TemplateSendMessage(
+				alt_text='Liat pengingat atau mau nambahin pengingat?',
+				template=ButtonsTemplate(
+					title='Pengingat',
+					text='Mau cek atau nambahin pengingat?',
+					actions=[
+						PostbackAction(
+							label='Cek Pengingat',
+							text='Mau cek pengingat',
+							data='/cek_pengingat'
+						),
+						DatetimePickerkAction(
+							label='Tambah pengingat',
+							text='Mau nambahin pengingat',
+							data='/tambah_pengingat',
+							mode='datetime',
+							initial=str(sekarang.year)+'-'+str(sekarang.month)+'-'+str(sekarang.day+1)+'t05:00',
+							min=sekarang.date()+'t'+str(sekarang.hour)+':'+str(sekarang.minute)
+						)
+					]
+				)
+			)
+			line_bot_api.reply_message(event.reply_token, pesan)
 
-def yee():
-	line_bot_api.push_message('U3fed832cbef28b87b7827b306506c8d5', TextSendMessage(text="Yeeee"))
+		elif cmd == 'tambah_pengingat':
+			kalender = event.postback.params['datetime']
+			remind_me.update({sender:kalender})
+			tanggal, jamku = kalender.split("t")
+			tgl, bln, thn = tanggal.split('-')
+			line_bot_api.reply_message(reply_token, TextSendMessage(text='Kak '+panggil(sender)+' mau diingatkan apa pada tanggal '+tgl+' bulan '+bulan(int(bln))+' tahun '+thn+' jam '+jamku+'?')
 
-
+		elif cmd == 'cek_pengingat':
+			try:
+				kumpulan = list()
+				reminder = db.child("pengguna").child(sender).child("tambahan").child("pengingat").get().val()
+				for alarm in reminder:
+					kumpulan.append(
+						BoxComponent(
+							layout='baseline',
+							margin='sm',
+							contents=[
+								TextComponent(
+									text=alarm["jam"],
+									size='xs',
+									align='start'
+								),
+								TextComponent(
+									text=alarm["tanggal"],
+									size='xs',
+									align='center'
+								),
+								TextComponent(
+									text=alarm,
+									size='xs',
+									align='end',
+									wrap=True
+								)
+							]
+						)
+					)
+				jadwal = BubbleContainer(
+					direction='ltr',
+					header=BoxComponent(
+						layout='vertical',
+						contents=[
+							TextComponent(
+								text='PENGINGAT',
+								align='center',
+								weight='bold',
+								color='#aaaaaa'
+							)
+						]
+					),
+					hero=ImageComponent(
+						url=line_bot_api.get_profile(sender).picture_url,
+						size='full',
+						aspect_ratio='4:3',
+						aspect_mode='cover'
+					),
+					body=BoxComponent(
+						layout='vertical',
+						contents=[
+							TextComponent(
+								text='Berikut ini pengingat kak '+panggil(sender),
+								size='sm',
+								align='start',
+								gravity='top'
+							),
+							SeparatorComponent(margin='lg'),
+							BoxComponent(
+								layout='vertical',
+								margin='sm',
+								contents=[
+									BoxComponent(
+										layout='baseline',
+										contents=[
+											TextComponent(
+												text='Jam',
+												size='xs',
+												align='start'
+											),
+											TextComponent(
+												text='Tanggal',
+												size='xs',
+												align='center'
+											),
+											TextComponent(
+												text='Agenda',
+												size='xs',
+												align='end'
+											)
+										]
+									),
+									SeparatorComponent(margin='xs'),
+									BoxComponent(
+										layout='vertical',
+										margin='sm',
+										contents=kumpulan
+									)
+								]
+							)
+						]
+					),
+					footer=BoxComponent(
+						layout='horizontal',
+						contents=[
+							ButtonComponent(
+								action=PostbackAction(
+									label='Tambah Pengingat',
+									text='Mau nambah pengingat',
+									data='/tambah_pengingat'
+								),
+								color='#ffffff',
+								height='sm'
+							)
+						]
+					),
+					styles=BubbleStyle(
+						footer=BlockStyle(
+							background_color='#00318d'
+						)
+					)
+				)
+				kirim = FlexSendMessage(
+					alt_text='Pengingat',
+					contents=jadwal
+				)
+				line_bot_api.reply_message(event.reply_token, kirim)
+			except:
+				line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kamu tidak memiliki pengingat.')))
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-	text = event.message.text
 	sender = event.source.user_id
-
-	if text == "Run notif":
-		Jalankan = True
-		line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Notif berjalan"))
-		x = datetime.today()
-		y = x.replace(second=x.second+10)
-		delta_t = y - x
-		secs = delta_t.seconds+1
-		t = Timer(secs, yee)
-		t.start()
-		
-	elif text == "Stop notif":
-		Jalankan = False
-		line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Notif berhenti"))
-		t.stop()
+	if sender in remind_me:
+		kalender = remind_me[sender]
+		tanggal, jamku = kalender.split("t")
+		data = {'tanggal':tanggal,'jam':jamku,'ulang':False}
+		db.child("pengguna").child(sender).child("tambahan").child("pengingat").child(text).set(data)
+		line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Okee kak ;D'))
+		sesuatu.reminder()

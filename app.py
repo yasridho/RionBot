@@ -149,6 +149,7 @@ def handle_postback(event):
     cmds.handle_postback(event)
     yify_torrent.handle_postback(event)
     cinemaxxi.handle_postback(event)
+    notif.handle_postback(event)
     sender = event.source.user_id
     if isinstance(event.source, SourceGroup):
         kirim = gid
@@ -245,19 +246,7 @@ def handle_message(event):
         sender = event.source.user_id #get user_id
         gid = event.source.sender_id #get group_id
         profil = line_bot_api.get_profile(sender)
-        try:       
-            nama = panggil(sender) #Ini buat nama
-        except:
-            data = {'nama':line_bot_api.get_profile(event.source.user_id).display_name,
-                    'foto':line_bot_api.get_profile(event.source.user_id).picture_url,
-                    'status':line_bot_api.get_profile(event.source.user_id).status_message,
-                    'waktu_add':time.time()}
-            db.child("pengguna").child(event.source.user_id).set(data)
-            try:
-                jumlah = db.child("pengguna").get().val()["total"]
-                db.child("pengguna").child("total").update(jumlah+1)
-            except:
-                db.child("pengguna").child("total").set(1)  
+        nama = panggil(sender) #Ini buat nama
         gambar = profil.picture_url #Ini profile picture
         status = profil.status_message #Ini status di line
 
@@ -304,63 +293,6 @@ def handle_message(event):
             kirim = event.source.room_id
         else:
             kirim = sender
-
-        def test():
-            pesan = FlexSendMessage(
-                    alt_text='Test request granted',
-                    contents=
-                            CarouselContainer(
-                                contents=[
-                                    BubbleContainer(
-                                        body=BoxComponent(
-                                            layout='horizontal',
-                                            contents=[
-                                                TextComponent(
-                                                    text='Lorem ipsum dolor sit amet',
-                                                    wrap=True
-                                                )
-                                            ]
-                                        ), 
-                                        footer=BoxComponent(
-                                            layout='horizontal',
-                                            contents=[
-                                                ButtonComponent(
-                                                    style='primary',
-                                                    action=URIAction(
-                                                        label='Go',
-                                                        uri='https://example.com'
-                                                    )
-                                                )
-                                            ]
-                                        )
-                                    ),
-                                    BubbleContainer(
-                                        body=BoxComponent(
-                                            layout='horizontal',
-                                            contents=[
-                                                TextComponent(
-                                                    text='Hello world',
-                                                    wrap=True
-                                                )
-                                            ]
-                                        ),
-                                        footer=BoxComponent(
-                                            layout='horizontal',
-                                            contents=[
-                                                ButtonComponent(
-                                                    style='primary',
-                                                    action=URIAction(
-                                                        label='Go',
-                                                        uri='https://example.com'
-                                                    )
-                                                )
-                                            ]   
-                                        )
-                                    )
-                                ]
-                            )
-                    )
-            return line_bot_api.push_message(kirim, pesan)
 
         def balas(args):
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=args))

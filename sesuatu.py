@@ -10,8 +10,9 @@ import cinema21
 from linebot.models import *
 from acc import (google_key, db, line_bot_api)
 from datetime import datetime
+from threading import Timer
 
-
+running_notif = {}
 
 def ukuran_file(args):
 	minimal = 2**10
@@ -36,6 +37,54 @@ def panggil(args):
 		return panggilan
 	except:
 		return data["nama"]
+
+def pengingat(kepada, pesan, agenda):
+	line_bot_api.push_message(kepada, TextSendMessage(text=pesan))
+	db.child("pengguna").child(kepada).child("tambahan").child("pengingat").child(agenda).remove()
+	running_notif[kepada].remove(agenda)
+
+def reminder():
+	data = db.child("pengguna").get().val()
+	for user in data:
+		if not user in running_notif:
+			running_notif.update({user:[]})
+		if not user == "total":
+			pengingat = data[user]["tambahan"]["pengingat"]
+			for alarm in pengingat:
+				waktu = pengingat[alarm]["jam"]
+				tanggal = pengingat[alarm]["tanggal"]
+				jam, menit = waktu.split(":")
+				tgl, bln, thn = tanggal.split("-")
+				if not alarm in running_notif[user]:
+					running_notif[user].append(agenda)
+				else:return
+				x = datetime.today()
+				if int(thn) <= x.year:
+					if int(bln) <= x.month:
+						if int(tgl) <= x.day:
+							if int(jam) <= x.hour:
+								if int(menit) <= x.minute:
+									db.child("pengguna").child(user).child("tambahan").child("pengingat").child(alarm).remove()
+				
+				if x.hour < int(jam):
+					ingat_jam = int(jam)
+					ingat_menit = int(menit) - 30
+					if ingat_menit < 0:
+						ingat_jam = int(jam) - 1
+						ingat_menit = abs(ingat_menit)
+					r = x.replace(year=x.year+(int(thn)-x.year),month=x.month+(int(bln)-x.month),day=x.day+(int(tgl)-x.day),hour=x.hour+(ingat_jam-x.hour), minute=x.minute+(ingat_menit-x.minute))
+					delta_b = r - x
+					detik = delta_b.seconds+1
+					b = Timer(detik, pengingat,  (user, 'Kak '+panggil(user)+' punya kegiatan 30 menit lagi ;D', alarm))
+					c = Timer(detik, pengingat, (user, 'Agenda yang akan dilakukan: '+alarm, alarm))
+					b.start()
+					c.start()
+
+				y = x.replace(year=x.year+(int(thn)-x.year),month=x.month+(int(bln)-x.month),day=x.day+(int(tgl)-x.day),hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
+				delta_t = y - x
+				secs = delta_t.seconds+1
+				t = Timer(secs, pengingat, (user, 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm, alarm))
+				t.start()
 
 def ingetin(pengirim, jam, film, bioskop):
 	line_bot_api.push_message(pengirim,[
@@ -1650,7 +1699,7 @@ def tayang(kode_bioskop):
 								action=PostbackAction(
 									label='Ingetin',
 									text='Ingetin jam '+jam+' buat nonton '+judul[num-1]+' di '+bioskop.capitalize(),
-									data='/reminder '+jam+' '+judul[num-1].replace(" ","+")+' '+bioskop.capitalize().replace(" ","+")
+									data='/reminder '+jam+' '+judul[num-1].replace(" ","+")+' '+bioskop.capitalize().replace(" ","+")+' '+tanggal[num-1]
 								)
 							)
 						)
@@ -1666,7 +1715,7 @@ def tayang(kode_bioskop):
 								action=PostbackAction(
 									label='Ingetin',
 									text='Ingetin jam '+jam+' buat nonton '+judul[num-1]+' di '+bioskop.capitalize(),
-									data='/reminder '+jam+' '+judul[num-1].replace(" ","+")+' '+bioskop.capitalize().replace(" ","+")
+									data='/reminder '+jam+' '+judul[num-1].replace(" ","+")+' '+bioskop.capitalize().replace(" ","+")+' '+tanggal[num-1]
 								)
 							)
 						)
