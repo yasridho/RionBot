@@ -11,6 +11,7 @@ from linebot.models import *
 from acc import (google_key, db, line_bot_api)
 from datetime import datetime
 from threading import Timer
+from calendar import monthrange
 
 running_notif = {}
 
@@ -80,8 +81,15 @@ def reminder():
 					b.start()
 					c.start()
 
-				y = datetime.date(int(thn), int(bln), int(tgl))
-				#y = x.replace(year=x.year+(int(thn)-x.year),month=x.month+(int(bln)-x.month),day=x.day+(int(tgl)-x.day),hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
+				#y = datetime.date(int(thn), int(bln), int(tgl))
+				day = x.day + (int(tgl) - x.day)
+				month = x.month + (int(bln) - x.month)
+				year = x.year + (int(thn) - x.year)
+				if day > monthrange(int(thn), int(bln))[1]:
+					month = month + 1
+				if month > 12:
+					year = year + 1
+				y = x.replace(year=year,month=month,day=day,hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
 				delta_t = y - x
 				secs = delta_t.seconds+1
 				t = Timer(secs, pengingat, (user, 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm, alarm))
