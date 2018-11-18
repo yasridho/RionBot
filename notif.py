@@ -40,7 +40,7 @@ def handle_postback(event):
 								text='Mau nambahin pengingat',
 								data='/tambah_pengingat',
 								mode='datetime',
-								initial=str(sekarang.year)+'-'+str(sekarang.month)+'-'+str(sekarang.day+1)+'t05:00',
+								initial=str(sekarang.year)+'-'+str(sekarang.month)+'-'+str(sekarang.day+1)+'t'+str(sekarang.hour+5)+':'+str(sekarang.minute),
 								min=str(sekarang.date())+'t'+str(sekarang.hour)+':'+str(sekarang.minute)
 							)
 						]
@@ -50,11 +50,10 @@ def handle_postback(event):
 
 			elif cmd == 'tambah_pengingat':
 				kalender = event.postback.params['datetime']
-				#remind_me.update({sender:kalender})
-				#tanggal, jamku = kalender.split("t")
-				#tgl, bln, thn = tanggal.split('-')
-				#line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' mau diingatkan apa pada tanggal '+tgl+' bulan '+bulan(int(bln))+' tahun '+thn+' jam '+jamku+'?'))
-				line_bot_api.reply_message(event.reply_token, TextSendMessage(text=kalender))
+				remind_me.update({sender:kalender})
+				tanggal, jamku = kalender.split("T")
+				tgl, bln, thn = tanggal.split('-')
+				line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' mau diingatkan apa pada tanggal '+tgl+' bulan '+bulan(int(bln))+' tahun '+thn+' jam '+jamku+'?'))
 
 			elif cmd == 'cek_pengingat':
 				try:
