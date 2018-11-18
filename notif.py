@@ -24,6 +24,14 @@ def handle_postback(event):
 
 			if cmd == "pengingat":
 				sekarang = datetime.today()
+				if sekarang.minute < 10:
+					menit = '0'+str(sekarang.minute)
+				else:
+					menit = str(sekarang.minute)
+				if sekarang.hour < 10:
+					jam = '0'+str(sekarang.hour)
+				else:
+					jam = str(sekarang.hour)
 				pesan = TemplateSendMessage(
 					alt_text='Liat pengingat atau mau nambahin pengingat?',
 					template=ButtonsTemplate(
@@ -40,8 +48,8 @@ def handle_postback(event):
 								text='Mau nambahin pengingat',
 								data='/tambah_pengingat',
 								mode='datetime',
-								initial=str(sekarang.year)+'-'+str(sekarang.month)+'-'+str(sekarang.day+1)+'t'+str(sekarang.hour)+':'+str(sekarang.minute),
-								min=str(sekarang.date())+'t'+str(sekarang.hour)+':'+str(sekarang.minute)
+								initial=str(sekarang.year)+'-'+str(sekarang.month)+'-'+str(sekarang.day+1)+'t'+jam':'+menit,
+								min=str(sekarang.date())+'t'+jam+':'+menit
 							)
 						]
 					)
