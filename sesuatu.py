@@ -59,9 +59,8 @@ def reminder():
 					tanggal = pengingat[alarm]["tanggal"]
 					jam, menit = waktu.split(":")
 					tgl, bln, thn = tanggal.split("-")
-					if not alarm in running_notif[user]:
-						running_notif[user].append(alarm)
-					else:return
+					if alarm in running_notif[user]:return
+					running_notif[user].append(alarm)
 					x = datetime.today()
 					if int(thn) <= x.year:
 						if int(bln) <= x.month:
