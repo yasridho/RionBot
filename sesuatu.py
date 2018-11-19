@@ -49,10 +49,10 @@ def pesan_pengingat(kepada, pesan, agenda):
 def reminder():
 	data = db.child("pengguna").get().val()
 	for user in data:
-		if not user in running_notif:
+		if not user in running_notif and not user == "total":
 			running_notif.update({user:[]})
 		if not user == "total":
-			#try:
+			try:
 				pengingat = data[user]["tambahan"]["pengingat"]
 				for alarm in pengingat:
 					waktu = pengingat[alarm]["jam"]
@@ -96,7 +96,7 @@ def reminder():
 					teks = 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm
 					t = Timer(secs, pesan_pengingat, (user, teks, alarm))
 					t.start()
-			#except:pass
+			except:pass
 def ingetin(pengirim, jam, film, bioskop):
 	line_bot_api.push_message(pengirim,[
 		TextSendMessage(
