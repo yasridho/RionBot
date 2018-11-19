@@ -74,17 +74,17 @@ def handle_postback(event):
 								margin='sm',
 								contents=[
 									TextComponent(
-										text=alarm["jam"],
+										text=reminder[alarm]["jam"],
 										size='xs',
 										align='start'
 									),	
 									TextComponent(
-										text=alarm["tanggal"],
+										text=reminder[alarm]["tanggal"],
 										size='xs',
 										align='center'
 									),
 									TextComponent(
-										text=alarm,
+										text=reminder[alarm],
 										size='xs',
 										align='end',
 										wrap=True
