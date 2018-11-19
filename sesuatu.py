@@ -39,7 +39,7 @@ def panggil(args):
 	except:
 		return data["nama"]
 
-def pengingat(kepada, agenda):
+def pesan_pengingat(kepada, agenda):
 	line_bot_api.push_message(kepada, TextSendMessage(text='Kak '+panggil(user)+' punya jadwal hari ini: '+agenda))
 	db.child("pengguna").child(kepada).child("tambahan").child("pengingat").child(agenda).remove()
 	running_notif[kepada].remove(agenda)
@@ -91,7 +91,7 @@ def reminder():
 					y = x.replace(year=year,month=month,day=day,hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
 					delta_t = y - x
 					secs = delta_t.seconds+1
-					t = Timer(secs, pengingat, (user, alarm))
+					t = Timer(secs, pesan_pengingat, (user, alarm))
 					t.start()
 			#except:pass
 def ingetin(pengirim, jam, film, bioskop):
