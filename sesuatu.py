@@ -55,10 +55,12 @@ def reminder():
 			try:
 				pengingat = data[user]["tambahan"]["pengingat"]
 				for alarm in pengingat:
+					if alarm in running_notif[user]:continue
 					waktu = pengingat[alarm]["jam"]
 					tanggal = pengingat[alarm]["tanggal"]
 					jam, menit = waktu.split(":")
 					tgl, bln, thn = tanggal.split("-")
+					running_notif[user].append(alarm)
 					x = datetime.today()
 					if int(thn) <= x.year:
 						if int(bln) <= x.month:
@@ -93,8 +95,6 @@ def reminder():
 					teks = 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm
 					t = Timer(secs, pesan_pengingat, (user, teks, alarm))
 					t.start()
-					if alarm in running_notif[user]:continue
-					running_notif[user].append(alarm)
 			except:pass
 
 def ingetin(pengirim, jam, film, bioskop):
