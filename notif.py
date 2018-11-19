@@ -60,7 +60,7 @@ def handle_postback(event):
 				kalender = event.postback.params['datetime']
 				remind_me.update({sender:kalender})
 				tanggal, jamku = kalender.split("T")
-				tgl, bln, thn = tanggal.split('-')
+				thn, bln, tgl = tanggal.split('-')
 				line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' mau diingatkan apa pada tanggal '+tgl+' bulan '+bulan(int(bln))+' tahun '+thn+' jam '+jamku+'?'))
 
 			elif cmd == 'cek_pengingat':
@@ -198,6 +198,8 @@ def handle_message(event):
 	if sender in remind_me:
 		kalender = remind_me[sender]
 		tanggal, jamku = kalender.split("T")
+		thn, bln, tgl = tanggal.split("-")
+		tanggal = tgl+'-'+bln+'-'+thn
 		data = {'tanggal':tanggal,'jam':jamku,'ulang':False}
 		db.child("pengguna").child(sender).child("tambahan").child("pengingat").child(text).set(data)
 		line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Okee kak ;D'))
