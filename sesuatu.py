@@ -42,7 +42,7 @@ def panggil(args):
 	except:pass
 
 def pesan_pengingat(kepada, agenda):
-	line_bot_api.push_message(kepada, TextSendMessage(text='Kak '+panggil(user)+' punya jadwal hari ini: '+agenda))
+	line_bot_api.push_message(kepada, TextSendMessage(text='Kak '+panggil(kepada)+' punya jadwal hari ini: '+agenda))
 	db.child("pengguna").child(kepada).child("tambahan").child("pengingat").child(agenda).remove()
 	running_notif[kepada].remove(agenda)
 
