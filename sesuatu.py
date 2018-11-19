@@ -50,7 +50,7 @@ def reminder():
 		if not user in running_notif:
 			running_notif.update({user:[]})
 		if not user == "total":
-			try:
+			#try:
 				pengingat = data[user]["tambahan"]["pengingat"]
 				for alarm in pengingat:
 					waktu = pengingat[alarm]["jam"]
@@ -93,7 +93,7 @@ def reminder():
 					secs = delta_t.seconds+1
 					t = Timer(secs, pengingat, (user, alarm))
 					t.start()
-			except:pass
+			#except:pass
 def ingetin(pengirim, jam, film, bioskop):
 	line_bot_api.push_message(pengirim,[
 		TextSendMessage(
