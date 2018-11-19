@@ -84,7 +84,7 @@ def handle_postback(event):
 										align='center'
 									),
 									TextComponent(
-										text=reminder[alarm],
+										text=alarm,
 										size='xs',
 										align='end',
 										wrap=True
