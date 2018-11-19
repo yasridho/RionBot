@@ -32,12 +32,14 @@ def bulan(args):
 	return data[args]
 
 def panggil(args):
-	data = db.child("pengguna").get().val()[args]
 	try:
-		panggilan = data["tambahan"]["panggilan"]
-		return panggilan
-	except:
-		return data["nama"]
+		data = db.child("pengguna").get().val()[args]
+		try:
+			panggilan = data["tambahan"]["panggilan"]
+			return panggilan
+		except:
+			return data["nama"]
+	except:pass
 
 def pesan_pengingat(kepada, agenda):
 	line_bot_api.push_message(kepada, TextSendMessage(text='Kak '+panggil(user)+' punya jadwal hari ini: '+agenda))
