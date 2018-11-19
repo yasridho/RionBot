@@ -41,8 +41,8 @@ def panggil(args):
 			return data["nama"]
 	except:pass
 
-def pesan_pengingat(kepada, agenda):
-	line_bot_api.push_message(kepada, TextSendMessage(text='Kak '+panggil(kepada)+' punya jadwal hari ini: '+agenda))
+def pesan_pengingat(kepada, pesan, agenda):
+	line_bot_api.push_message(kepada, TextSendMessage(text=pesan))
 	db.child("pengguna").child(kepada).child("tambahan").child("pengingat").child(agenda).remove()
 	running_notif[kepada].remove(agenda)
 
@@ -81,8 +81,8 @@ def reminder():
 						detik = delta_b.seconds+1
 						teks1 = 'Kak '+panggil(user)+' punya kegiatan 30 menit lagi ;D'
 						teks2 = 'Agenda yang akan dilakukan: '+alarm
-						b = Timer(detik, pengingat, (user, teks1, alarm))
-						c = Timer(detik, pengingat, (user, teks2, alarm))
+						b = Timer(detik, pesan_pengingat, (user, teks1, alarm))
+						c = Timer(detik, pesan_pengingat, (user, teks2, alarm))
 						b.start()
 						c.start()
 
@@ -93,7 +93,8 @@ def reminder():
 					y = x.replace(year=year,month=month,day=day,hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
 					delta_t = y - x
 					secs = delta_t.seconds+1
-					t = Timer(secs, pesan_pengingat, (user, alarm))
+					teks = 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm
+					t = Timer(secs, pesan_pengingat, (user, teks, alarm))
 					t.start()
 			#except:pass
 def ingetin(pengirim, jam, film, bioskop):
