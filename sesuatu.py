@@ -59,42 +59,42 @@ def reminder():
 					tanggal = pengingat[alarm]["tanggal"]
 					jam, menit = waktu.split(":")
 					tgl, bln, thn = tanggal.split("-")
-					for i in running_notif[user]:
-						if alarm != i:
-							running_notif[user].append(alarm)
-							x = datetime.today()
-							if int(thn) <= x.year:
-								if int(bln) <= x.month:
-									if int(tgl) <= x.day:
-										if int(jam) <= x.hour:
-											if int(menit) <= x.minute:
-												db.child("pengguna").child(user).child("tambahan").child("pengingat").child(alarm).remove()				
-							if x.hour < int(jam):
-								ingat_jam = int(jam)
-								ingat_menit = int(menit) - 30
-								if ingat_menit < 0:
-									ingat_jam = int(jam) - 1
-									ingat_menit = abs(ingat_menit)
-								r = x.replace(year=x.year+(int(thn)-x.year),month=x.month+(int(bln)-x.month),day=x.day+(int(tgl)-x.day),hour=x.hour+(ingat_jam-x.hour), minute=x.minute+(ingat_menit-x.minute))
-								delta_b = r - x
-								detik = delta_b.seconds+1
-								teks1 = 'Kak '+panggil(user)+' punya kegiatan 30 menit lagi ;D'
-								teks2 = 'Agenda yang akan dilakukan: '+alarm
-								b = Timer(detik, pesan_pengingat, (user, teks1, alarm))
-								c = Timer(detik, pesan_pengingat, (user, teks2, alarm))
-								b.start()
-								c.start()
+					if alarm in running_notif[user]:continue
+					running_notif[user].append(alarm)
+					x = datetime.today()
+					if int(thn) <= x.year:
+						if int(bln) <= x.month:
+							if int(tgl) <= x.day:
+								if int(jam) <= x.hour:
+									if int(menit) <= x.minute:
+										db.child("pengguna").child(user).child("tambahan").child("pengingat").child(alarm).remove()
+				
+					if x.hour < int(jam):
+						ingat_jam = int(jam)
+						ingat_menit = int(menit) - 30
+						if ingat_menit < 0:
+							ingat_jam = int(jam) - 1
+							ingat_menit = abs(ingat_menit)
+						r = x.replace(year=x.year+(int(thn)-x.year),month=x.month+(int(bln)-x.month),day=x.day+(int(tgl)-x.day),hour=x.hour+(ingat_jam-x.hour), minute=x.minute+(ingat_menit-x.minute))
+						delta_b = r - x
+						detik = delta_b.seconds+1
+						teks1 = 'Kak '+panggil(user)+' punya kegiatan 30 menit lagi ;D'
+						teks2 = 'Agenda yang akan dilakukan: '+alarm
+						b = Timer(detik, pesan_pengingat, (user, teks1, alarm))
+						c = Timer(detik, pesan_pengingat, (user, teks2, alarm))
+						b.start()
+						c.start()
 
-							#y = datetime.date(int(thn), int(bln), int(tgl))
-							day = x.day + (int(tgl) - x.day)
-							month = x.month + (int(bln) - x.month)
-							year = x.year + (int(thn) - x.year)
-							y = x.replace(year=year,month=month,day=day,hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
-							delta_t = y - x
-							secs = delta_t.seconds+1
-							teks = 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm
-							t = Timer(secs, pesan_pengingat, (user, teks, alarm))
-							t.start()
+					#y = datetime.date(int(thn), int(bln), int(tgl))
+					day = x.day + (int(tgl) - x.day)
+					month = x.month + (int(bln) - x.month)
+					year = x.year + (int(thn) - x.year)
+					y = x.replace(year=year,month=month,day=day,hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
+					delta_t = y - x
+					secs = delta_t.seconds+1
+					teks = 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm
+					t = Timer(secs, pesan_pengingat, (user, teks, alarm))
+					t.start()
 			except:pass
 
 def ingetin(pengirim, jam, film, bioskop):
