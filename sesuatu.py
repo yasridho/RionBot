@@ -59,7 +59,6 @@ def reminder():
 					tanggal = pengingat[alarm]["tanggal"]
 					jam, menit = waktu.split(":")
 					tgl, bln, thn = tanggal.split("-")
-					if alarm in running_notif[user]:return
 					running_notif[user].append(alarm)
 					x = datetime.today()
 					if int(thn) <= x.year:
@@ -96,6 +95,7 @@ def reminder():
 					t = Timer(secs, pesan_pengingat, (user, teks, alarm))
 					t.start()
 			except:pass
+
 def ingetin(pengirim, jam, film, bioskop):
 	line_bot_api.push_message(pengirim,[
 		TextSendMessage(
