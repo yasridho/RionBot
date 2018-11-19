@@ -56,7 +56,7 @@ def reminder():
 					waktu = pengingat[alarm]["jam"]
 					tanggal = pengingat[alarm]["tanggal"]
 					jam, menit = waktu.split(":")
-					thn, bln, tgl = tanggal.split("-")
+					tgl, bln, thn = tanggal.split("-")
 					if not alarm in running_notif[user]:
 						running_notif[user].append(alarm)
 					else:return
