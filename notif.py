@@ -161,9 +161,15 @@ def handle_postback(event):
 					else:
 						jam = str(sekarang.hour)
 					kumpulan = list()
+					terdekat = {}
 					reminder = db.child("pengguna").child(sender).child("tambahan").child("pengingat").get().val()
 					for alarm in reminder:
-						kumpulan.append(
+						waktu 		= reminder[alarm]["jam"]
+						tanggal 	= reminder[alarm]["tanggal"]
+						waktu_alarm = tanggal+" "+waktu
+						t_timestamp = time.mktime(datetime.strptime(waktu_alarm, "%d-%m-%Y %H:%M").timetuple())
+						durasi 		= t_timestamp - time.time()
+						terdekat.update({durasi:
 							BoxComponent(
 								layout='baseline',
 								margin='sm',
@@ -186,7 +192,10 @@ def handle_postback(event):
 									)
 								]
 							)
-						)
+						})
+					dekat = terdekat.keys()
+					dekat.sort()
+					tersusun = [terdekat[i] for i in dekat]
 					jadwal = BubbleContainer(
 						direction='ltr',
 						header=BoxComponent(
@@ -244,7 +253,7 @@ def handle_postback(event):
 										BoxComponent(
 											layout='vertical',
 											margin='sm',
-											contents=kumpulan
+											contents=tersusun
 										)
 									]
 								)
