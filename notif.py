@@ -95,8 +95,20 @@ def handle_postback(event):
 					if sender in remind_me:
 						status, kalender = remind_me[sender]
 						if status = 'pending':
-							remind_me.update({sender:['sukses',kalender]})
-							line_bot_api.push_message(sender, TextSendMessage(text='Kak '+panggil(sender)+' mau diingatkan apa pada tanggal '+tgl+' bulan '+bulan(int(bln))+' tahun '+thn+' jam '+jamku+'?'))
+							t_timestamp = time.mktime(datetime.strptime(kalender, "%Y-%m-%dT%H:%M").timetuple())
+							MENIT 		= 60
+							JAM 		= MENIT * 60
+							if args.upper() == 'WITA':
+								t_timestamp += (1*JAM)
+							elif args.upper() == 'WIT':
+								t_timestamp += (2*JAM)
+							durasi = t_timestamp - time.time()
+							if int(durasi) <= 20:
+								line_bot_api.push_message(sender, [TextSendMessage(text='Maaf kak '+panggil(sender)+', waktunya udah lewat :('),TextSendMessage(text='Silahkan pilih waktu lagi ;D')])
+								del remind_me[sender]
+							else:
+								remind_me.update({sender:['sukses',kalender]})
+								line_bot_api.push_message(sender, TextSendMessage(text='Kak '+panggil(sender)+' mau diingatkan apa pada tanggal '+tgl+' bulan '+bulan(int(bln))+' tahun '+thn+' jam '+jamku+'?'))
 
 			elif cmd == 'zona_waktu':
 				line_bot_api.reply_message(event.reply_token, indozone())
@@ -117,7 +129,7 @@ def handle_postback(event):
 
 			elif cmd == 'tambah_pengingat':
 				kalender = event.postback.params['datetime']
-				t_timestamp = time.mktime(datetime.strptime(kalender, "%d-%m-%YT%H:%M").timetuple())
+				t_timestamp = time.mktime(datetime.strptime(kalender, "%Y-%m-%dT%H:%M").timetuple())
 				durasi = t_timestamp - time.time()
 				if int(durasi) <= 0:
 					line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Maaf kak '+panggil(sender)+', waktunya udah lewat :('),TextSendMessage(text='Silahkan pilih waktu lagi ;D')])
@@ -288,4 +300,4 @@ def handle_message(event):
 			db.child("pengguna").child(sender).child("tambahan").child("pengingat").child(text).set(data)
 			line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Okee kak ;D'))
 			sesuatu.reminder()
-			remind_me.pop(sender)
+			del remind_me[sender]

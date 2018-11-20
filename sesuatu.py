@@ -43,8 +43,22 @@ def panggil(args):
 
 def pesan_pengingat(kepada, pesan, agenda):
 	line_bot_api.push_message(kepada, TextSendMessage(text=pesan))
-	db.child("pengguna").child(kepada).child("tambahan").child("pengingat").child(agenda).remove()
-	running_notif[kepada].remove(agenda)
+	zona_waktu 	= db.child("pengguna").child(kepada).child("tambahan").child("zona_waktu").get().val()
+	alarm 		= db.child("pengguna").child(kepada).child("tambahan").child("pengingat").child(agenda).get().val()
+	waktu 		= pengingat[alarm]["jam"]
+	tanggal 	= pengingat[alarm]["tanggal"]
+	waktu_alarm = tanggal+" "+waktu
+	t_timestamp = time.mktime(datetime.strptime(waktu_alarm, "%d-%m-%Y %H:%M").timetuple())
+	MENIT 		= 60
+	JAM 		= MENIT * 60
+	if zona_waktu == 'WITA':
+		t_timestamp += (1*JAM)
+	elif zona_waktu == 'WIT':
+		t_timestamp += (2*JAM)
+	durasi = t_timestamp - time.time()
+	if int(durasi) <= 0:
+		db.child("pengguna").child(kepada).child("tambahan").child("pengingat").child(agenda).remove()
+		running_notif[kepada].remove(agenda)
 
 def reminder():
 	data = db.child("pengguna").get().val()
@@ -54,13 +68,13 @@ def reminder():
 		if not user == "total":
 			try:
 				pengingat = data[user]["tambahan"]["pengingat"]
+				zona_waktu = data[user]["tambahan"]["zona_waktu"]
 				for alarm in pengingat:
 					if alarm in running_notif[user]:continue
 					waktu 		= pengingat[alarm]["jam"]
 					tanggal 	= pengingat[alarm]["tanggal"]
 					waktu_alarm = tanggal+" "+waktu
 					t_timestamp = time.mktime(datetime.strptime(waktu_alarm, "%d-%m-%Y %H:%M").timetuple())
-					durasi 		= t_timestamp - time.time()
 					x 			= datetime.today()
 
 					MENIT 		= 60
@@ -74,6 +88,13 @@ def reminder():
 					hari 		= int((durasi % BULAN) / HARI)
 					jam 		= int((durasi % HARI) / JAM)
 					menit 		= int((durasi % JAM) / MENIT)
+
+					if zona_waktu 	== 'WITA':
+						t_timestamp += (1*JAM)
+					elif zona_waktu == 'WIT':
+						t_timestamp += (2*JAM)
+
+					durasi = t_timestamp - time.time()
 					
 					running_notif[user].append(alarm)
 					
