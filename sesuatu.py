@@ -558,7 +558,9 @@ def pengaturan(args):
 						action=PostbackAction(
 							label='Ubah zona waktu',
 							text='Ubah zona waktu',
-							data='/zona_waktu'))
+							data='/zona_waktu'
+						)
+					),
 					ButtonComponent(
 						action=PostbackAction(
 							label='Ubah lokasi',
