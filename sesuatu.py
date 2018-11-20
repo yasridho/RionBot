@@ -44,9 +44,9 @@ def panggil(args):
 def pesan_pengingat(kepada, pesan, agenda):
 	line_bot_api.push_message(kepada, TextSendMessage(text=pesan))
 	zona_waktu 	= db.child("pengguna").child(kepada).child("tambahan").child("zona_waktu").get().val()
-	alarm 		= db.child("pengguna").child(kepada).child("tambahan").child("pengingat").child(agenda).get().val()
-	waktu 		= pengingat[alarm]["jam"]
-	tanggal 	= pengingat[alarm]["tanggal"]
+	pengingat 	= db.child("pengguna").child(kepada).child("tambahan").child("pengingat").child(agenda).get().val()
+	waktu 		= pengingat[agenda]["jam"]
+	tanggal 	= pengingat[agenda]["tanggal"]
 	waktu_alarm = tanggal+" "+waktu
 	t_timestamp = time.mktime(datetime.strptime(waktu_alarm, "%d-%m-%Y %H:%M").timetuple())
 	MENIT 		= 60
@@ -66,7 +66,7 @@ def reminder():
 		if not user in running_notif and not user == "total":
 			running_notif.update({user:[]})
 		if not user == "total":
-			#try:
+			try:
 				pengingat = data[user]["tambahan"]["pengingat"]
 				zona_waktu = data[user]["tambahan"]["zona_waktu"]
 				for alarm in pengingat:
@@ -116,7 +116,7 @@ def reminder():
 					teks = 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm
 					t = Timer(durasi, pesan_pengingat, (user, teks, alarm))
 					t.start()
-			#except:pass
+			except:pass
 
 def ingetin(pengirim, jam, film, bioskop):
 	line_bot_api.push_message(pengirim,[
