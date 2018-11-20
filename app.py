@@ -540,25 +540,7 @@ def handle_message(event):
             else:
                 cmd, args = data[0].lower(), ""
             
-            if cmd == "test":
-                balas("Test Request Granted my Dear.")
-                message("Here's a picture for you.")
-                line_bot_api.push_message(kirim, ImageSendMessage(
-                    original_content_url='https://i.pinimg.com/originals/0b/45/54/0b45541af3e8d77e23498c1bc8d552f6.jpg',
-                    preview_image_url='https://i.pinimg.com/originals/0b/45/54/0b45541af3e8d77e23498c1bc8d552f6.jpg'
-                ))
-
-            elif cmd == "say":
-                if args:
-                    balas(args)
-                else:
-                    balas("What should I say?")
-
-            elif cmd == "reload":
-                imp.reload(cmds)
-                balas("Reloaded.")
-
-            elif cmd == "e":
+            if cmd == "e":
                 if sender != owner:
                     message('STFU!')
                     return
@@ -577,68 +559,6 @@ def handle_message(event):
                     except:
                         message("Undescribeable error detected!!")
 
-            elif cmd == "owner":
-                pesan = TemplateSendMessage(
-                    alt_text='Owner',
-                    template=CarouselTemplate(
-                        columns=[
-                            CarouselColumn(
-                                title='LINE',
-                                text='Chat me about this bot.',
-                                actions=[
-                                    URITemplateAction(
-                                        label='Add Me',
-                                        uri='https://line.me/ti/p/~freedom_for_all'
-                                    )
-                                ]
-                            ),
-                            CarouselColumn(
-                                title='INSTAGRAM',
-                                text='Feel free to follow ;)',
-                                actions=[
-                                    URITemplateAction(
-                                        label='Go to my Instagram',
-                                        uri='https://instagram.com/yasridho'
-                                    )
-                                ]
-                            )
-
-                        ]
-                    )   
-                )
-                line_bot_api.reply_message(event.reply_token, pesan)
-            
-
-    #=====[ CAROUSEL MESSAGE ]==========
-        elif text == '/carousel':
-            message = TemplateSendMessage(
-                alt_text='OTHER MENU',
-                template=CarouselTemplate(
-                    columns=[
-                        CarouselColumn(
-                            title='ADD ME',
-                            text='Contact Noir',
-                            actions=[
-                                URITemplateAction(
-                                    label='>TAP HERE<',
-                                    uri='https://line.me/ti/p/~freedom_for_all'
-                                )
-                            ]   
-                        ),
-                        CarouselColumn(
-                            title='Instagram',
-                            text='FIND ME ON INSTAGRAM',
-                            actions=[
-                                URITemplateAction(
-                                    label='>TAP HERE!<',
-                                    uri='https://instagram.com/yasridho'
-                                )
-                            ]
-                        )
-                    ]
-                )
-            )
-            line_bot_api.reply_message(event.reply_token, message)
     #=====[ FLEX MESSAGE ]==========
         elif text == 'flex':
             bubble = BubbleContainer(

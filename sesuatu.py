@@ -342,6 +342,33 @@ def bioskop_terdekat(latitude, longitude):
 		except:
 			return TextSendMessage(text="Undescribeable error detected!!")
 
+def indozone():
+	pilih = TemplateSendMessage(
+		alt_text='Pilih zona waktu',
+		template=ButtonsTemplate(
+			title='Zona Waktu Indonesia',
+			text='Pilih zona waktu kamu ;)',
+			actions=[
+				PostbackAction(
+					label='WIB',
+					text='Waktu Indonesia Barat',
+					data='/zona wib'
+				),
+				PostbackAction(
+					title='WITA',
+					text='Waktu Indonesia Tengah',
+					data='/zona wita'
+				),
+				PostbackAction(
+					title='WIT',
+					text='Waktu Indonesia Timur',
+					data='/zona wit'
+				)
+			]
+		)
+	)
+	return pilih
+
 def pengaturan(args):
 	try:
 		
@@ -506,6 +533,11 @@ def pengaturan(args):
 							data='/nick '+args
 						)
 					),
+					ButtonComponent(
+						action=PostbackAction(
+							label='Ubah zona waktu',
+							text='Ubah zona waktu',
+							data='/zona_waktu'))
 					ButtonComponent(
 						action=PostbackAction(
 							label='Ubah lokasi',
