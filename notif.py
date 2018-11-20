@@ -24,7 +24,8 @@ def handle_postback(event):
 
 			if cmd == "pengingat":
 				try:
-					zona = db.child("pengguna").child(sender).child("tambahan").child("zona_waktu").get().val()
+					data = db.child("pengguna").child(sender).child("tambahan").get().val()
+					zona = data["zona_waktu"]
 					sekarang = datetime.today()
 					if sekarang.minute < 10:
 						menit = '0'+str(sekarang.minute)
