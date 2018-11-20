@@ -94,7 +94,7 @@ def handle_postback(event):
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Zona waktu kak '+panggil(sender)+' berhasil diset ;D'))
 					if sender in remind_me:
 						status, kalender = remind_me[sender]
-						if status = 'pending':
+						if status == 'pending':
 							t_timestamp = time.mktime(datetime.strptime(kalender, "%Y-%m-%dT%H:%M").timetuple())
 							MENIT 		= 60
 							JAM 		= MENIT * 60
