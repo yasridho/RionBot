@@ -231,19 +231,16 @@ def handle_location_message(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    owner = 'U3fed832cbef28b87b7827b306506c8d5'
+    sender = event.source.user_id
+    text = event.message.text
     try:
-
-        ###################### OWNER ####################
-        owner = 'U3fed832cbef28b87b7827b306506c8d5'
 
         startTime = time.time()
         cmds.handle_message(event)
         cinemaxxi.handle_message(event)
         yify_torrent.handle_message(event)
         notif.handle_message(event)
-
-        text = event.message.text #simplify for receove message
-        sender = event.source.user_id #get user_id
         gid = event.source.sender_id #get group_id
         profil = line_bot_api.get_profile(sender)
         nama = panggil(sender) #Ini buat nama
@@ -283,7 +280,10 @@ def handle_message(event):
                     et, ev, tb = sys.exc_info()
                     lineno = tb.tb_lineno
                     fn = tb.tb_frame.f_code.co_filename
-                    return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
+                    if sender == owner:
+                        return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
+                    else:
+                        return TextSendMessage(text="Oooppss.. ada kesalahan")
                 except:
                     return TextSendMessage(text="Undescribeable error detected!!")
         
