@@ -136,7 +136,8 @@ def handle_postback(event):
 					return
 				try:
 					status = 'sukses'
-					sekarang = db.child("pengguna").child(sender).child("tambahan").child("zona_waktu").get().val()
+					data = db.child("pengguna").child(sender).child("tambahan").get().val()
+					zona_waktu = data["zona_waktu"]
 					tanggal, jamku = kalender.split("T")
 					thn, bln, tgl = tanggal.split('-')
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' mau diingatkan apa pada tanggal '+tgl+' bulan '+bulan(int(bln))+' tahun '+thn+' jam '+jamku+'?'))
