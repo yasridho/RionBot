@@ -90,9 +90,9 @@ def reminder():
 					menit 		= int((durasi % JAM) / MENIT)
 
 					if zona_waktu 	== 'WITA':
-						t_timestamp += (1*JAM)
+						t_timestamp = t_timestamp + (1*JAM)
 					elif zona_waktu == 'WIT':
-						t_timestamp += (2*JAM)
+						t_timestamp = t_timestamp + (2*JAM)
 
 					durasi = t_timestamp - time.time()
 					

@@ -101,9 +101,9 @@ def handle_postback(event):
 							MENIT 		= 60
 							JAM 		= MENIT * 60
 							if args.upper() == 'WITA':
-								t_timestamp += (1*JAM)
+								t_timestamp = t_timestamp + (1*JAM)
 							elif args.upper() == 'WIT':
-								t_timestamp += (2*JAM)
+								t_timestamp = t_timestamp + (2*JAM)
 							durasi = t_timestamp - time.time()
 							if int(durasi) <= 20:
 								line_bot_api.push_message(sender, [TextSendMessage(text='Maaf kak '+panggil(sender)+', waktunya udah lewat :('),TextSendMessage(text='Silahkan pilih waktu lagi ;D')])
