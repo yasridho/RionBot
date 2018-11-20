@@ -63,7 +63,8 @@ def handle_postback(event):
 
 			elif cmd == 'zona':
 				try:
-					sekarang = db.child("pengguna").child(sender).child("tambahan").child("zona_waktu").get().val()
+					data = db.child("pengguna").child(sender).child("tambahan").get().val()
+					sekarang = data["zona_waktu"]
 				except:
 					sekarang = ""
 
