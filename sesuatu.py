@@ -44,7 +44,7 @@ def panggil(args):
 def pesan_pengingat(kepada, pesan, agenda):
 	line_bot_api.push_message(kepada, TextSendMessage(text=pesan))
 	zona_waktu 	= db.child("pengguna").child(kepada).child("tambahan").child("zona_waktu").get().val()
-	pengingat 	= db.child("pengguna").child(kepada).child("tambahan").child("pengingat").child(agenda).get().val()
+	pengingat 	= db.child("pengguna").child(kepada).child("tambahan").child("pengingat").get().val()
 	waktu 		= pengingat[agenda]["jam"]
 	tanggal 	= pengingat[agenda]["tanggal"]
 	waktu_alarm = tanggal+" "+waktu
