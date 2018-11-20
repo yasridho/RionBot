@@ -150,7 +150,7 @@ def handle_postback(event):
 				remind_me.update({sender:[status,kalender]})
 
 			elif cmd == 'cek_pengingat':
-				#try:
+				try:
 					sekarang = datetime.today()
 					if sekarang.minute < 10:
 						menit = '0'+str(sekarang.minute)
@@ -161,7 +161,6 @@ def handle_postback(event):
 					else:
 						jam = str(sekarang.hour)
 					kumpulan = list()
-					terdekat = {}
 					reminder = db.child("pengguna").child(sender).child("tambahan").child("pengingat").get().val()
 					for alarm in reminder:
 						waktu 		= reminder[alarm]["jam"]
@@ -169,7 +168,7 @@ def handle_postback(event):
 						waktu_alarm = tanggal+" "+waktu
 						t_timestamp = time.mktime(datetime.strptime(waktu_alarm, "%d-%m-%Y %H:%M").timetuple())
 						durasi 		= t_timestamp - time.time()
-						terdekat.update({durasi:
+						kumpulan.append(
 							BoxComponent(
 								layout='baseline',
 								margin='sm',
@@ -192,10 +191,7 @@ def handle_postback(event):
 									)
 								]
 							)
-						})
-					dekat = terdekat.keys()
-					dekat.sort()
-					tersusun = [terdekat[i] for i in dekat]
+						)
 					jadwal = BubbleContainer(
 						direction='ltr',
 						header=BoxComponent(
@@ -253,7 +249,7 @@ def handle_postback(event):
 										BoxComponent(
 											layout='vertical',
 											margin='sm',
-											contents=tersusun
+											contents=kumpulan
 										)
 									]
 								)
@@ -287,8 +283,8 @@ def handle_postback(event):
 						contents=jadwal
 					)
 					line_bot_api.reply_message(event.reply_token, kirim)
-				#except:
-				#	line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kamu tidak memiliki pengingat.'))
+				except:
+					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kamu tidak memiliki pengingat.'))
 	except Exception as e:
 		try:
 			et, ev, tb = sys.exc_info()
