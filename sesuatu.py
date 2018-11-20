@@ -75,27 +75,23 @@ def reminder():
 					jam 		= int((durasi % HARI) / JAM)
 					menit 		= int((durasi % JAM) / MENIT)
 					
-					#jam, menit = waktu.split(":")
-					#tgl, bln, thn = tanggal.split("-")
-					
 					running_notif[user].append(alarm)
 					
 					if int(durasi) <= 0:
 						db.child("pengguna").child(user).child("tambahan").child("pengingat").child(alarm).remove()
 				
-					if (menit >= 30) and (hari <= 0):
-						teks1 = 'Kak '+panggil(user)+' punya kegiatan 30 menit lagi ;D'
-						b = Timer(durasi, pesan_pengingat, (user, teks1, alarm))
+					if menit >= 30:
+						teks = 'Kak '+panggil(user)+' punya kegiatan 30 menit lagi ;D'
+						durasi30 = durasi - (30*MENIT)
+						b = Timer(durasi30, pesan_pengingat, (user, teks, alarm))
 						b.start()
 
-					#y = datetime.date(int(thn), int(bln), int(tgl))
-					#day = x.day + (int(tgl) - x.day)
-					#month = x.month + (int(bln) - x.month)
-					#year = x.year + (int(thn) - x.year)
-					#y = x.replace(year=year,month=month,day=day,hour=x.hour+(int(jam)-x.hour), minute=x.minute+(int(menit)-x.minute))
-					#delta_t = y - x
-					#secs = delta_t.seconds+1
-					durasi = t_timestamp - time.time()
+					if hari >= 1:
+						teks = 'Kak '+panggil(user)+' besok punya kegiatan: '+alarm
+						durasi1 = durasi - (1*HARI)
+						b = Timer(durasi1, pesan_pengingat, (user, teks, alarm))
+						b.start()
+
 					teks = 'Kak '+panggil(user)+' punya jadwal hari ini: '+alarm
 					t = Timer(durasi, pesan_pengingat, (user, teks, alarm))
 					t.start()
