@@ -376,12 +376,12 @@ def indozone():
 					data='/zona wib'
 				),
 				PostbackAction(
-					title='WITA',
+					label='WITA',
 					text='Waktu Indonesia Tengah',
 					data='/zona wita'
 				),
 				PostbackAction(
-					title='WIT',
+					label='WIT',
 					text='Waktu Indonesia Timur',
 					data='/zona wit'
 				)
