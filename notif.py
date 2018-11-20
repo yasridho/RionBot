@@ -142,7 +142,7 @@ def handle_postback(event):
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' mau diingatkan apa pada tanggal '+tgl+' bulan '+bulan(int(bln))+' tahun '+thn+' jam '+jamku+'?'))
 				except:
 					status = 'pending'
-					line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Maaf kak, kak '+panggil(sender)' belum memberitahu zona waktu kakak :('), TextSendMessage(text='Silahkan dipilih dulu kak ;D'), indozone()])
+					line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Maaf kak, kak '+panggil(sender)+' belum memberitahu zona waktu kakak :('), TextSendMessage(text='Silahkan dipilih dulu kak ;D'), indozone()])
 
 				remind_me.update({sender:[status,kalender]})
 
