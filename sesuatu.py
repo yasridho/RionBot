@@ -77,6 +77,8 @@ def reminder():
 					t_timestamp = time.mktime(datetime.strptime(waktu_alarm, "%d-%m-%Y %H:%M").timetuple())
 					x 			= datetime.today()
 
+					durasi = t_timestamp - time.time()
+
 					MENIT 		= 60
 					JAM 		= MENIT * 60
 					HARI 		= JAM * 24
@@ -90,11 +92,9 @@ def reminder():
 					menit 		= int((durasi % JAM) / MENIT)
 
 					if zona_waktu 	== 'WITA':
-						t_timestamp = t_timestamp + (1*JAM)
+						durasi = durasi + (1*JAM)
 					elif zona_waktu == 'WIT':
-						t_timestamp = t_timestamp + (2*JAM)
-
-					durasi = t_timestamp - time.time()
+						durasi = durasi + (2*JAM)
 					
 					running_notif[user].append(alarm)
 					
