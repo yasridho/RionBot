@@ -69,13 +69,14 @@ def handle_postback(event):
 					cari, nomor = args.split(" ")
 					try:
 						video = videos[cari.replace('+',' ')]
+						batas = int(nomor) + 9
 					except:
 						videos.update({cari:[]})
 						for i in youtube(cari):
 							videos[cari].append(i)
 						video = videos[cari.replace('+',' ')]
+						batas = 18
 					jvideo = 50 - int(nomor)
-					batas = int(nomor) + 9
 					res = list()
 					if jvideo > 10:
 						for i in video[int(nomor)+1:batas]:
