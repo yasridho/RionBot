@@ -92,7 +92,7 @@ def handle_postback(event):
 						video = res
 					else:
 						video = video[int(nomor)+1:]
-					line_bot_api.reply_message(event.reply_token, [FlexSendMessage(alt_text='Hasil pencarian: '+cari,contents=CarouselContainer(contents=video)), TemplateSendMessage(alt_text='Mau cari video lagi?', template=ConfirmTemplate(text='Mau cari video lagi?',actions=[PostbackAction(label='Iya',text='Iya',data='/yt iya '+cari),PostbackAction(label='Tidak',text='Tidak',data='/yt tidak')]))])
+					line_bot_api.reply_message(event.reply_token, [FlexSendMessage(alt_text='Hasil pencarian: '+cari,contents=CarouselContainer(contents=video)), TemplateSendMessage(alt_text='Mau cari video lagi?', template=ConfirmTemplate(text='Mau cari video lagi?',actions=[PostbackAction(label='Iya',text='Iya',data='/yt iya '+cari),PostbackAction(label='Tidak',text='Tidak',data='/yt tidak '+cari)]))])
 
 	except Exception as e:
 		try:
@@ -168,7 +168,7 @@ def handle_message(event):
 							)
 						)
 					)
-					line_bot_api.push_message(kirim, [FlexSendMessage(alt_text='Hasil pencarian: '+text,contents=CarouselContainer(contents=res)), TemplateSendMessage(alt_text='Mau cari video lagi?', template=ConfirmTemplate(text='Mau cari video lagi?',actions=[PostbackAction(label='Iya',text='Iya',data='/yt iya '+text),PostbackAction(label='Tidak',text='Tidak',data='/yt tidak')]))])
+					line_bot_api.push_message(kirim, [FlexSendMessage(alt_text='Hasil pencarian: '+text,contents=CarouselContainer(contents=res)), TemplateSendMessage(alt_text='Mau cari video lagi?', template=ConfirmTemplate(text='Mau cari video lagi?',actions=[PostbackAction(label='Iya',text='Iya',data='/yt iya '+text),PostbackAction(label='Tidak',text='Tidak',data='/yt tidak '+text)]))])
 				except Exception as e:
 					try:
 						et, ev, tb = sys.exc_info()
