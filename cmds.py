@@ -57,7 +57,7 @@ def handle_postback(event):
 					perintah.update({event.source.user_id:['Cari lagi', time.time()]})
 					del videos[cari]
 				
-				elif args == 'tidak':
+				elif mau == 'tidak':
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Terima kasih ;)"))
 					del videos[cari]
 				
