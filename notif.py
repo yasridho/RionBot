@@ -171,7 +171,7 @@ def handle_postback(event):
 						durasi 		= t_timestamp - time.time()
 						atur.update({durasi:[alarm, tanggal, waktu]})
 
-					diatur = atur.keys()
+					diatur = [i for i in atur.keys()]
 					diatur.sort()
 					for r in diatur:
 						alarm, tanggal, waktu = atur[r]
