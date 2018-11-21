@@ -184,19 +184,19 @@ def handle_postback(event):
 								margin='sm',
 								contents=[
 									TextComponent(
-										text=reminder[alarm]["jam"],
-										size='xs',
-										align='start'
-									),	
-									TextComponent(
 										text=reminder[alarm]["tanggal"],
+										size='xs',
+										align='center'
+									),
+									TextComponent(
+										text=reminder[alarm]["jam"],
 										size='xs',
 										align='center'
 									),
 									TextComponent(
 										text=alarm,
 										size='xs',
-										align='end',
+										align='center',
 										wrap=True
 									)
 								]
@@ -214,10 +214,11 @@ def handle_postback(event):
 									color='#aaaaaa'
 								),
 								TextComponent(
-									text='Berikut ini pengingat kak '+panggil(sender),
+									text='Berikut ini pengingat kak '+panggil(sender)+' ;D',
 									size='sm',
 									align='start',
-									gravity='top'
+									gravity='top',
+									margin='md'
 								),
 								BoxComponent(
 									layout='baseline',
@@ -244,19 +245,25 @@ def handle_postback(event):
 											layout='baseline',
 											contents=[
 												TextComponent(
-													text='Jam',
-													size='xs',
-													align='start'
-												),
-												TextComponent(
 													text='Tanggal',
 													size='xs',
-													align='center'
+													align='center',
+													weight='bold',
+													color='#939393'
+												),
+												TextComponent(
+													text='Jam',
+													size='xs',
+													align='center',
+													weight='bold',
+													color='#939393'
 												),
 												TextComponent(
 													text='Agenda',
 													size='xs',
-													align='end'
+													align='center',
+													weight='bold',
+													color='#939393'
 												)
 											]
 										),
