@@ -70,9 +70,9 @@ def handle_postback(event):
 					try:
 						video = videos[cari.replace('+',' ')]
 					except:
-						videos.update({text:[]})
-						for i in youtube(text):
-							videos[text].append(i)
+						videos.update({cari:[]})
+						for i in youtube(cari):
+							videos[cari].append(i)
 						video = videos[cari.replace('+',' ')]
 					jvideo = 50 - int(nomor)
 					batas = int(nomor) + 9
