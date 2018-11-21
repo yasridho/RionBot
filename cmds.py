@@ -140,6 +140,7 @@ def handle_message(event):
 			
 			if komando == "Mau nonton YouTube":
 				try:
+					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Tunggu sebentar ya kak '+panggil(sender)+', '+namaBot.capitalize()+' sedang mengumpulkan data.. ;)'))
 					videos.update({text:[]})
 					for i in youtube(text):
 						videos[text].append(i)
@@ -167,7 +168,7 @@ def handle_message(event):
 							)
 						)
 					)
-					line_bot_api.reply_message(event.reply_token, [FlexSendMessage(alt_text='Hasil pencarian: '+text,contents=CarouselContainer(contents=res)), TemplateSendMessage(alt_text='Mau cari video lagi?', template=ConfirmTemplate(text='Mau cari video lagi?',actions=[PostbackAction(label='Iya',text='Iya',data='/yt iya '+text),PostbackAction(label='Tidak',text='Tidak',data='/yt tidak')]))])
+					line_bot_api.push_message(kirim, [FlexSendMessage(alt_text='Hasil pencarian: '+text,contents=CarouselContainer(contents=res)), TemplateSendMessage(alt_text='Mau cari video lagi?', template=ConfirmTemplate(text='Mau cari video lagi?',actions=[PostbackAction(label='Iya',text='Iya',data='/yt iya '+text),PostbackAction(label='Tidak',text='Tidak',data='/yt tidak')]))])
 				except Exception as e:
 					try:
 						et, ev, tb = sys.exc_info()
