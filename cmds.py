@@ -55,11 +55,11 @@ def handle_postback(event):
 				
 				if mau == 'iya':
 					perintah.update({event.source.user_id:['Cari lagi', time.time()]})
-					del videos[cari.replace('+',' ')]
+					del videos[cari]
 				
 				elif args == 'tidak':
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Terima kasih ;)"))
-					del videos[cari.replace('+',' ')]
+					del videos[cari]
 				
 				else:
 					cari, nomor = args.split(" ")
