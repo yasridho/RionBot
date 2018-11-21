@@ -161,6 +161,7 @@ def handle_postback(event):
 					else:
 						jam = str(sekarang.hour)
 					kumpulan = list()
+					atur = {}
 					reminder = db.child("pengguna").child(sender).child("tambahan").child("pengingat").get().val()
 					for alarm in reminder:
 						waktu 		= reminder[alarm]["jam"]
@@ -168,6 +169,12 @@ def handle_postback(event):
 						waktu_alarm = tanggal+" "+waktu
 						t_timestamp = time.mktime(datetime.strptime(waktu_alarm, "%d-%m-%Y %H:%M").timetuple())
 						durasi 		= t_timestamp - time.time()
+						atur.update({durasi:[alarm, tanggal, waktu]})
+
+					diatur = atur.keys()
+					diatur.sort()
+					for r in diatur:
+						alarm, tanggal, waktu = atur[r]
 						kumpulan.append(
 							BoxComponent(
 								layout='baseline',
