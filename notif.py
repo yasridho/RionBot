@@ -171,6 +171,9 @@ def handle_postback(event):
 						durasi 		= t_timestamp - time.time()
 						atur.update({durasi:[alarm, tanggal, waktu]})
 
+					tambahan = db.child("pengguna").child(sender).child("tambahan").get().val()
+					zona_waktu = tambahan["zona_waktu"]
+
 					diatur = [i for i in atur.keys()]
 					diatur.sort()
 					for r in diatur:
@@ -201,7 +204,7 @@ def handle_postback(event):
 						)
 					jadwal = BubbleContainer(
 						direction='ltr',
-						header=BoxComponent(
+						body=BoxComponent(
 							layout='vertical',
 							contents=[
 								TextComponent(
@@ -209,23 +212,28 @@ def handle_postback(event):
 									align='center',
 									weight='bold',
 									color='#aaaaaa'
-								)
-							]
-						),
-						hero=ImageComponent(
-							url=line_bot_api.get_profile(sender).picture_url,
-							size='full',
-							aspect_ratio='4:3',
-							aspect_mode='cover'
-						),
-						body=BoxComponent(
-							layout='vertical',
-							contents=[
+								),
 								TextComponent(
 									text='Berikut ini pengingat kak '+panggil(sender),
 									size='sm',
 									align='start',
 									gravity='top'
+								),
+								BoxComponent(
+									layout='baseline',
+									contents=[
+										TextComponent(
+											text='Zona Waktu',
+											size='xs',
+											color='#7b7b7b'
+										),
+										TextComponent(
+											text=zona_waktu,
+											flex=2,
+											size='xs',
+											color='#7b7b7b'
+										)
+									]
 								),
 								SeparatorComponent(margin='lg'),
 								BoxComponent(
