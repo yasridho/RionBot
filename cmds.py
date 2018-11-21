@@ -67,7 +67,13 @@ def handle_postback(event):
 				
 				else:
 					cari, nomor = args.split(" ")
-					video = videos[cari.replace('+',' ')]
+					try:
+						video = videos[cari.replace('+',' ')]
+					except:
+						videos.update({text:[]})
+						for i in youtube(text):
+							videos[text].append(i)
+						video = videos[cari.replace('+',' ')]
 					jvideo = 50 - int(nomor)
 					batas = int(nomor) + 9
 					res = list()
