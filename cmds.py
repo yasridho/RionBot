@@ -75,7 +75,7 @@ def handle_postback(event):
 						for i in youtube(cari):
 							videos[cari].append(i)
 						video = videos[cari.replace('+',' ')]
-						batas = 18
+						batas = 19
 					jvideo = 50 - int(nomor)
 					res = list()
 					if jvideo > 10:
