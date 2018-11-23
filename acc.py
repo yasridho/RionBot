@@ -16,3 +16,13 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
+
+quiz_db = {
+	"apiKey": os.environ.get('QUIZ_API_KEY'),
+    "authDomain": os.environ.get('QUIZ_AUTH_DOMAIN'),
+    "databaseURL": os.environ.get('QUIZ_LINK_DATABASE'),
+    "storageBucket": os.environ.get('QUIZ_STORAGE_BUCKET')
+}
+
+quiz = pyrebase.initialize_app(quiz_db)
+qz = firebase.database()
