@@ -23,6 +23,7 @@ import sesuatu
 import imp
 import schedule
 import notif
+import quiz
 
 from acc import (namaBot, google_key, line_bot_api, handler, db)
 from sesuatu import (mau_nonton, pengaturan, panggil)
