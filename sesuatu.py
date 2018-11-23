@@ -8,7 +8,7 @@ import pafy
 import time
 import cinema21
 from linebot.models import *
-from acc import (google_key, db, line_bot_api)
+from acc import (google_key, db, line_bot_api, qz)
 from datetime import datetime
 from threading import Timer
 from calendar import monthrange
@@ -40,6 +40,51 @@ def panggil(args):
 		except:
 			return data["nama"]
 	except:pass
+
+def film_quiz(pertanyaan, film):
+	pesan = FlexSendMessage(
+		alt_text=pertanyaan,
+		contents=BubbleContainer(
+			direction='ltr',
+			body=BoxComponent(
+				layout='vertical',
+				contents=[
+					TextComponent(
+						text=film,
+						size='xs',
+						align='start',
+						color='#989898'
+					),
+					TextComponent(
+						text=pertanyaan,
+						margin='md',
+						align='center',
+						wrap=True
+					)
+				]
+			),
+			footer=BoxComponent(
+				layout='horizontal',
+				contents=[
+					ButtonComponent(
+						action=PostbackAction(
+							label='Menyerah',
+							text='Nyerah deh',
+							data='/nyerah'
+						),
+						color='#ffffff',
+						height='sm'
+					)
+				]
+			),
+			styles=BubbleStyle(
+				footer=BlockStyle(
+					background_color='#a33f3f'
+				)
+			)
+		)
+	)
+	return pesan
 
 def pesan_pengingat(kepada, pesan, agenda):
 	line_bot_api.push_message(kepada, TextSendMessage(text=pesan))

@@ -6,7 +6,7 @@ import time
 import json
 
 from acc import (line_bot_api, qz, handler, owner, namaBot)
-from sesuatu import panggil
+from sesuatu import (panggil, film_quiz)
 from datetime import datetime
 from linebot.models import *
 
@@ -59,49 +59,7 @@ def handle_postback(event):
 					jawab = pertanyaan[tanya]["Jawaban"]
 					film = pertanyaan[tanya]["Film"]
 					soal.update({kirim:[tanya, jawab]})
-					pesan = FlexSendMessage(
-						alt_text=tanya,
-						contents=BubbleContainer(
-							direction='ltr',
-							body=BoxComponent(
-								layout='vertical',
-								contents=[
-									TextComponent(
-										text=film,
-										size='xs',
-										align='start',
-										color='#989898'
-									),
-									TextComponent(
-										text=tanya,
-										margin='md',
-										align='center',
-										wrap=True
-									)
-								]
-							),
-							footer=BoxComponent(
-								layout='horizontal',
-								contents=[
-									ButtonComponent(
-										action=PostbackAction(
-											label='Menyerah',
-											text='Nyerah deh',
-											data='/nyerah'
-										),
-										color='#ffffff',
-										height='sm'
-									)
-								]
-							),
-							styles=BubbleStyle(
-								footer=BlockStyle(
-									background_color='#a33f3f'
-								)
-							)
-						)
-					)
-					line_bot_api.reply_message(event.reply_token, pesan)
+					line_bot_api.reply_message(event.reply_token, film_quiz(tanya, film))
 				else:
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kabarin kalau udah siap ya kak ;D'))
 	except Exception as e:
@@ -132,4 +90,9 @@ def handle_message(event):
 		pertanyaan, jawaban = soal[kirim]
 
 		if text.lower() == jawaban.lower():
-			line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' benar ;D'))
+			pertanyaan = qz.child("pertanyaan").get().val()
+			tanya = random.choice([i for i in pertanyaan])
+			jawab = pertanyaan[tanya]["Jawaban"]
+			film = pertanyaan[tanya]["Film"]
+			soal.update({kirim:[tanya, jawab]})
+			line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' benar ;D'), film_quiz(tanya, film)])
