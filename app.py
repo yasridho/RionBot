@@ -25,7 +25,7 @@ import schedule
 import notif
 import quiz
 
-from acc import (namaBot, google_key, line_bot_api, handler, db)
+from acc import (namaBot, google_key, line_bot_api, handler, db, owner)
 from sesuatu import (mau_nonton, pengaturan, panggil)
 from bs4 import BeautifulSoup
 from linebot.exceptions import LineBotApiError
@@ -233,7 +233,6 @@ def handle_location_message(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    owner = 'U3fed832cbef28b87b7827b306506c8d5'
     sender = event.source.user_id
     text = event.message.text
     try:

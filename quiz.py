@@ -5,7 +5,7 @@ import random
 import time
 import json
 
-from acc import (line_bot_api, qz, handler)
+from acc import (line_bot_api, qz, handler, owner)
 from sesuatu import panggil
 from datetime import datetime
 from linebot.models import *
@@ -20,6 +20,8 @@ def handle_postback(event):
 		kirim = event.source.room_id
 	else:
 		kirim = event.source.user_id
+	
+	sender = event.source.user_id
 	
 	try:
 		if event.postback.data[0] == '/':
@@ -102,6 +104,16 @@ def handle_postback(event):
 					line_bot_api.reply_message(event.reply_token, pesan)
 				else:
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kabarin kalau udah siap ya kak ;D'))
+	except Exception as e:
+		try:
+			et, ev, tb = sys.exc_info()
+			lineno = tb.tb_lineno
+			fn = tb.tb_frame.f_code.co_filename
+			if sender != owner:
+				line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+			line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
+		except:
+			line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
