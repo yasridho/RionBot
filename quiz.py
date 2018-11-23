@@ -5,7 +5,7 @@ import random
 import time
 import json
 
-from acc import (line_bot_api, qz, handler, owner)
+from acc import (line_bot_api, qz, handler, owner, namaBot)
 from sesuatu import panggil
 from datetime import datetime
 from linebot.models import *
