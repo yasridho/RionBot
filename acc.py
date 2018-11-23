@@ -26,4 +26,4 @@ quiz_db = {
 }
 
 quiz = pyrebase.initialize_app(quiz_db)
-qz = firebase.database()
+qz = quiz.database()
