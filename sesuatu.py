@@ -79,64 +79,48 @@ def film_quiz(nomor, pertanyaan, film, pilihan, gambar):
 							align='center',
 							wrap=True
 						),
-						SeparatorComponent(
-							margin='xl'
-						),
 						BoxComponent(
-							layout='horizontal',
+							layout='vertical',
 							margin='md',
+							spacing='sm',
 							contents=[
-								TextComponent(
-									text=pilihan[0],
-									align='center',
-									wrap=True,
+								ButtonComponent(
+									color='#283ACB',
+									height='sm',
+									style='primary',
 									action=PostbackAction(
 										label=pilihan[0],
 										data='/jawab '+pilihan[0]
 									)
 								),
-								SeparatorComponent(),
-								TextComponent(
-									text=pilihan[1],
-									align='center',
-									wrap=True,
+								ButtonComponent(
+									color='#283ACB',
+									height='sm',
+									style='primary',
 									action=PostbackAction(
 										label=pilihan[1],
 										data='/jawab '+pilihan[1]
 									)
-								)
-							]
-						),
-						SeparatorComponent(
-							margin='md'
-						),
-						BoxComponent(
-							layout='horizontal',
-							margin='md',
-							contents=[
-								TextComponent(
-									text=pilihan[2],
-									align='center',
-									wrap=True,
+								),
+								ButtonComponent(
+									color='#283ACB',
+									height='sm',
+									style='primary',
 									action=PostbackAction(
 										label=pilihan[2],
 										data='/jawab '+pilihan[2]
 									)
 								),
-								SeparatorComponent(),
-								TextComponent(
-									text=pilihan[3],
-									align='center',
-									wrap=True,
+								ButtonComponent(
+									color='#283ACB',
+									height='sm',
+									style='primary',
 									action=PostbackAction(
 										label=pilihan[3],
 										data='/jawab '+pilihan[3]
 									)
 								)
 							]
-						),
-						SeparatorComponent(
-							margin='md'
 						),
 						SpacerComponent(
 							size='xxl'
@@ -195,60 +179,48 @@ def film_quiz(nomor, pertanyaan, film, pilihan, gambar):
 							align='center',
 							wrap=True
 						),
-						SeparatorComponent(
-							margin='xl'
-						),
 						BoxComponent(
-							layout='horizontal',
+							layout='vertical',
 							margin='md',
+							spacing='sm',
 							contents=[
-								TextComponent(
-									text=pilihan[0],
-									align='center',
+								ButtonComponent(
+									color='#283ACB',
+									height='sm',
+									style='primary',
 									action=PostbackAction(
 										label=pilihan[0],
 										data='/jawab '+pilihan[0]
 									)
 								),
-								SeparatorComponent(),
-								TextComponent(
-									text=pilihan[1],
-									align='center',
+								ButtonComponent(
+									color='#283ACB',
+									height='sm',
+									style='primary',
 									action=PostbackAction(
 										label=pilihan[1],
 										data='/jawab '+pilihan[1]
 									)
-								)
-							]
-						),
-						SeparatorComponent(
-							margin='md'
-						),
-						BoxComponent(
-							layout='horizontal',
-							margin='md',
-							contents=[
-								TextComponent(
-									text=pilihan[2],
-									align='center',
+								),
+								ButtonComponent(
+									color='#283ACB',
+									height='sm',
+									style='primary',
 									action=PostbackAction(
 										label=pilihan[2],
 										data='/jawab '+pilihan[2]
 									)
 								),
-								SeparatorComponent(),
-								TextComponent(
-									text=pilihan[3],
-									align='center',
+								ButtonComponent(
+									color='#283ACB',
+									height='sm',
+									style='primary',
 									action=PostbackAction(
 										label=pilihan[3],
 										data='/jawab '+pilihan[3]
 									)
 								)
 							]
-						),
-						SeparatorComponent(
-							margin='md'
 						),
 						SpacerComponent(
 							size='xxl'
