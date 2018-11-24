@@ -41,6 +41,69 @@ def panggil(args):
 			return data["nama"]
 	except:pass
 
+def pemain(aturan):
+	num = 0
+	peraturan = list()
+	for atur in aturan:
+		peraturan.append(
+			BoxComponent(
+				layout='baseline',
+				contents=[
+					TextComponent(
+						text=str(num+1),
+						size='xs'
+					),
+					TextComponent(
+						text=atur,
+						flex=10,
+						size='xs',
+						wrap=True
+					)
+				]
+			)
+		)
+		num += 1
+	peraturan.append(
+		TextComponent(
+			text='Tekan tombol dibawah untuk bergabung dalam permainan ;D',
+			margin='md',
+			size='xs',
+			wrap=True
+		)
+	)
+	pesan = FlexSendMessage(
+		alt_text='Aturan Permainan',
+		contents=BubbleContainer(
+			direction='ltr',
+			header=BoxComponent(
+				layout='vertical',
+				contents=[
+					TextComponent(
+						text='Aturan Permainan',
+						align='center',
+						weight='bold'
+					)
+				]
+			),
+			body=BoxComponent(
+				layout='vertical',
+				contents=peraturan
+			),
+			footer=BoxComponent(
+				layout='horizontal',
+				contents=[
+					ButtonComponent(
+						action=PostbackAction(
+							label='Dimengerti',
+							data='/join '+time.time()
+						)
+					)
+				]
+			)
+		)
+	)
+	return pesan
+
 def film_quiz(nomor, pertanyaan, film, pilihan, gambar):
 	if gambar != "":
 		pesan = FlexSendMessage(
