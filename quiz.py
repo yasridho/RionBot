@@ -71,7 +71,7 @@ def handle_postback(event):
 			elif cmd == 'jawab':
 				if kirim in soal:
 					nomor, tanya, waktu = soal[kirim]
-					bertanya = qz.child("Quiz").child("Pilihan").child(tanya).get.val()
+					bertanya = qz.child("Quiz").child("Pilihan").child(tanya).get().val()
 					menjawab = bertanya["Jawaban"][args]
 					if menjawab == 'Benar':
 						pertanyaan = qz.child("Quiz").child("Pilihan").get().val()

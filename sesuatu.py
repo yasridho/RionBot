@@ -89,6 +89,7 @@ def film_quiz(nomor, pertanyaan, film, pilihan, gambar):
 								TextComponent(
 									text=pilihan[0],
 									align='center',
+									wrap=True,
 									action=PostbackAction(
 										label=pilihan[0],
 										data='/jawab '+pilihan[0]
@@ -98,6 +99,7 @@ def film_quiz(nomor, pertanyaan, film, pilihan, gambar):
 								TextComponent(
 									text=pilihan[1],
 									align='center',
+									wrap=True,
 									action=PostbackAction(
 										label=pilihan[1],
 										data='/jawab '+pilihan[1]
@@ -115,6 +117,7 @@ def film_quiz(nomor, pertanyaan, film, pilihan, gambar):
 								TextComponent(
 									text=pilihan[2],
 									align='center',
+									wrap=True,
 									action=PostbackAction(
 										label=pilihan[2],
 										data='/jawab '+pilihan[2]
@@ -124,6 +127,7 @@ def film_quiz(nomor, pertanyaan, film, pilihan, gambar):
 								TextComponent(
 									text=pilihan[3],
 									align='center',
+									wrap=True,
 									action=PostbackAction(
 										label=pilihan[3],
 										data='/jawab '+pilihan[3]
