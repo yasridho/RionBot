@@ -41,49 +41,237 @@ def panggil(args):
 			return data["nama"]
 	except:pass
 
-def film_quiz(pertanyaan, film):
-	pesan = FlexSendMessage(
-		alt_text=pertanyaan,
-		contents=BubbleContainer(
-			direction='ltr',
-			body=BoxComponent(
-				layout='vertical',
-				contents=[
-					TextComponent(
-						text=film,
-						size='xs',
-						align='start',
-						color='#989898'
-					),
-					TextComponent(
-						text=pertanyaan,
-						margin='md',
-						align='center',
-						wrap=True
-					)
-				]
-			),
-			footer=BoxComponent(
-				layout='horizontal',
-				contents=[
-					ButtonComponent(
-						action=PostbackAction(
-							label='Menyerah',
-							text='Nyerah deh',
-							data='/nyerah'
+def film_quiz(nomor, pertanyaan, film, pilihan, gambar):
+	if gambar != "":
+		pesan = FlexSendMessage(
+			alt_text=pertanyaan,
+			contents=BubbleContainer(
+				direction='ltr',
+				header=BoxComponent(
+					layout='vertical',
+					contents=[
+						TextComponent(
+							text=nomor,
+							align='center',
+							weight='bold',
+							color='#8a8a8a'
+						)
+					]
+				),
+				hero=ImageComponent(
+					url=gambar,
+					size='full',
+					aspect_ratio='1.51:1',
+					aspect_mode='cover'
+				),
+				body=BoxComponent(
+					layout='vertical',
+					contents=[
+						TextComponent(
+							text=film,
+							size='xs',
+							align='start',
+							color='#989898'
 						),
-						color='#ffffff',
-						height='sm'
+						TextComponent(
+							text=pertanyaan,
+							margin='md',
+							align='center',
+							wrap=True
+						),
+						SeparatorComponent(
+							margin='xl'
+						),
+						BoxComponent(
+							layout='horizontal',
+							margin='md',
+							contents=[
+								TextComponent(
+									text=pilihan[0],
+									align='center',
+									action=PostbackAction(
+										label=pilihan[0],
+										data='/jawab '+pilihan[0]
+									)
+								),
+								SeparatorComponent(),
+								TextComponent(
+									text=pilihan[1],
+									align='center',
+									action=PostbackAction(
+										label=pilihan[1],
+										data='/jawab '+pilihan[1]
+									)
+								)
+							]
+						),
+						SeparatorComponent(
+							margin='md'
+						),
+						BoxComponent(
+							layout='horizontal',
+							margin='md',
+							contents=[
+								TextComponent(
+									text=pilihan[2],
+									align='center',
+									action=PostbackAction(
+										label=pilihan[2],
+										data='/jawab '+pilihan[2]
+									)
+								),
+								SeparatorComponent(),
+								TextComponent(
+									text=pilihan[3],
+									align='center',
+									action=PostbackAction(
+										label=pilihan[3],
+										data='/jawab '+pilihan[3]
+									)
+								)
+							]
+						),
+						SeparatorComponent(
+							margin='md'
+						),
+						SpacerComponent(
+							size='xxl'
+						)
+					]
+				),
+				footer=BoxComponent(
+					layout='horizontal',
+					contents=[
+						ButtonComponent(
+							action=PostbackAction(
+								label='Menyerah',
+								text='Nyerah deh',
+								data='/nyerah'
+							),
+							color='#ffffff',
+							height='sm'
+						)
+					]
+				),
+				styles=BubbleStyle(
+					footer=BlockStyle(
+						background_color='#a33f3f'
 					)
-				]
-			),
-			styles=BubbleStyle(
-				footer=BlockStyle(
-					background_color='#a33f3f'
 				)
 			)
 		)
-	)
+	else:
+		pesan = FlexSendMessage(
+			alt_text=pertanyaan,
+			contents=BubbleContainer(
+				direction='ltr',
+				header=BoxComponent(
+					layout='vertical',
+					contents=[
+						TextComponent(
+							text=nomor,
+							align='center',
+							weight='bold',
+							color='#8a8a8a'
+						)
+					]
+				),
+				body=BoxComponent(
+					layout='vertical',
+					contents=[
+						TextComponent(
+							text=film,
+							size='xs',
+							align='start',
+							color='#989898'
+						),
+						TextComponent(
+							text=pertanyaan,
+							margin='md',
+							align='center',
+							wrap=True
+						),
+						SeparatorComponent(
+							margin='xl'
+						),
+						BoxComponent(
+							layout='horizontal',
+							margin='md',
+							contents=[
+								TextComponent(
+									text=pilihan[0],
+									align='center',
+									action=PostbackAction(
+										label=pilihan[0],
+										data='/jawab '+pilihan[0]
+									)
+								),
+								SeparatorComponent(),
+								TextComponent(
+									text=pilihan[1],
+									align='center',
+									action=PostbackAction(
+										label=pilihan[1],
+										data='/jawab '+pilihan[1]
+									)
+								)
+							]
+						),
+						SeparatorComponent(
+							margin='md'
+						),
+						BoxComponent(
+							layout='horizontal',
+							margin='md',
+							contents=[
+								TextComponent(
+									text=pilihan[2],
+									align='center',
+									action=PostbackAction(
+										label=pilihan[2],
+										data='/jawab '+pilihan[2]
+									)
+								),
+								SeparatorComponent(),
+								TextComponent(
+									text=pilihan[3],
+									align='center',
+									action=PostbackAction(
+										label=pilihan[3],
+										data='/jawab '+pilihan[3]
+									)
+								)
+							]
+						),
+						SeparatorComponent(
+							margin='md'
+						),
+						SpacerComponent(
+							size='xxl'
+						)
+					]
+				),
+				footer=BoxComponent(
+					layout='horizontal',
+					contents=[
+						ButtonComponent(
+							action=PostbackAction(
+								label='Menyerah',
+								text='Nyerah deh',
+								data='/nyerah'
+							),
+							color='#ffffff',
+							height='sm'
+						)
+					]
+				),
+				styles=BubbleStyle(
+					footer=BlockStyle(
+						background_color='#a33f3f'
+					)
+				)
+			)
+		)
 	return pesan
 
 def pesan_pengingat(kepada, pesan, agenda):

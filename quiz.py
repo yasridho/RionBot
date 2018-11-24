@@ -54,14 +54,45 @@ def handle_postback(event):
 
 			elif cmd == 'quiz':
 				if args == 'ready':
-					pertanyaan = qz.child("pertanyaan").get().val()
+					pertanyaan = qz.child("Quiz").child("Pilihan").get().val()
 					tanya = random.choice([i for i in pertanyaan])
-					jawab = pertanyaan[tanya]["Jawaban"]
+					pilihan = [i for i in pertanyaan[tanya]["Jawaban"]]
 					film = pertanyaan[tanya]["Film"]
-					soal.update({kirim:[tanya, jawab]})
-					line_bot_api.reply_message(event.reply_token, film_quiz(tanya, film))
+					try:
+						gambar = pertanyaan[tanya]["Gambar"]
+					except:
+						gambar = ""
+					nomor = 1
+					soal.update({kirim:[nomor, tanya, time.time()]})
+					line_bot_api.reply_message(event.reply_token, film_quiz("Pertanyaan "+str(nomor)+"/10", tanya, film, pilihan, gambar))
 				else:
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kabarin kalau udah siap ya kak ;D'))
+			
+			elif cmd == 'jawab':
+				if kirim in soal:
+					nomor, tanya, waktu = soal[kirim]
+					bertanya = qz.child("Quiz").child("Pilihan").child(tanya).get.val()
+					menjawab = bertanya["Jawaban"][args]
+					if menjawab == 'Benar':
+						pertanyaan = qz.child("Quiz").child("Pilihan").get().val()
+						tanya = random.choice([i for i in pertanyaan])
+						pilihan = [i for i in pertanyaan[tanya]["Jawaban"]]
+						film = pertanyaan[tanya]["Film"]
+						try:
+							gambar = pertanyaan[tanya]["Gambar"]
+						except:
+							gambar = ""
+						soal.update({kirim:[nomor, tanya, time.time()]})
+						if nomor < 10:
+							nomor = nomor + 1
+							line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' benar ;D'), film_quiz("Pertanyaan "+str(nomor)+"/10", tanya, film, pilihan, gambar)])
+						else:
+							line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Soal selesai ;D'))
+							del soal[kirim]
+					else:
+						line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' salah :('))
+						del soal[kirim]
+	
 	except Exception as e:
 		try:
 			et, ev, tb = sys.exc_info()
@@ -85,14 +116,3 @@ def handle_message(event):
 	sender = event.source.user_id
 	profil = line_bot_api.get_profile(sender)
 	text = event.message.text
-
-	if kirim in soal:
-		pertanyaan, jawaban = soal[kirim]
-
-		if text.lower() == jawaban.lower():
-			pertanyaan = qz.child("pertanyaan").get().val()
-			tanya = random.choice([i for i in pertanyaan])
-			jawab = pertanyaan[tanya]["Jawaban"]
-			film = pertanyaan[tanya]["Film"]
-			soal.update({kirim:[tanya, jawab]})
-			line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' benar ;D'), film_quiz(tanya, film)])
