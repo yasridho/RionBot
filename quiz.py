@@ -83,9 +83,9 @@ def handle_postback(event):
 							gambar = pertanyaan[tanya]["Gambar"]
 						except:
 							gambar = ""
-						soal.update({kirim:[nomor, tanya, time.time()]})
 						if nomor < 10:
 							nomor = nomor + 1
+							soal.update({kirim:[nomor, tanya, time.time()]})
 							line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' benar ;D'), film_quiz("Pertanyaan "+str(nomor)+"/10", tanya, film, pilihan, gambar)])
 						else:
 							line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Soal selesai ;D'))
