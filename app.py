@@ -245,7 +245,14 @@ def handle_message(event):
         notif.handle_message(event)
         gid = event.source.sender_id #get group_id
         profil = line_bot_api.get_profile(sender)
-        nama = panggil(sender) #Ini buat nama
+        try:
+            nama = panggil(sender) #Ini buat nama
+        except:
+            data = {'nama':line_bot_api.get_profile(event.source.user_id).display_name,
+                    'foto':line_bot_api.get_profile(event.source.user_id).picture_url,
+                    'status':line_bot_api.get_profile(event.source.user_id).status_message,
+                    'waktu_add':time.time()}
+            db.child("pengguna").child(event.source.user_id).set(data)
         gambar = profil.picture_url #Ini profile picture
         status = profil.status_message #Ini status di line
 
