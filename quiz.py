@@ -196,7 +196,7 @@ def handle_postback(event):
 								t = Timer(20, waktu_main, (nomor, kirim))
 								t.start()
 						data = {"poin":poin,"waktu":time.time()}
-						qz.child("Quiz").child("Skor").child(kirim).child(sender).child("poin").set(data)
+						qz.child("Quiz").child("Skor").child(kirim).child(sender).set(data)
 	
 	except Exception as e:
 		try:
