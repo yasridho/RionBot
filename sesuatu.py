@@ -1449,7 +1449,10 @@ def search_movie_imdb(film):
 		gambar = movie.get_fullsizeURL()
 		bahasa = movie.guessLanguage()
 		judul = movie['title']+' ('+str(movie['year'])+')'
-		rating = movie['rating']
+		try:
+			rating = movie['rating']
+		except:
+			rating = 0
 		kumpulin.append(
 			BubbleContainer(
 				hero=ImageComponent(
