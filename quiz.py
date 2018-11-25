@@ -171,7 +171,6 @@ def handle_postback(event):
 								soal.update({kirim:[nomor, tanya, time.time()]})
 								line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' benar ;D'), film_quiz("Pertanyaan "+str(nomor)+"/10", tanya, film, pilihan, gambar)])
 							else:
-								nomor, tanya, waktu = soal[kirim]
 								data = qz.child("Quiz").child("Skor Pribadi").child(sender).get().val()
 								nama = line_bot_api.get_profile(sender).display_name
 								poin = data["poin"]
@@ -180,7 +179,11 @@ def handle_postback(event):
 								del soal[kirim]
 								del selesai[kirim]
 						else:
-							line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' salah :('))
+							data = qz.child("Quiz").child("Skor Pribadi").child(sender).get().val()
+							nama = line_bot_api.get_profile(sender).display_name
+							poin = data["poin"]
+							gambar = line_bot_api.get_profile(sender).picture_url
+							line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' salah :('), hasil_akhir(nama, nomor, poin, gambar)])
 							del soal[kirim]
 							del selesai[kirim]
 					else:
