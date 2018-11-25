@@ -103,6 +103,8 @@ def handle_postback(event):
 			elif cmd == 'join':
 				durasi = time.time() - float(args)
 				status = playah[kirim]["status"]
+				##if sender in playah[kirim]["pemain"]:
+				#	line_bot_api.reply_message()
 				if status == 'pending':
 					if durasi < 30*60: #30 menit
 						playah[kirim]["pemain"].append(sender)
@@ -217,7 +219,7 @@ def handle_message(event):
 	text = event.message.text
 
 	if text == '/mulai':
-		if kirim in playah:
+		if kirim in playah[kirim]["pemain"]:
 			if playah[kirim]["status"] == 'pending':
 				playah[kirim]["status"].update("mulai")
 				pertanyaan = qz.child("Quiz").child("Pilihan").get().val()
