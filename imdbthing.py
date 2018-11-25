@@ -129,7 +129,6 @@ def handle_message(event):
 							)
 						)
 					)
-					for i in 
 					pesan = FlexSendMessage(
 						alt_text='Hasil pencarian: '+text,
 						contents=CarouselContainer(
