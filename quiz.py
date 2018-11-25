@@ -176,7 +176,7 @@ def handle_postback(event):
 								nama = line_bot_api.get_profile(sender).display_name
 								poin = data["poin"]
 								gambar = line_bot_api.get_profile(sender).picture_url
-								line_bot_api.reply_message(event.reply_token, hasil_akhir(nama, nomor-1, poin, gambar))
+								line_bot_api.reply_message(event.reply_token, hasil_akhir(nama, nomor, poin, gambar))
 								del soal[kirim]
 								del selesai[kirim]
 						else:
