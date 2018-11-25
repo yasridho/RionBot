@@ -101,7 +101,7 @@ def handle_postback(event):
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kabarin kalau udah siap ya kak ;D'))
 			
 			elif cmd == 'join':
-				durasi = time.time() - args
+				durasi = time.time() - float(args)
 				status = playah[kirim]["status"]
 				if status == 'pending':
 					if durasi < 30*60: #30 menit
