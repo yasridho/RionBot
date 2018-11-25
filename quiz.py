@@ -253,9 +253,9 @@ def handle_postback(event):
 						else:
 							skornya = qz.child("Quiz").child("Skor").child(kirim).get().val()
 							skor_trakhir = {}
-							for pemain in skornya:
-								total_skor = skornya[pemain]["poin"] + poin
-								skor_trakhir.update({pemain:total_skor})
+							for u in skornya:
+								total_skor = skornya[u]["poin"] + poin
+								skor_trakhir.update({u:total_skor})
 							line_bot_api.reply_message(event.reply_token, skor_akhir(skor_trakhir))
 							del playah[kirim]
 							del kebenaran[kirim]
