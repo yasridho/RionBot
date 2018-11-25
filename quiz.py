@@ -152,7 +152,11 @@ def handle_postback(event):
 					nomor, tanya, waktu = soal[kirim]
 					bertanya = qz.child("Quiz").child("Pilihan").get().val()
 					bertanya = bertanya[tanya]
-					menjawab = bertanya["Jawaban"][args]
+					try:
+						menjawab = bertanya["Jawaban"][args]
+					except:
+						line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Tidak ada pilihan yang kak '+panggil(sender)+' pilih di soal ini :('))
+						return
 					if event.source.type == 'user':
 						if menjawab == 'Benar':
 							data = qz.child("Quiz").child("Skor Pribadi").child(sender).get().val()
