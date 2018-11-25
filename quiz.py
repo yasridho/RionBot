@@ -150,7 +150,11 @@ def handle_postback(event):
 							del soal[kirim]
 					else:
 						main = qz.child("Quiz").child("Skor").child(kirim).child(sender).get().val()
-						poin = main["poin"]
+						try:
+							poin = main["poin"]
+						except:
+							poin = 0
+						if sender not in playah[kirim]["pemain"]:return
 						if menjawab == 'Benar':
 							if (sender not in kebenaran[kirim]["benar"]) or (sender not in kebenaran[kirim]["salah"]) or (sender not in kebenaran[kirim]["nyerah"]):
 								if len(kebenaran[kirim]["benar"]) == 0:
@@ -191,8 +195,8 @@ def handle_postback(event):
 								kebenaran.update({kirim:{"benar":[],"salah":[],"nyerah":nyerah}})
 								t = Timer(20, waktu_main, (nomor, kirim))
 								t.start()
-
-						qz.child("Quiz").child("Skor").child(kirim).child(sender).child("poin").update(poin)
+						data = {"poin":poin,"waktu":time.time()}
+						qz.child("Quiz").child("Skor").child(kirim).child(sender).child("poin").set(data)
 	
 	except Exception as e:
 		try:
