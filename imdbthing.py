@@ -34,7 +34,7 @@ def handle_postback(event):
 				cari = cari.replace('+',' ')
 				batas = int(nomor)+9
 				hasil = pencarian[cari]
-				jhasil = len(hasil[cari]) - int(nomor)
+				jhasil = len(hasil) - int(nomor)
 				res = list()
 				if jhasil > 10:
 					for i in hasil[int(nomor)+1:batas]:
