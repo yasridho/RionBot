@@ -1445,7 +1445,6 @@ def search_movie_imdb(film):
 	for ids in movie_ids:
 		movie = ia.get_movie(ids)
 		genres = ", ".join(movie['genres'])
-		directors = [r['name'] for r in movie['directors']]
 		gambar = movie.get_fullsizeURL()
 		bahasa = movie.guessLanguage()
 		judul = movie['title']+' ('+str(movie['year'])+')'
