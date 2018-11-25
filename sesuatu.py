@@ -63,14 +63,11 @@ def hasil_akhir(nama, jumlah_soal, total_poin, skorlist):
 	for player in skorlist:
 		poin, waktu = skorlist[player]
 		yeezy.update({player:poin})
-	terurut = {}
-	for key, value in sorted(yeezy.iteritems(), key=lambda (k,v): (v,k), reverse=True):
-		terurut.update({key:value})
+	s = [(k, yeezy[k]) for k in sorted(yeezy, key=yeezy.get, reverse=True)]
 	skors = list()
 	num = 1
-	for pemain in terurut:
+	for pemain, skor in s:
 		nama = line_bot_api.get_profile(pemain).display_name
-		skor = terurut[pemain]
 		skors.append(
 			BoxComponent(
 				layout='baseline',
