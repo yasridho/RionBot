@@ -41,6 +41,23 @@ def panggil(args):
 			return data["nama"]
 	except:pass
 
+def mulai_permainan():
+	pesan = TemplateSendMessage(
+		alt_text='Permainan belum dibuka :(',
+		template=ButtonsTemplate(
+			actions=[
+				PostbackAction(
+					label='Buka Permainan',
+					text='Main kuy',
+					data='/quiz ready'
+				)
+			],
+			title='Oooppps...',
+			text='Permainan belum dibuka, silahkan klik tombol dibawah'
+		)
+	)
+	return pesan
+
 def hasil_akhir(nama, jumlah_soal, total_poin, gambar):
 	if gambar != "":
 		pesan = FlexSendMessage(

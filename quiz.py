@@ -6,7 +6,7 @@ import time
 import json
 
 from acc import (line_bot_api, qz, handler, owner, namaBot)
-from sesuatu import (panggil, film_quiz, pemain, hasil_akhir, skor_akhir)
+from sesuatu import (panggil, film_quiz, pemain, hasil_akhir, skor_akhir, mulai_permainan)
 from datetime import datetime
 from threading import Timer
 from linebot.models import *
@@ -125,7 +125,11 @@ def handle_postback(event):
 			
 			elif cmd == 'join':
 				durasi = time.time() - float(args)
-				status = playah[kirim]["status"]
+				try:
+					status = playah[kirim]["status"]
+				except:
+					line_bot_api.reply_message(event.reply_token, mulai_permainan())
+					return
 				if sender in playah[kirim]["pemain"]:
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' sudah memasuki permainan ._.'))
 					return
