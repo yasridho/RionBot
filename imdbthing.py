@@ -32,7 +32,7 @@ def handle_postback(event):
 			if cmd == 'imdb':
 				cari, nomor = args.split(" ")
 				cari = cari.replace('+',' ')
-				batas = int(nomor)+9
+				batas = int(nomor)+10
 				hasil = pencarian[cari]
 				jhasil = len(hasil) - int(nomor)
 				res = list()
