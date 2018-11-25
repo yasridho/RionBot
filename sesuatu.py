@@ -67,7 +67,7 @@ def hasil_akhir(nama, jumlah_soal, total_poin, skorlist):
 	skors = list()
 	num = 1
 	for pemain, skor in s:
-		nama = line_bot_api.get_profile(pemain).display_name
+		nama_pemain = line_bot_api.get_profile(pemain).display_name
 		skors.append(
 			BoxComponent(
 				layout='baseline',
@@ -80,7 +80,7 @@ def hasil_akhir(nama, jumlah_soal, total_poin, skorlist):
 						size='xs'
 					),
 					TextComponent(
-						text=nama,
+						text=nama_pemain,
 						size='xs',
 						align='start',
 						wrap=True
