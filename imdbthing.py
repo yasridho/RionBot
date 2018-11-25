@@ -50,6 +50,8 @@ def handle_message(event):
 		kirim = event.source.user_id
 
 	sender = event.source.user_id
+	text = event.message.text
+
 	try:
 
 		if sender in perintah:
