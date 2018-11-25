@@ -118,8 +118,8 @@ def handle_postback(event):
 					else:
 						line_bot_api.reply_message(event.reply_token, pemain(aturan))
 						playah.update({kirim:{"status":"pending","pemain":[]}})
-						durasi = 30*60 #30 menit
-						t = Timer(durasi, cek_pemain, (kirim))
+						durasi = 5*60 #5 menit
+						t = Timer(durasi, cek_pemain, (str(kirim)))
 						t.start()
 				else:
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kabarin kalau udah siap ya kak ;D'))
