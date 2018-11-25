@@ -9,4 +9,4 @@ cinema21
 google
 pyrebase
 schedule
-imdb
+imdbpy
