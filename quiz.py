@@ -6,7 +6,7 @@ import time
 import json
 
 from acc import (line_bot_api, qz, handler, owner, namaBot)
-from sesuatu import (panggil, film_quiz, pemain)
+from sesuatu import (panggil, film_quiz, pemain, hasil_akhir, skor_akhir)
 from datetime import datetime
 from threading import Timer
 from linebot.models import *
@@ -80,10 +80,25 @@ def handle_postback(event):
 						if playah[kirim]["status"] == "mulai":
 							kebenaran[kirim]["nyerah"].append(sender)
 							line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' menyerah dan tidak dapat melanjutkan permainan :('))
-
+				else:
+					nomor, tanya, waktu = soal[kirim]
+					data = qz.child("Quiz").child("Skor Pribadi").child(sender).get().val()
+					nama = line_bot_api.get_profile(sender).display_name
+					poin = data["poin"]
+					gambar = line_bot_api.get_profile(sender).picture_url
+					line_bot_api.reply_message(event.reply_token, hasil_akhir(nama, nomor, poin, gambar))
+					del soal[kirim]
+					del selesai[kirim]
+	
 			elif cmd == 'quiz':
 				if args == 'ready':
 					if event.source.type == 'user':
+						try:
+							data = qz.child("Quiz").child("Skor Pribadi").child(sender).get().val()
+							poin = data["poin"]
+						except:
+							data = {"poin":0,"waktu":time.time()}
+							qz.child("Quiz").child("Skor Pribadi").child(sender).set(data)
 						pertanyaan = qz.child("Quiz").child("Pilihan").get().val()
 						tanya = random.choice([i for i in pertanyaan])
 						pilihan = [i for i in pertanyaan[tanya]["Jawaban"]]
@@ -137,6 +152,9 @@ def handle_postback(event):
 					menjawab = bertanya["Jawaban"][args]
 					if event.source.type == 'user':
 						if menjawab == 'Benar':
+							data = qz.child("Quiz").child("Skor Pribadi").child(sender).get().val()
+							poin = data["poin"] + 1
+							qz.child("Quiz").child("Skor Pribadi").child(sender).set({"poin":poin,"waktu":time.time()})
 							pertanyaan = qz.child("Quiz").child("Pilihan").get().val()
 							tanya = random.choice([i for i in pertanyaan])
 							while tanya in selesai[kirim]:
@@ -153,12 +171,18 @@ def handle_postback(event):
 								soal.update({kirim:[nomor, tanya, time.time()]})
 								line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' benar ;D'), film_quiz("Pertanyaan "+str(nomor)+"/10", tanya, film, pilihan, gambar)])
 							else:
-								line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Soal selesai ;D'))
+								nomor, tanya, waktu = soal[kirim]
+								data = qz.child("Quiz").child("Skor Pribadi").child(sender).get().val()
+								nama = line_bot_api.get_profile(sender).display_name
+								poin = data["poin"]
+								gambar = line_bot_api.get_profile(sender).picture_url
+								line_bot_api.reply_message(event.reply_token, hasil_akhir(nama, nomor, poin, gambar))
 								del soal[kirim]
 								del selesai[kirim]
 						else:
 							line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' salah :('))
 							del soal[kirim]
+							del selesai[kirim]
 					else:
 						main = qz.child("Quiz").child("Skor").child(kirim).child(sender).get().val()
 						try:
