@@ -26,7 +26,7 @@ def cek_pemain(ruangan):
 def waktu_main(nomor_soal, ruangan):
 	nomor, tanya, waktu = soal[ruangan]
 	if nomor == nomor_soal:
-		for pion in playah[ruangan]:
+		for pion in playah[ruangan]["pemain"]:
 			if not (pion in kebenaran[ruangan]["benar"]) and not (pion in kebenaran[ruangan]["salah"]):
 				kebenaran[ruangan]["nyerah"].append(pion)
 		line_bot_api.push_message(ruangan, TextSendMessage(text='Kak '+", ".join([panggil(sender) for sender in kebenaran[ruangan]["nyerah"]])+' menyerah dan tidak dapat mengikuti permainan lagi :('))
@@ -75,6 +75,7 @@ def handle_postback(event):
 				if kirim in playah:
 					if sender in playah[kirim]["pemain"]:
 						if playah[kirim]["status"] == "mulai":
+							kebenaran[kirim]["nyerah"].append(sender)
 							line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' menyerah dan tidak dapat melanjutkan permainan :('))
 
 			elif cmd == 'quiz':
@@ -179,7 +180,10 @@ def handle_postback(event):
 								line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' salah, dikurangi 1 poin. :(\nTotal: '+str(poin)+' poin.'))
 						
 						if nomor < 10:
-							if (len(kebenaran[kirim]["benar"]) + len(kebenaran[kirim]["salah"]) + len(kebenaran[kirim]["nyerah"])) == len(playah[kirim]["pemain"]):
+							benar = len(kebenaran[kirim]["benar"])
+							salah = len(kebenaran[kirim]["salah"])
+							nyerah = len(kebenaran[kirim]["nyerah"])
+							if (benar + salah + nyerah) == len(playah[kirim]["pemain"]):
 								pertanyaan = qz.child("Quiz").child("Pilihan").get().val()
 								tanya = random.choice([i for i in pertanyaan])
 								pilihan = [i for i in pertanyaan[tanya]["Jawaban"]]
