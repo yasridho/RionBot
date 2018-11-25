@@ -58,159 +58,168 @@ def mulai_permainan():
 	)
 	return pesan
 
-def hasil_akhir(nama, jumlah_soal, total_poin, gambar):
-	if gambar != "":
-		pesan = FlexSendMessage(
-			alt_text='Hasil Akhir',
-			contents=BubbleContainer(
-				direction='ltr',
-				header=BoxComponent(
-					layout='vertical',
-					contents=[
-						TextComponent(
-							text='Hasil',
-							align='center',
-							weight='bold',
-							color='#ffffff'
-						)
-					]
-				),
-				hero=ImageComponent(
-					url=gambar,
-					size='full',
-					aspect_mode='cover',
-					aspect_ratio='1:1'
-				),
-				body=BoxComponent(
-					layout='vertical',
-					contents=[
-						TextComponent(
-							text=nama,
-							align='center'
-						),
-						TextComponent(
-							text=str(jumlah_soal)+' soal terjawab',
-							size='sm',
-							align='center'
-						),
-						SeparatorComponent(
-							margin='md'
-						),
-						BoxComponent(
-							layout='baseline',
-							spacing='md',
-							margin='sm',
-							contents=[
-								TextComponent(
-									text='Poin yang terkumpul',
-									flex=0,
-									size='sm'
-								),
-								TextComponent(
-									text=str(total_poin)+' poin',
-									size='sm',
-									align='end'
-								)
-							]
-						)
-					]
-				),
-				footer=BoxComponent(
-					layout='horizontal',
-					contents=[
-						ButtonComponent(
-							action=PostbackAction(
-								label='Main lagi',
-								text='Main lagi dong',
-								data='/quiz ready'
-							),
-							color='#ffffff'
-						)
-					]
-				),
-				styles=BubbleStyle(
-					header=BlockStyle(
-						background_color='#14a6b7'
+def hasil_akhir(nama, jumlah_soal, total_poin, skorlist):
+	yeezy = {}
+	for player in skorlist:
+		poin, waktu = skorlist[player]
+		yeezy.update({player:poin})
+	terurut = {}
+	for key, value in sorted(yeezy.iteritems(), key=lambda (k,v): (v,k), reverse=True):
+		terurut.update({key:value})
+	skors = list()
+	num = 1
+	for pemain in terurut:
+		nama = line_bot_api.get_profile(pemain).display_name
+		skor = terurut[pemain]
+		skors.append(
+			BoxComponent(
+				layout='baseline',
+				spacing='md',
+				margin='sm',
+				contents=[
+					TextComponent(
+						text=str(num),
+						flex=0,
+						size='xs'
 					),
-					footer=BlockStyle(
-						background_color='#14a6b7'
-					)
-				)
-			)	
-		)
-	else:
-		pesan = FlexSendMessage(
-			alt_text='Hasil Akhir',
-			contents=BubbleContainer(
-				direction='ltr',
-				header=BoxComponent(
-					layout='vertical',
-					contents=[
-						TextComponent(
-							text='Hasil',
-							align='center',
-							weight='bold',
-							color='#ffffff'
-						)
-					]
-				),
-				body=BoxComponent(
-					layout='vertical',
-					contents=[
-						TextComponent(
-							text=nama,
-							align='center'
-						),
-						TextComponent(
-							text=str(jumlah_soal)+' soal terjawab',
-							size='sm',
-							align='center'
-						),
-						SeparatorComponent(
-							margin='md'
-						),
-						BoxComponent(
-							layout='baseline',
-							spacing='md',
-							margin='sm',
-							contents=[
-								TextComponent(
-									text='Poin yang terkumpul',
-									flex=0,
-									size='sm'
-								),
-								TextComponent(
-									text=str(total_poin)+' poin',
-									size='sm',
-									align='end'
-								)
-							]
-						)
-					]
-				),
-				footer=BoxComponent(
-					layout='horizontal',
-					contents=[
-						ButtonComponent(
-							action=PostbackAction(
-								label='Main lagi',
-								text='Main lagi dong',
-								data='/quiz ready'
-							),
-							color='#ffffff'
-						)
-					]
-				),
-				styles=BubbleStyle(
-					header=BlockStyle(
-						background_color='#14a6b7'
+					TextComponent(
+						text=nama,
+						size='xs',
+						align='start',
+						wrap=True
 					),
-					footer=BlockStyle(
-						background_color='#14a6b7'
+					TextComponent(
+						text=str(skor)+'p',
+						size='xs',
+						align='end',
+						wrap=False
 					)
-				)
-			)	
+				]
+			)
 		)
+		num += 1
+	pesan = FlexSendMessage(
+		alt_text='Hasil Akhir',
+		contents=BubbleContainer(
+			direction='ltr',
+			header=BoxComponent(
+				layout='vertical',
+				contents=[
+					TextComponent(
+						text='Hasil',
+						align='center',
+						weight='bold',
+						color='#ffffff'
+					)
+				]
+			),
+			body=BoxComponent(
+				layout='vertical',
+				contents=[
+					TextComponent(
+						text=nama,
+						align='center'
+					),
+					TextComponent(
+						text=str(jumlah_soal)+' soal terjawab',
+						size='sm',
+						align='center'
+					),
+					SeparatorComponent(
+						margin='md'
+					),
+					BoxComponent(
+						layout='baseline',
+						spacing='md',
+						margin='sm',
+						contents=[
+							TextComponent(
+								text='Poin yang terkumpul',
+								flex=0,
+								size='sm'
+							),
+							TextComponent(
+								text=str(total_poin-jumlah_soal),
+								size='sm',
+								align='end'
+							),
+							TextComponent(
+								text='+ '+str(jumlah_soal),
+								flex=0,
+								size='xxs',
+								color='#009b0e'
+							),
+							TextComponent(
+								text='poin',
+								size='sm'
+							)
+						]
+					),
+					BoxComponent(
+						layout='baseline',
+						margin='sm',
+						contents=[
+							TextComponent(
+								text='Total',
+								flex=3,
+								size='sm',
+								align='end',
+								weight='bold',
+								color='#777777'
+							),
+							TextComponent(
+								text=str(total_poin)+' poin',
+								size='sm',
+								align='end',
+								color='#071ffd'
+							)
+						]
+					),
+					SeparatorComponent(
+						margin='sm'
+					),
+					TextComponent(
+						text='Skor Tertinggi',
+						margin='sm',
+						size='xs',
+						align='center',
+						weight='bold',
+						color='#777777'
+					),
+					SeparatorComponent(
+						margin='sm'
+					),
+					BoxComponent(
+						layout='vertical',
+						margin='sm',
+						contents=skors
+					)
+				]
+			),
+			footer=BoxComponent(
+				layout='horizontal',
+				contents=[
+					ButtonComponent(
+						action=PostbackAction(
+							label='Main lagi',
+							text='Main lagi dong',
+							data='/quiz ready'
+						),
+						color='#ffffff',
+						height='sm'
+					)
+				]
+			),
+			styles=BubbleStyle(
+				header=BlockStyle(
+					background_color='#14a6b7'
+				),
+				footer=BlockStyle(
+					background_color='#14a6b7'
+				)
+			)
+		)	
+	)
 	return pesan
 
 def skor_akhir(data):
