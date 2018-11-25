@@ -219,9 +219,10 @@ def handle_message(event):
 	text = event.message.text
 
 	if text == '/mulai':
-		if kirim in playah[kirim]["pemain"]:
+		if kirim in playah:
 			if playah[kirim]["status"] == 'pending':
-				playah[kirim]["status"].update("mulai")
+				para_pemain = [i for i in playah[kirim]["pemain"]]
+				playah[kirim].update({"status":"mulai","pemain":para_pemain})
 				pertanyaan = qz.child("Quiz").child("Pilihan").get().val()
 				tanya = random.choice([i for i in pertanyaan])
 				pilihan = [i for i in pertanyaan[tanya]["Jawaban"]]
