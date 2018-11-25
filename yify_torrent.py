@@ -4,7 +4,7 @@ import os
 import sys, random, datetime, time, re
 import json
 from linebot.models import *
-from acc import (namaBot, line_bot_api, handler)
+from acc import (namaBot, line_bot_api, handler, owner)
 from sesuatu import download_film
 
 perintah = {}
@@ -68,9 +68,11 @@ def handle_postback(event):
 			et, ev, tb = sys.exc_info()
 			lineno = tb.tb_lineno
 			fn = tb.tb_frame.f_code.co_filename
-			line_bot_api.push_message(kirim, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
+			if sender != owner:
+				line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+			line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 		except:
-			line_bot_api.push_message(kirim, TextSendMessage(text="Undescribeable error detected!!"))
+			line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -183,6 +185,8 @@ def handle_message(event):
 			et, ev, tb = sys.exc_info()
 			lineno = tb.tb_lineno
 			fn = tb.tb_frame.f_code.co_filename
-			line_bot_api.push_message(kirim, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
+			if sender != owner:
+				line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+			line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 		except:
-			line_bot_api.push_message(kirim, TextSendMessage(text="Undescribeable error detected!!"))
+			line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))

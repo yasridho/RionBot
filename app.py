@@ -213,9 +213,11 @@ def handle_postback(event):
             et, ev, tb = sys.exc_info()
             lineno = tb.tb_lineno
             fn = tb.tb_frame.f_code.co_filename
-            line_bot_api.push_message(kirim, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
+            if sender != owner:
+                line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+            line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
         except:
-            line_bot_api.push_message(kirim, TextSendMessage(text="Undescribeable error detected!!"))
+            line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
@@ -289,12 +291,11 @@ def handle_message(event):
                     et, ev, tb = sys.exc_info()
                     lineno = tb.tb_lineno
                     fn = tb.tb_frame.f_code.co_filename
-                    if sender == owner:
-                        return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
-                    else:
-                        return TextSendMessage(text="Oooppss.. ada kesalahan")
+                    if sender != owner:
+                        line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+                    line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
                 except:
-                    return TextSendMessage(text="Undescribeable error detected!!")
+                    line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
         
         if isinstance(event.source, SourceGroup):
             kirim = gid

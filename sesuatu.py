@@ -95,7 +95,7 @@ def pemain(aturan):
 					ButtonComponent(
 						action=PostbackAction(
 							label='Dimengerti',
-							data='/join '+time.time()
+							data='/join '+str(time.time())
 						)
 					)
 				]
