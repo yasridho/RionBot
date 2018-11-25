@@ -3,7 +3,7 @@ import os
 import sys, random, datetime, time, re
 
 from datetime import datetime
-from acc import (line_bot_api, namaBot, owner)
+from acc import (line_bot_api, namaBot, owner, handler)
 from sesuatu import search_movie_imdb
 from linebot.models import *
 
