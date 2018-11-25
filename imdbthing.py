@@ -143,6 +143,7 @@ def handle_message(event):
 						)
 					)
 				line_bot_api.push_message(sender, pesan)
+				del perintah[sender]
 
 		if text == 'Cek film dong':
 			line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' mau cari film apa?'))
