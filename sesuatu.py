@@ -12,6 +12,7 @@ from acc import (google_key, db, line_bot_api, qz)
 from datetime import datetime
 from threading import Timer
 from calendar import monthrange
+from imdb import IMDb
 
 running_notif = {}
 
@@ -1435,6 +1436,106 @@ def download(gambar, args):
 			return TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e)))
 		except:
 			return TextSendMessage(text="Undescribeable error detected!!")
+
+def search_movie_imdb(film):
+	ia = IMDb()
+	movies = ia.search_movie(film)
+	movie_ids = [i.movieID for i in movies]
+	kumpulin = list()
+	for ids in movie_ids:
+		movie = ia.get_movie(ids)
+		genres = ", ".join(movie['genres'])
+		directors = [r['name'] for r in movie['directors']]
+		gambar = movie.get_fullsizeURL()
+		bahasa = movie.guessLanguage()
+		judul = movie['title']+' ('+str(movie['year'])+')'
+		rating = movie['rating']
+		kumpulin.append(
+			BubbleContainer(
+				hero=ImageComponent(
+					url=gambar,
+					size='full',
+					aspect_ratio='9:16',
+					aspect_mode='cover'
+				),
+				body=BoxComponent(
+					layout='vertical',
+					contents=[
+						TextComponent(
+							text=judul,
+							size='lg',
+							align='start',
+							weight='bold'
+						),
+						BoxComponent(
+							layout='baseline',
+							spacing='md',
+							contents=[
+								IconComponent(
+									url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png'
+								),
+								TextComponent(
+									text=str(rating),
+									size='md'
+								)
+							]
+						),
+						BoxComponent(
+							layout='baseline',
+							contents=[
+								TextComponent(
+									text='Bahasa',
+									flex=1,
+									size='xs',
+									align='start'
+								),
+								TextComponent(
+									text=bahasa,
+									flex=3,
+									size='xs',
+									align='start'
+								)
+							]
+						),
+						BoxComponent(
+							layout='baseline',
+							contents=[
+								TextComponent(
+									text='Genres',
+									size='xs'
+								),
+								TextComponent(
+									text=genres,
+									flex=3,
+									size='xs',
+									wrap=True
+								)
+							]
+						)
+					]
+				),
+				footer=BoxComponent(
+					layout='horizontal',
+					contents=[
+						ButtonComponent(
+							action=PostbackAction(
+								label='Lihat Selengkapnya',
+								text='Lihat info film '+judul+' dong..',
+								data='/imdb '+str(ids)
+							),
+							color='#ffffff',
+							height='sm'
+						)
+					]
+				),
+				styles=BubbleStyle(
+					footer=BlockStyle(
+						background_color='#0697bc'
+					)
+				)
+			)
+		)
+	return kumpulin
 
 def mau_nonton():
 	pesan = FlexSendMessage(

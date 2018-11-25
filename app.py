@@ -18,6 +18,7 @@ import urllib
 import cmds
 import cinemaxxi
 import yify_torrent
+import imdbthing
 import acc
 import sesuatu
 import imp
@@ -152,6 +153,7 @@ def handle_postback(event):
     cinemaxxi.handle_postback(event)
     notif.handle_postback(event)
     quiz.handle_postback(event)
+    imdbthing.handle_postback(event)
     sender = event.source.user_id
     if isinstance(event.source, SourceGroup):
         kirim = gid
@@ -245,6 +247,7 @@ def handle_message(event):
         yify_torrent.handle_message(event)
         quiz.handle_message(event)
         notif.handle_message(event)
+        imdbthing.handle_message(event)
         gid = event.source.sender_id #get group_id
         profil = line_bot_api.get_profile(sender)
         try:
