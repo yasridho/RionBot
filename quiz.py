@@ -14,7 +14,7 @@ from linebot.models import *
 soal = {}
 playah = {}
 kebenaran = {}
-aturan = ["Akan diberikan 10 soal yang harus dijawab dengan durasi kurang dari 20 detik.","Minimal ada 5 pemain dalam 1 grup","Pemain yang pertama kali menjawab benar akan diberikan 5 poin.","Pemain yang menjawab benar diurutan kedua akan diberikan 3 poin.","Pemain yang menjawab benar diurutan ketiga akan diberikan 1 poin.","Pemain yang menjawab benar tetapi mendapatkan urutan diatas 3 tidak mendapatkan poin.","Pemain yang menjawab salah akan dikurangi 1 poin.","Pemain yang menyerah tidak akan mendapat ataupun mengurangi poin, tetapi tidak dapat melanjutkan ke soal selanjutnya.","Pemain yang tidak menjawab akan dianggap menyerah dan tidak mengikuti soal berikutnya."]
+aturan = ["Akan diberikan 10 soal yang harus dijawab dengan durasi kurang dari 1 menit.","Minimal ada 5 pemain dalam 1 grup","Pemain yang pertama kali menjawab benar akan diberikan 5 poin.","Pemain yang menjawab benar diurutan kedua akan diberikan 3 poin.","Pemain yang menjawab benar diurutan ketiga akan diberikan 1 poin.","Pemain yang menjawab benar tetapi mendapatkan urutan diatas 3 tidak mendapatkan poin.","Pemain yang menjawab salah akan dikurangi 1 poin.","Pemain yang menyerah tidak akan mendapat ataupun mengurangi poin, tetapi tidak dapat melanjutkan ke soal selanjutnya.","Pemain yang tidak menjawab akan dianggap menyerah dan tidak mengikuti soal berikutnya."]
 
 def cek_pemain(ruangan):
 	if ruangan in playah:
@@ -29,7 +29,8 @@ def waktu_main(nomor_soal, ruangan):
 		for pion in playah[ruangan]["pemain"]:
 			if not (pion in kebenaran[ruangan]["benar"]) and not (pion in kebenaran[ruangan]["salah"]):
 				kebenaran[ruangan]["nyerah"].append(pion)
-		line_bot_api.push_message(ruangan, TextSendMessage(text='Kak '+", ".join([panggil(sender) for sender in kebenaran[ruangan]["nyerah"]])+' menyerah dan tidak dapat mengikuti permainan lagi :('))
+		if len(kebenaran[ruangan]["nyerah"]) > 0:
+			line_bot_api.push_message(ruangan, TextSendMessage(text='Kak '+", ".join([panggil(sender) for sender in kebenaran[ruangan]["nyerah"]])+' menyerah dan tidak dapat mengikuti permainan lagi :('))
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
@@ -74,6 +75,7 @@ def handle_postback(event):
 			elif cmd == 'nyerah':
 				if kirim in playah:
 					if sender in playah[kirim]["pemain"]:
+						if sender in kebenaran[kirim]["nyerah"]:return
 						if playah[kirim]["status"] == "mulai":
 							kebenaran[kirim]["nyerah"].append(sender)
 							line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' menyerah dan tidak dapat melanjutkan permainan :('))
@@ -104,8 +106,9 @@ def handle_postback(event):
 			elif cmd == 'join':
 				durasi = time.time() - float(args)
 				status = playah[kirim]["status"]
-				##if sender in playah[kirim]["pemain"]:
-				#	line_bot_api.reply_message()
+				if sender in playah[kirim]["pemain"]:
+					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' sudah memasuki permainan ._.'))
+					return
 				if status == 'pending':
 					if durasi < 30*60: #30 menit
 						playah[kirim]["pemain"].append(sender)
@@ -156,8 +159,12 @@ def handle_postback(event):
 						except:
 							poin = 0
 						if sender not in playah[kirim]["pemain"]:return
+						benar = kebenaran[kirim]["benar"]
+						salah = kebenaran[kirim]["salah"]
+						nyerah = kebenaran[kirim]["nyerah"]
+						if sender in benar or sender in salah or sender in nyerah:return
 						if menjawab == 'Benar':
-							if (sender not in kebenaran[kirim]["benar"]) or (sender not in kebenaran[kirim]["salah"]) or (sender not in kebenaran[kirim]["nyerah"]):
+							if sender not in benar or sender not in salah or sender not in nyerah:
 								if len(kebenaran[kirim]["benar"]) == 0:
 									poin += 5
 									kebenaran[kirim]["benar"].append(sender)
@@ -197,8 +204,17 @@ def handle_postback(event):
 								line_bot_api.push_message(kirim, film_quiz("Pertanyaan "+str(nomor)+"/10", tanya, film, pilihan, gambar))
 								nyerah = [i for i in kebenaran[kirim]["nyerah"]]
 								kebenaran.update({kirim:{"benar":[],"salah":[],"nyerah":nyerah}})
-								t = Timer(20, waktu_main, (nomor, kirim))
+								t = Timer(60, waktu_main, (nomor, kirim))
 								t.start()
+						else:
+							skornya = qz.child("Quiz").child("Skor").child(kirim).get().val()
+							skor_trakhir = {}
+							for pemain in skornya:
+								total_skor = skornya[pemain]["poin"] + poin
+								skor_trakhir.update({pemain:total_skor})
+							line_bot_api.reply_message(event.reply_token, skor_akhir(skor_trakhir))
+							del playah[kirim]
+							del kebenaran[kirim]
 						data = {"poin":poin,"waktu":time.time()}
 						qz.child("Quiz").child("Skor").child(kirim).child(sender).set(data)
 	

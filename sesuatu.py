@@ -41,6 +41,83 @@ def panggil(args):
 			return data["nama"]
 	except:pass
 
+def skor_akhir(data):
+	skor = list()
+	for nama in data:
+		skor.append(
+			BoxComponent(
+				layout='baseline',
+				margin='sm',
+				contents=[
+					TextComponent(
+						text=nama,
+						size='xs',
+						align='center'
+					),
+					TextComponent(
+						text=str(data[nama]),
+						size='xs',
+						align='center'
+					)
+				]
+			)
+		)
+	pesan = FlexSendMessage(
+		alt_text='Skor Permainan',
+		contents=BubbleContainer(
+			direction='ltr',
+			header=BoxComponent(
+				layout='vertical',
+				contents=[
+					TextComponent(
+						text='Skor Permainan',
+						align='center',
+						weight='bold',
+						color='#ffffff'
+					)
+				]
+			),
+			body=BoxComponent(
+				layout='vertical',
+				contents=[
+					SeparatorComponent(),
+					BoxComponent(
+						layout='baseline',
+						margin='xs',
+						contents=[
+							TextComponent(
+								text='Nama',
+								size='xs',
+								align='center',
+								weight='bold',
+								color='#777777'
+							),
+							TextComponent(
+								text='Skor',
+								size='xs',
+								align='center',
+								weight='bold',
+								color='#777777'
+							)
+						]
+					),
+					SeparatorComponent(),
+					BoxComponent(
+						layout='vertical',
+						margin='sm',
+						contents=skor
+					)
+				]
+			),
+			styles=BubbleStyle(
+				header=BlockStyle(
+					background_color='#14a6b7'
+				)
+			)
+		)
+	)
+	return pesan
+
 def pemain(aturan):
 	num = 0
 	peraturan = list()
