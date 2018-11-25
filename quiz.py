@@ -81,7 +81,11 @@ def handle_postback(event):
 							kebenaran[kirim]["nyerah"].append(sender)
 							line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' menyerah dan tidak dapat melanjutkan permainan :('))
 				else:
-					nomor, tanya, waktu = soal[kirim]
+					try:
+						nomor, tanya, waktu = soal[kirim]
+					except:
+						line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' tidak dalam permainan ._.'))
+						return
 					data = qz.child("Quiz").child("Skor Pribadi").child(sender).get().val()
 					nama = line_bot_api.get_profile(sender).display_name
 					poin = data["poin"]
