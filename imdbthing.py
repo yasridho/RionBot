@@ -4,7 +4,7 @@ import sys, random, datetime, time, re
 
 from datetime import datetime
 from acc import (line_bot_api, namaBot, owner, handler)
-from sesuatu import search_movie_imdb
+from sesuatu import (search_movie_imdb, panggil)
 from linebot.models import *
 
 
