@@ -14,6 +14,7 @@ from linebot.models import *
 soal = {}
 playah = {}
 kebenaran = {}
+selesai = {}
 aturan = ["Akan diberikan 10 soal yang harus dijawab dengan durasi kurang dari 1 menit.","Minimal ada 5 pemain dalam 1 grup","Pemain yang pertama kali menjawab benar akan diberikan 5 poin.","Pemain yang menjawab benar diurutan kedua akan diberikan 3 poin.","Pemain yang menjawab benar diurutan ketiga akan diberikan 1 poin.","Pemain yang menjawab benar tetapi mendapatkan urutan diatas 3 tidak mendapatkan poin.","Pemain yang menjawab salah akan dikurangi 1 poin.","Pemain yang menyerah tidak akan mendapat ataupun mengurangi poin, tetapi tidak dapat melanjutkan ke soal selanjutnya.","Pemain yang tidak menjawab akan dianggap menyerah dan tidak mengikuti soal berikutnya."]
 
 def cek_pemain(ruangan):
@@ -93,6 +94,8 @@ def handle_postback(event):
 							gambar = ""
 						nomor = 1
 						soal.update({kirim:[nomor, tanya, time.time()]})
+						selesai.update({kirim:[]})
+						selesai[kirim].append(tanya)
 						line_bot_api.reply_message(event.reply_token, film_quiz("Pertanyaan "+str(nomor)+"/10", tanya, film, pilihan, gambar))
 					else:
 						line_bot_api.reply_message(event.reply_token, pemain(aturan))
@@ -136,6 +139,9 @@ def handle_postback(event):
 						if menjawab == 'Benar':
 							pertanyaan = qz.child("Quiz").child("Pilihan").get().val()
 							tanya = random.choice([i for i in pertanyaan])
+							while tanya in selesai[kirim]:
+								tanya = random.choice([i for i in pertanyaan])
+							selesai[kirim].append(tanya)
 							pilihan = [i for i in pertanyaan[tanya]["Jawaban"]]
 							film = pertanyaan[tanya]["Film"]
 							try:
@@ -149,6 +155,7 @@ def handle_postback(event):
 							else:
 								line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Soal selesai ;D'))
 								del soal[kirim]
+								del selesai[kirim]
 						else:
 							line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' salah :('))
 							del soal[kirim]
