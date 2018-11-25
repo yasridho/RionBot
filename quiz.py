@@ -85,7 +85,10 @@ def handle_postback(event):
 					data = qz.child("Quiz").child("Skor Pribadi").child(sender).get().val()
 					nama = line_bot_api.get_profile(sender).display_name
 					poin = data["poin"]
-					gambar = line_bot_api.get_profile(sender).picture_url
+					try:
+						gambar = line_bot_api.get_profile(sender).picture_url
+					except:
+						gambar = ""
 					line_bot_api.reply_message(event.reply_token, hasil_akhir(nama, nomor-1, poin, gambar))
 					del soal[kirim]
 					del selesai[kirim]
@@ -182,7 +185,10 @@ def handle_postback(event):
 							data = qz.child("Quiz").child("Skor Pribadi").child(sender).get().val()
 							nama = line_bot_api.get_profile(sender).display_name
 							poin = data["poin"]
-							gambar = line_bot_api.get_profile(sender).picture_url
+							try:
+								gambar = line_bot_api.get_profile(sender).picture_url
+							except:
+								gambar = ""
 							line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' salah :('), hasil_akhir(nama, nomor-1, poin, gambar)])
 							del soal[kirim]
 							del selesai[kirim]

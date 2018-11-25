@@ -42,84 +42,158 @@ def panggil(args):
 	except:pass
 
 def hasil_akhir(nama, jumlah_soal, total_poin, gambar):
-	pesan = FlexSendMessage(
-		alt_text='Hasil Akhir',
-		contents=BubbleContainer(
-			direction='ltr',
-			header=BoxComponent(
-				layout='vertical',
-				contents=[
-					TextComponent(
-						text='Hasil',
-						align='center',
-						weight='bold',
-						color='#ffffff'
-					)
-				]
-			),
-			hero=ImageComponent(
-				url=gambar,
-				size='full',
-				aspect_mode='cover',
-				aspect_ratio='1:1'
-			),
-			body=BoxComponent(
-				layout='vertical',
-				contents=[
-					TextComponent(
-						text=nama,
-						align='center'
-					),
-					TextComponent(
-						text=str(jumlah_soal)+' soal terjawab',
-						size='sm',
-						align='center'
-					),
-					SeparatorComponent(
-						margin='md'
-					),
-					BoxComponent(
-						layout='baseline',
-						spacing='md',
-						margin='sm',
-						contents=[
-							TextComponent(
-								text='Poin yang terkumpul',
-								flex=0,
-								size='sm'
-							),
-							TextComponent(
-								text=str(total_poin)+' poin',
-								size='sm',
-								align='end'
-							)
-						]
-					)
-				]
-			),
-			footer=BoxComponent(
-				layout='horizontal',
-				contents=[
-					ButtonComponent(
-						action=PostbackAction(
-							label='Main lagi',
-							text='Main lagi dong',
-							data='/quiz ready'
-						),
-						color='#ffffff'
-					)
-				]
-			),
-			styles=BubbleStyle(
-				header=BlockStyle(
-					background_color='#14a6b7'
+	if gambar != "":
+		pesan = FlexSendMessage(
+			alt_text='Hasil Akhir',
+			contents=BubbleContainer(
+				direction='ltr',
+				header=BoxComponent(
+					layout='vertical',
+					contents=[
+						TextComponent(
+							text='Hasil',
+							align='center',
+							weight='bold',
+							color='#ffffff'
+						)
+					]
 				),
-				footer=BlockStyle(
-					background_color='#14a6b7'
+				hero=ImageComponent(
+					url=gambar,
+					size='full',
+					aspect_mode='cover',
+					aspect_ratio='1:1'
+				),
+				body=BoxComponent(
+					layout='vertical',
+					contents=[
+						TextComponent(
+							text=nama,
+							align='center'
+						),
+						TextComponent(
+							text=str(jumlah_soal)+' soal terjawab',
+							size='sm',
+							align='center'
+						),
+						SeparatorComponent(
+							margin='md'
+						),
+						BoxComponent(
+							layout='baseline',
+							spacing='md',
+							margin='sm',
+							contents=[
+								TextComponent(
+									text='Poin yang terkumpul',
+									flex=0,
+									size='sm'
+								),
+								TextComponent(
+									text=str(total_poin)+' poin',
+									size='sm',
+									align='end'
+								)
+							]
+						)
+					]
+				),
+				footer=BoxComponent(
+					layout='horizontal',
+					contents=[
+						ButtonComponent(
+							action=PostbackAction(
+								label='Main lagi',
+								text='Main lagi dong',
+								data='/quiz ready'
+							),
+							color='#ffffff'
+						)
+					]
+				),
+				styles=BubbleStyle(
+					header=BlockStyle(
+						background_color='#14a6b7'
+					),
+					footer=BlockStyle(
+						background_color='#14a6b7'
+					)
 				)
-			)
+			)	
 		)
-	)
+	else:
+		pesan = FlexSendMessage(
+			alt_text='Hasil Akhir',
+			contents=BubbleContainer(
+				direction='ltr',
+				header=BoxComponent(
+					layout='vertical',
+					contents=[
+						TextComponent(
+							text='Hasil',
+							align='center',
+							weight='bold',
+							color='#ffffff'
+						)
+					]
+				),
+				body=BoxComponent(
+					layout='vertical',
+					contents=[
+						TextComponent(
+							text=nama,
+							align='center'
+						),
+						TextComponent(
+							text=str(jumlah_soal)+' soal terjawab',
+							size='sm',
+							align='center'
+						),
+						SeparatorComponent(
+							margin='md'
+						),
+						BoxComponent(
+							layout='baseline',
+							spacing='md',
+							margin='sm',
+							contents=[
+								TextComponent(
+									text='Poin yang terkumpul',
+									flex=0,
+									size='sm'
+								),
+								TextComponent(
+									text=str(total_poin)+' poin',
+									size='sm',
+									align='end'
+								)
+							]
+						)
+					]
+				),
+				footer=BoxComponent(
+					layout='horizontal',
+					contents=[
+						ButtonComponent(
+							action=PostbackAction(
+								label='Main lagi',
+								text='Main lagi dong',
+								data='/quiz ready'
+							),
+							color='#ffffff'
+						)
+					]
+				),
+				styles=BubbleStyle(
+					header=BlockStyle(
+						background_color='#14a6b7'
+					),
+					footer=BlockStyle(
+						background_color='#14a6b7'
+					)
+				)
+			)	
+		)
 	return pesan
 
 def skor_akhir(data):
