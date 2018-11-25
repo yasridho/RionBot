@@ -360,6 +360,7 @@ def pemain(aturan):
 	return pesan
 
 def film_quiz(nomor, pertanyaan, film, pilihan, gambar):
+	random.shuffle(pilihan)
 	if gambar != "":
 		pesan = FlexSendMessage(
 			alt_text=pertanyaan,
