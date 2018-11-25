@@ -40,8 +40,8 @@ def handle_postback(event):
 			line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
 					
 
-@handler.add(MessageEvent, message=LocationMessage)
-def handle_location_message(event):
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
 	if isinstance(event.source, SourceGroup):
 		kirim = event.source.sender_id
 	elif isinstance(event.source, SourceRoom):
