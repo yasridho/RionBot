@@ -5,6 +5,8 @@ Rion Line Bot
 **RionBot** ini ditujukan bagi kalian yang hobi nonton. Dengan menggunakan **RionBot**, kalian bisa mengecek film yang sedang tayang di XXI dengan teman-teman di **LINE**.
 > RionBot menggunakan firebase sebagai database untuk menyimpan data user.
 
+Untuk mengecek bot, bisa add dulu di **LINE**: @vfu8183p
+
 ## Fitur-fitur
 1. Cek Film XXI
 
@@ -47,3 +49,8 @@ Seharusnya ini adalah fitur untuk mencari drama, tetapi masih belum ketemu websi
 Dalam menyelesaikan projek ini, saya mengalami beberapa kendala yaitu
 1. Waktu pengerjaan yang lumayan sempit, hal ini dikarenakan pembagian waktu dengan pengerjaan tubes.
 2. Fitur-fitur yang tidak sempat terdeteksi adanya bug akhirnya tidak sempat diperbaiki.
+
+Ini adalah bug-bug yang terdeteksi dan belum sempat diperbaiki:
+- Masih terjadi kesalahan ketika mengakses fitur IMDB.
+- Lag ketika mencari video youtube dan mengakses fitur IMDB.
+- Terkadang masih error ketika menjawab soal quiz.
