@@ -86,7 +86,11 @@ def handle_postback(event):
 			lineno = tb.tb_lineno
 			fn = tb.tb_frame.f_code.co_filename
 			if sender != owner:
-				line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+				line_bot_api.reply_message(event.reply_token, [
+					TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+					TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+					]
+				)
 			line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 		except:
 			line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
@@ -130,10 +134,15 @@ def handle_location_message(event):
 								)
 							)
 						)
-					line_bot_api.reply_message(event.reply_token,
-						[TextSendMessage(text=namaBot.capitalize()+' tidak dapat menemukan bioskop terdekat kak :('),
-						TextSendMessage(text='Kakak sekarang di kota apa?',quick_reply=QuickReply(items=balasCepat[:13]))]
-					)
+					line_bot_api.reply_message(event.reply_token, [
+						TextSendMessage(text=namaBot.capitalize()+' tidak dapat menemukan bioskop terdekat kak :('),
+						TextSendMessage(
+							text='Kakak sekarang di kota apa?',
+							quick_reply=QuickReply(
+								items=balasCepat[:13]
+							)
+						)
+					])
 					del perintah[sender]
 					perintah.update({sender:["Cek bioskop", time.time()]})
 				except Exception as e:
@@ -142,7 +151,11 @@ def handle_location_message(event):
 						lineno = tb.tb_lineno
 						fn = tb.tb_frame.f_code.co_filename
 						if sender != owner:
-							line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+							line_bot_api.reply_message(event.reply_token, [
+								TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+								TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+								]
+							)
 						line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 					except:
 						line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
@@ -392,7 +405,11 @@ def handle_message(event):
 						lineno = tb.tb_lineno
 						fn = tb.tb_frame.f_code.co_filename
 						if sender != owner:
-							line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+							line_bot_api.reply_message(event.reply_token, [
+								TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+								TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+								]
+							)
 						line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 					except:
 						line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
@@ -408,7 +425,19 @@ def handle_message(event):
 				line_bot_api.push_message(kirim, bioskop_terdekat(lat, lng))
 			except:
 				perintah.update({sender:['Cek bioskop terdekat', time.time()]})
-				line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Share lokasi dulu kak "+panggil(sender)+", nanti kucarikan bioskop terdekat ;)", quick_reply=QuickReply(items=[QuickReplyButton(action=LocationAction(label='Share lokasi'))])))
+				line_bot_api.reply_message(event.reply_token, 
+					TextSendMessage(
+						text="Share lokasi dulu kak "+panggil(sender)+", nanti kucarikan bioskop terdekat ;)", 
+						quick_reply=QuickReply(
+							items=[
+							QuickReplyButton(
+								action=LocationAction(
+									label='Share lokasi'
+								)
+							)
+						]
+					)
+				))
 
 	except Exception as e:
 		try:
@@ -416,7 +445,11 @@ def handle_message(event):
 			lineno = tb.tb_lineno
 			fn = tb.tb_frame.f_code.co_filename
 			if sender != owner:
-				line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+				line_bot_api.reply_message(event.reply_token, [
+					TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+					TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+					]
+				)
 			line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 		except:
 			line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))

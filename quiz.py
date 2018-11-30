@@ -15,7 +15,15 @@ soal = {}
 playah = {}
 kebenaran = {}
 selesai = {}
-aturan = ["Akan diberikan 10 soal yang harus dijawab dengan durasi kurang dari 1 menit.","Minimal ada 5 pemain dalam 1 grup","Pemain yang pertama kali menjawab benar akan diberikan 5 poin.","Pemain yang menjawab benar diurutan kedua akan diberikan 3 poin.","Pemain yang menjawab benar diurutan ketiga akan diberikan 1 poin.","Pemain yang menjawab benar tetapi mendapatkan urutan diatas 3 tidak mendapatkan poin.","Pemain yang menjawab salah akan dikurangi 1 poin.","Pemain yang menyerah tidak akan mendapat ataupun mengurangi poin, tetapi tidak dapat melanjutkan ke soal selanjutnya.","Pemain yang tidak menjawab akan dianggap menyerah dan tidak mengikuti soal berikutnya."]
+aturan = ["Akan diberikan 10 soal yang harus dijawab dengan durasi kurang dari 1 menit.",
+			"Minimal ada 5 pemain dalam 1 grup",
+			"Pemain yang pertama kali menjawab benar akan diberikan 5 poin.",
+			"Pemain yang menjawab benar diurutan kedua akan diberikan 3 poin.",
+			"Pemain yang menjawab benar diurutan ketiga akan diberikan 1 poin.",
+			"Pemain yang menjawab benar tetapi mendapatkan urutan diatas 3 tidak mendapatkan poin.",
+			"Pemain yang menjawab salah akan dikurangi 1 poin.",
+			"Pemain yang menyerah tidak akan mendapat ataupun mengurangi poin, tetapi tidak dapat melanjutkan ke soal selanjutnya.",
+			"Pemain yang tidak menjawab akan dianggap menyerah dan tidak mengikuti soal berikutnya."]
 
 def cek_pemain(ruangan):
 	if ruangan in playah:
@@ -148,7 +156,12 @@ def handle_postback(event):
 							qz.child("Quiz").child("Skor").child(kirim).child(sender).set(data)
 						line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' telah bergabung ;D'))
 						if len(playah[kirim]["pemain"]) == 5:
-							line_bot_api.push_message(kirim, [TextSendMessage(text='5 pemain telah terkumpul ;D'), TextSendMessage(text='Kalian bisa menunggu atau langsung memulai permainan'), TextSendMessage(text='Ketik /mulai jika ingin memulai permainan ;)')])
+							line_bot_api.push_message(kirim, [
+								TextSendMessage(text='5 pemain telah terkumpul ;D'), 
+								TextSendMessage(text='Kalian bisa menunggu atau langsung memulai permainan'), 
+								TextSendMessage(text='Ketik /mulai jika ingin memulai permainan ;)')
+								]
+							)
 					else:
 						line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Waktu untuk bergabung sudah habis kak '+panggil(sender)+' :('))
 				else:
@@ -183,7 +196,11 @@ def handle_postback(event):
 							if nomor < 10:
 								nomor = nomor + 1
 								soal.update({kirim:[nomor, tanya, time.time()]})
-								line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' benar ;D'), film_quiz("Pertanyaan "+str(nomor)+"/10", tanya, film, pilihan, gambar)])
+								line_bot_api.reply_message(event.reply_token, [
+									TextSendMessage(text='Kak '+panggil(sender)+' benar ;D'), 
+									film_quiz("Pertanyaan "+str(nomor)+"/10", tanya, film, pilihan, gambar)
+									]
+								)
 							else:
 								data = qz.child("Quiz").child("Skor Pribadi").get().val()
 								nama = line_bot_api.get_profile(sender).display_name
@@ -204,7 +221,11 @@ def handle_postback(event):
 								gambar = line_bot_api.get_profile(sender).picture_url
 							except:
 								gambar = ""
-							line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' salah :('), hasil_akhir(nama, nomor-1, poin, gambar)])
+							line_bot_api.reply_message(event.reply_token, [
+								TextSendMessage(text='Kak '+panggil(sender)+' salah :('), 
+								hasil_akhir(nama, nomor-1, poin, gambar)
+								]
+							)
 							del soal[kirim]
 							del selesai[kirim]
 					else:
@@ -279,7 +300,11 @@ def handle_postback(event):
 			lineno = tb.tb_lineno
 			fn = tb.tb_frame.f_code.co_filename
 			if sender != owner:
-				line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+				line_bot_api.reply_message(event.reply_token, [
+					TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+					TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+					]
+				)
 			line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 		except:
 			line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
@@ -315,6 +340,10 @@ def handle_message(event):
 				soal.update({kirim:[nomor, tanya, time.time()]})
 				t = Timer(20, waktu_main, (nomor, kirim))
 				t.start()
-				line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Permainan dimulai ;)'), film_quiz("Pertanyaan "+str(nomor)+"/10", tanya, film, pilihan, gambar)])
+				line_bot_api.reply_message(event.reply_token, [
+					TextSendMessage(text='Permainan dimulai ;)'), 
+					film_quiz("Pertanyaan "+str(nomor)+"/10", tanya, film, pilihan, gambar)
+					]
+				)
 			else:
 				line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Permainan sudah dimulai ._.'))

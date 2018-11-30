@@ -103,7 +103,32 @@ def handle_postback(event):
 						video = res
 					else:
 						video = video[int(nomor)+1:]
-					line_bot_api.reply_message(event.reply_token, [FlexSendMessage(alt_text='Hasil pencarian: '+cari,contents=CarouselContainer(contents=video)), TemplateSendMessage(alt_text='Mau cari video lagi?', template=ConfirmTemplate(text='Mau cari video lagi?',actions=[PostbackAction(label='Iya',text='Iya',data='/yt iya '+cari),PostbackAction(label='Tidak',text='Tidak',data='/yt tidak '+cari)]))])
+					line_bot_api.reply_message(event.reply_token, [
+						FlexSendMessage(
+							alt_text='Hasil pencarian: '+cari,
+							contents=CarouselContainer(
+								contents=video
+							)
+						), 
+						TemplateSendMessage(
+							alt_text='Mau cari video lagi?', 
+							template=ConfirmTemplate(
+								text='Mau cari video lagi?',
+								actions=[
+									PostbackAction(
+										label='Iya',
+										text='Iya',
+										data='/yt iya '+cari
+									),
+									PostbackAction(
+										label='Tidak',
+										text='Tidak',
+										data='/yt tidak '+cari
+									)
+								]
+							)
+						)
+					])
 
 	except Exception as e:
 		try:
@@ -111,7 +136,11 @@ def handle_postback(event):
 			lineno = tb.tb_lineno
 			fn = tb.tb_frame.f_code.co_filename
 			if sender != owner:
-				line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+				line_bot_api.reply_message(event.reply_token, [
+					TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+					TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+				]
+			)
 			line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 		except:
 			line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
@@ -133,13 +162,49 @@ def handle_message(event):
 			line_bot_api.reply_message(event.reply_token, TextSendMessage(text=args))
 
 		def cbalas(args):
-			line_bot_api.reply_message(event.reply_token, TextSendMessage(text=args, quick_reply=[QuickReplyButton(action=MessageAction(label="YouTube Search", text="YouTube")),QuickReplyButton(action=MessageAction(label="Google Image Search", text="Google Image"))]))
+			line_bot_api.reply_message(event.reply_token, 
+				TextSendMessage(
+					text=args, 
+					quick_reply=[
+						QuickReplyButton(
+							action=MessageAction(
+								label="YouTube Search", 
+								text="YouTube"
+							)
+						),
+						QuickReplyButton(
+							action=MessageAction(
+								label="Google Image Search", 
+								text="Google Image"
+							)
+						)
+					]
+				)
+			)
 
 		def message(args):
 			line_bot_api.push_message(kirim, TextSendMessage(text=args))
 
 		def cmessage(args):
-			line_bot_api.push_message(kirim, TextSendMessage(text=args, quick_reply=[QuickReplyButton(action=MessageAction(label="YouTube Search", text="YouTube")),QuickReplyButton(action=MessageAction(label="Google Image Search", text="Google Image"))]))
+			line_bot_api.push_message(kirim, 
+				TextSendMessage(
+					text=args, 
+					quick_reply=[
+						QuickReplyButton(
+							action=MessageAction(
+								label="YouTube Search", 
+								text="YouTube"
+							)
+						),
+						QuickReplyButton(
+							action=MessageAction(
+								label="Google Image Search", 
+								text="Google Image"
+							)
+						)
+					]
+				)
+			)
 
 		def img(args):
 			line_bot_api.push_message(kirim, ImageSendMessage(
@@ -153,7 +218,9 @@ def handle_message(event):
 			
 			if komando == "Mau nonton YouTube":
 				try:
-					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Tunggu sebentar ya kak '+panggil(sender)+', '+namaBot.capitalize()+' sedang mengumpulkan data.. ;)'))
+					line_bot_api.reply_message(event.reply_token, 
+						TextSendMessage(text='Tunggu sebentar ya kak '+panggil(sender)+', '+namaBot.capitalize()+' sedang mengumpulkan data.. ;)')
+					)
 					videos.update({text:[]})
 					for i in youtube(text):
 						videos[text].append(i)
@@ -181,14 +248,43 @@ def handle_message(event):
 							)
 						)
 					)
-					line_bot_api.push_message(kirim, [FlexSendMessage(alt_text='Hasil pencarian: '+text,contents=CarouselContainer(contents=res)), TemplateSendMessage(alt_text='Mau cari video lagi?', template=ConfirmTemplate(text='Mau cari video lagi?',actions=[PostbackAction(label='Iya',text='Iya',data='/yt iya '+text),PostbackAction(label='Tidak',text='Tidak',data='/yt tidak '+text)]))])
+					line_bot_api.push_message(kirim, [
+						FlexSendMessage(
+							alt_text='Hasil pencarian: '+text,
+							contents=CarouselContainer(
+								contents=res
+							)
+						), 
+						TemplateSendMessage(
+							alt_text='Mau cari video lagi?', 
+							template=ConfirmTemplate(
+								text='Mau cari video lagi?',
+								actions=[
+									PostbackAction(
+										label='Iya',
+										text='Iya',
+										data='/yt iya '+text
+									),
+									PostbackAction(
+										label='Tidak',
+										text='Tidak',
+										data='/yt tidak '+text
+									)
+								]
+							)
+						)
+					])
 				except Exception as e:
 					try:
 						et, ev, tb = sys.exc_info()
 						lineno = tb.tb_lineno
 						fn = tb.tb_frame.f_code.co_filename
 						if sender != owner:
-							line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+							line_bot_api.reply_message(event.reply_token, [
+								TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+								TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+								]
+							)
 						line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 					except:
 						line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
@@ -207,7 +303,11 @@ def handle_message(event):
 						lineno = tb.tb_lineno
 						fn = tb.tb_frame.f_code.co_filename
 						if sender != owner:
-							line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+							line_bot_api.reply_message(event.reply_token, [
+								TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+								TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+								]
+							)
 						line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 					except:
 						line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
@@ -265,14 +365,17 @@ def handle_message(event):
 						balas("Type =gis <your keyword> to search an image.")
 						return
 					line_bot_api.reply_message(event.reply_token, gis(args))
-						#message(judul+"\nSize: "+str(tinggi)+"x"+str(lebar)+"\nType: "+jenis+"\nSource: "+link)
 				except Exception as e:
 					try:
 						et, ev, tb = sys.exc_info()
 						lineno = tb.tb_lineno
 						fn = tb.tb_frame.f_code.co_filename
 						if sender != owner:
-							line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+							line_bot_api.reply_message(event.reply_token, [
+								TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+								TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+								]
+							)
 						line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 					except:
 						line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))

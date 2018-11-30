@@ -69,7 +69,11 @@ def handle_postback(event):
 			lineno = tb.tb_lineno
 			fn = tb.tb_frame.f_code.co_filename
 			if sender != owner:
-				line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+				line_bot_api.reply_message(event.reply_token, [
+					TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+					TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+					]
+				)
 			line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 		except:
 			line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
@@ -129,7 +133,11 @@ def handle_message(event):
 						contents=res
 					)
 				)
-				line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=namaBot.capitalize()+' dapat ini kak '+profil.display_name), hasil])
+				line_bot_api.reply_message(event.reply_token, [
+					TextSendMessage(text=namaBot.capitalize()+' dapat ini kak '+profil.display_name), 
+					hasil
+					]
+				)
 				del perintah[sender]
 
 		if text == "Iya, mau nyari film":
@@ -186,7 +194,11 @@ def handle_message(event):
 			lineno = tb.tb_lineno
 			fn = tb.tb_frame.f_code.co_filename
 			if sender != owner:
-				line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+				line_bot_api.reply_message(event.reply_token, [
+					TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+					TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+					]
+				)
 			line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
 		except:
 			line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))

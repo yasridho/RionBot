@@ -59,7 +59,11 @@ def handle_postback(event):
 					)
 					line_bot_api.reply_message(event.reply_token, pesan)
 				except:
-					line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' belum menentukan zona waktu, silahkan dipilih dulu ;D'), indozone()])
+					line_bot_api.reply_message(event.reply_token, [
+						TextSendMessage(text='Kak '+panggil(sender)+' belum menentukan zona waktu, silahkan dipilih dulu ;D'),
+						indozone()
+						]
+					)
 
 			elif cmd == 'zona':
 				try:
@@ -106,7 +110,11 @@ def handle_postback(event):
 								t_timestamp = t_timestamp + (2*JAM)
 							durasi = t_timestamp - time.time()
 							if int(durasi) <= 20:
-								line_bot_api.push_message(sender, [TextSendMessage(text='Maaf kak '+panggil(sender)+', waktunya udah lewat :('),TextSendMessage(text='Silahkan pilih waktu lagi ;D')])
+								line_bot_api.push_message(sender, [
+									TextSendMessage(text='Maaf kak '+panggil(sender)+', waktunya udah lewat :('),
+									TextSendMessage(text='Silahkan pilih waktu lagi ;D')
+									]
+								)
 								del remind_me[sender]
 							else:
 								remind_me.update({sender:['sukses',kalender]})
@@ -127,14 +135,22 @@ def handle_postback(event):
 					else:
 						line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Zona waktu kak '+panggil(sender)+' tetap '+sekarang+' ;D'))
 				except:
-					line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Kak '+panggil(sender)+' belum menentukan zona waktu :('), TextSendMessage(text='Silahkan pilih zona waktu terlebih dahulu ;D'), indozone()])
+					line_bot_api.reply_message(event.reply_token, [
+						TextSendMessage(text='Kak '+panggil(sender)+' belum menentukan zona waktu :('), 
+						TextSendMessage(text='Silahkan pilih zona waktu terlebih dahulu ;D'), indozone()
+						]
+					)
 
 			elif cmd == 'tambah_pengingat':
 				kalender = event.postback.params['datetime']
 				t_timestamp = time.mktime(datetime.strptime(kalender, "%Y-%m-%dT%H:%M").timetuple())
 				durasi = t_timestamp - time.time()
 				if int(durasi) <= 0:
-					line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Maaf kak '+panggil(sender)+', waktunya udah lewat :('),TextSendMessage(text='Silahkan pilih waktu lagi ;D')])
+					line_bot_api.reply_message(event.reply_token, [
+						TextSendMessage(text='Maaf kak '+panggil(sender)+', waktunya udah lewat :('),
+						TextSendMessage(text='Silahkan pilih waktu lagi ;D')
+						]
+					)
 					return
 				try:
 					status = 'sukses'
@@ -145,7 +161,12 @@ def handle_postback(event):
 					line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Kak '+panggil(sender)+' mau diingatkan apa pada tanggal '+tgl+' bulan '+bulan(int(bln))+' tahun '+thn+' jam '+jamku+'?'))
 				except:
 					status = 'pending'
-					line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Maaf kak, kak '+panggil(sender)+' belum memberitahu zona waktu kakak :('), TextSendMessage(text='Silahkan dipilih dulu kak ;D'), indozone()])
+					line_bot_api.reply_message(event.reply_token, [
+						TextSendMessage(text='Maaf kak, kak '+panggil(sender)+' belum memberitahu zona waktu kakak :('), 
+						TextSendMessage(text='Silahkan dipilih dulu kak ;D'), 
+						indozone()
+						]
+					)
 
 				remind_me.update({sender:[status,kalender]})
 

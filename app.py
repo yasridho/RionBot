@@ -174,7 +174,20 @@ def handle_postback(event):
                 line_bot_api.reply_message(event.reply_token, pengaturan(sender))
 
             elif cmd == "lokasi":
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Share lokasi dulu kak '+panggil(sender)+' ;)', quick_reply=QuickReply(items=[QuickReplyButton(action=LocationAction(label='Share lokasi'))])))
+                line_bot_api.reply_message(event.reply_token, 
+                    TextSendMessage(
+                        text='Share lokasi dulu kak '+panggil(sender)+' ;)', 
+                        quick_reply=QuickReply(
+                            items=[
+                            QuickReplyButton(
+                                action=LocationAction(
+                                    label='Share lokasi'
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                )
                 perintah.update({sender:['lokasi',time.time()]})
 
             elif cmd == "nick":
@@ -216,7 +229,11 @@ def handle_postback(event):
             lineno = tb.tb_lineno
             fn = tb.tb_frame.f_code.co_filename
             if sender != owner:
-                line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')])
+                line_bot_api.reply_message(event.reply_token, [
+                    TextSendMessage(text='Oopps.. '+namaBot.capitalize()+' ada kesalahan kak :('),
+                    TextSendMessage(text='Tapi tenang kak, laporan kesalahan ini terkirim ke owner untuk diperbaiki ;D')
+                    ]
+                )
             line_bot_api.push_message(owner, TextSendMessage(text="[Expectation Failed] %s Line %i - %s"% (fn, lineno, str(e))))
         except:
             line_bot_api.push_message(owner, TextSendMessage(text="Undescribeable error detected!!"))
